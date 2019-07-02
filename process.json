@@ -1,0 +1,7 @@
+{
+  "apps" : [{
+    "name": "api",
+    "script": "./dist/app.js",
+    "watch": "dist",
+  }]
+}
