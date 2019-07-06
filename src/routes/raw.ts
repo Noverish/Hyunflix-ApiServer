@@ -1,33 +1,29 @@
 import * as fs from 'promise-fs';
+import * as mime from 'mime';
 import { Request, Response, NextFunction } from 'express';
 import { extname } from 'path';
 import { createError } from '../utils'
 
 export default async function (path: string, req: Request, res: Response, next: NextFunction) {
   const ext = extname(path).toLowerCase();
+  const type = mime.getType(ext);
   
   switch (ext) {
     case '.mp4':
       await mp4(req, res, path);
       break;
     case '.vtt':
-      await vtt(req, res, path);
-      break;
     case '.srt':
-      await srt(req, res, path);
-      break;
     case '.smi':
-      await smi(req, res, path);
-      break;
     case '.txt':
-      await smi(req, res, path);
-      break;
-    case '.jpeg':
-    case '.jpg':
-      await jpg(req, res, path);
+      await text(req, res, path);
       break;
     default:
-      next(createError(400, 'Cannot open this type of file'));
+      if (type) {
+        _default(req, res, path);
+      } else {
+        next(createError(400, 'Cannot open this type of file'));
+      }
   }
 }
 
@@ -62,29 +58,7 @@ async function mp4(req: Request, res: Response, path: string) {
   }
 }
 
-async function vtt(req: Request, res: Response, path: string) {
-  const file = fs.createReadStream(path);
-  const header = {
-    'Content-Type': 'text/vtt; charset=utf-8',
-    'Access-Control-Allow-Origin': '*'
-  }
-  
-  res.writeHead(200, header)
-  file.pipe(res);
-}
-
-async function srt(req: Request, res: Response, path: string) {
-  const file = fs.createReadStream(path);
-  const header = {
-    'Content-Type': 'text/srt; charset=utf-8',
-    'Access-Control-Allow-Origin': '*'
-  }
-  
-  res.writeHead(200, header)
-  file.pipe(res);
-}
-
-async function txt(req: Request, res: Response, path: string) {
+async function text(req: Request, res: Response, path: string) {
   const file = fs.createReadStream(path);
   const header = {
     'Content-Type': 'text/plain; charset=utf-8',
@@ -95,21 +69,11 @@ async function txt(req: Request, res: Response, path: string) {
   file.pipe(res);
 }
 
-async function smi(req: Request, res: Response, path: string) {
+async function _default(req: Request, res: Response, path: string) {
+  const ext = extname(path).toLowerCase();
   const file = fs.createReadStream(path);
   const header = {
-    'Content-Type': 'text/smi; charset=euc-kr',
-    'Access-Control-Allow-Origin': '*'
-  }
-  
-  res.writeHead(200, header)
-  file.pipe(res);
-}
-
-async function jpg(req: Request, res: Response, path: string) {
-  const file = fs.createReadStream(path);
-  const header = {
-    'Content-Type': 'image/jpeg',
+    'Content-Type': mime.getType(ext),
     'Access-Control-Allow-Origin': '*'
   }
   

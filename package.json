@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "express": "~4.16.1",
+    "mime": "^2.4.4",
     "morgan": "^1.9.1",
     "pretty-bytes": "^5.2.0",
     "promise-fs": "^2.1.0",
