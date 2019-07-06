@@ -64,8 +64,7 @@ export async function getVideo(stat: fs.stat, path: string): Promise<Video> {
   return {
     posterUrl: (await isExist(posterPath)) ? ('http://' + join(SERVER, posterPath) + '?raw') : null,
     videoUrl: 'http://' + join(SERVER, path) + '?raw',
-    vttUrl: (await isExist(vttPath)) ? ('http://' + join(SERVER, vttPath) + '?raw') : null,
-    smiUrl: (await isExist(smiPath)) ? ('http://' + join(SERVER, smiPath) + '?raw') : null,
+    subtitleUrl: (await isExist(smiPath)) ? ('http://' + join(SERVER, vttPath) + '?raw') : null,
     videoWidth: 640,
     videoHeight: 360
   };

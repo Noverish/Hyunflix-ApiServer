@@ -16,15 +16,24 @@ export default function(path: string): string {
     const endTime = sentence['endTime'];
     const content = sentence['languages'];
     
-    if (content) {
-      if (content.hasOwnProperty('kr')) {
-        const time = convertTimeFormat(startTime) + ' --> ' + convertTimeFormat(endTime);
-        result += time + '\n' + content['kr'] + '\n\n';
-        continue;
-      }
+    const time = convertTimeFormat(startTime) + ' --> ' + convertTimeFormat(endTime);
+    
+    if(!content) {
+      console.log(sentence);
+      continue;
     }
-      
-    console.log(sentence);
+    
+    let korean = null;
+    if (content.hasOwnProperty('kr')) {
+      korean = content['kr'];
+    } else if (content.hasOwnProperty('ko')) {
+      korean = content['ko'];
+    } else {
+      console.log(sentence);
+      continue;
+    }
+    
+    result += time + '\n' + korean + '\n\n';
   }
   
   return result;

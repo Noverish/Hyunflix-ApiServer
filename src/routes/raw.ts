@@ -63,20 +63,13 @@ async function mp4(req: Request, res: Response, path: string) {
 async function vtt(req: Request, res: Response, path: string) {
   const parsed = parse(path);
   const smiPath = join(parsed.dir, parsed.name + '.smi');
-  console.log(smiPath);
-  
-  const smiExist = fs.existsSync(smiPath);
-  if(smiExist) {
-    const header = {
-      'Content-Type': 'text/plain; charset=utf-8',
-      'Access-Control-Allow-Origin': '*'
-    }
-    
-    res.writeHead(200, header);
-    res.end(smi2vtt(smiPath));
-  } else {
-    res.end();
+  const header = {
+    'Content-Type': 'text/plain; charset=utf-8',
+    'Access-Control-Allow-Origin': '*'
   }
+  
+  res.writeHead(200, header);
+  res.end(smi2vtt(smiPath));
 }
 
 async function text(req: Request, res: Response, path: string) {
