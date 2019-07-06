@@ -1,8 +1,8 @@
 import * as fs from 'promise-fs';
 import * as mime from 'mime';
 import { Request, Response, NextFunction } from 'express';
-import { extname } from 'path';
-import { createError } from '../utils'
+import { extname, parse, join } from 'path';
+import { createError, smi2vtt } from '../utils'
 
 export default async function (path: string, req: Request, res: Response, next: NextFunction) {
   const ext = extname(path).toLowerCase();
@@ -13,6 +13,8 @@ export default async function (path: string, req: Request, res: Response, next: 
       await mp4(req, res, path);
       break;
     case '.vtt':
+      await vtt(req, res, path);
+      break;
     case '.srt':
     case '.smi':
     case '.txt':
@@ -20,7 +22,7 @@ export default async function (path: string, req: Request, res: Response, next: 
       break;
     default:
       if (type) {
-        _default(req, res, path);
+        await _default(req, res, path);
       } else {
         next(createError(400, 'Cannot open this type of file'));
       }
@@ -55,6 +57,25 @@ async function mp4(req: Request, res: Response, path: string) {
     }
     res.writeHead(200, head)
     fs.createReadStream(path).pipe(res)
+  }
+}
+
+async function vtt(req: Request, res: Response, path: string) {
+  const parsed = parse(path);
+  const smiPath = join(parsed.dir, parsed.name + '.smi');
+  console.log(smiPath);
+  
+  const smiExist = fs.existsSync(smiPath);
+  if(smiExist) {
+    const header = {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Access-Control-Allow-Origin': '*'
+    }
+    
+    res.writeHead(200, header);
+    res.end(smi2vtt(smiPath));
+  } else {
+    res.end();
   }
 }
 
