@@ -3,6 +3,7 @@ import * as express from 'express';
 import * as fs from 'fs'
 import { createError } from './utils'
 
+import logger from './utils/logger';
 import indexRouter from './routes';
 
 const app = express();
@@ -16,10 +17,11 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(function (req, res, next) {
   req['decodedPath'] = decodeURI(req.path);
-  console.log(req['decodedPath']);
   res.set('Access-Control-Allow-Origin', '*');
   next();
-})
+});
+
+app.use(logger);
 
 app.use('/archive/Movies', indexRouter);
 
@@ -36,8 +38,8 @@ server.listen(port, function() {
   console.log(`Server Started at ${port}`);
 });
 
-server.on('error', onError);
-function onError(error) {
+server.on('error', function onError(error) {
   console.error(error);
-}
+});
+
 
