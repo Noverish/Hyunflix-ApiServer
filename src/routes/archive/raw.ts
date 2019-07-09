@@ -2,7 +2,7 @@ import * as fs from 'promise-fs';
 import * as mime from 'mime';
 import { Request, Response, NextFunction } from 'express';
 import { extname, parse, join } from 'path';
-import { createError, smi2vtt } from '../utils'
+import { createError, smi2vtt } from '../../utils'
 
 export default async function (path: string, req: Request, res: Response, next: NextFunction) {
   const ext = extname(path).toLowerCase();

@@ -2,9 +2,9 @@ import * as fs from 'promise-fs';
 import { parse } from 'path';
 import { Router, Request, Response, NextFunction } from 'express';
 
-import * as file from '../utils/file'
-import { Type, ServerResponse } from '../models';
-import { createError } from '../utils'
+import * as file from '../../utils/file'
+import { Type, ServerResponse } from '../../models';
+import { createError } from '../../utils'
 
 export default async function (path: string, req: Request, res: Response, next: NextFunction) {
   const parsed = parse(path);

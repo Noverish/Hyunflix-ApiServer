@@ -23,7 +23,7 @@ app.use(function (req, res, next) {
 
 app.use(logger);
 
-app.use('/archive/Movies', indexRouter);
+app.use('/', indexRouter);
 
 app.use(function(req, res, next) {
   res.json(createError(404, 'Not Found'));

@@ -1,12 +1,11 @@
 import * as mysql from 'promise-mysql';
-
-const options = {
-  host     : 'localhost',
-  user     : 'hyunsub',
-  password : 'ekdldkahsem1',
-  database : 'hyunsub'
-}
+import { mysqlOption } from '../credentials';
 
 export async function createConnection(): Promise<mysql.Connection> {
-  return await mysql.createConnection(options);
+  return await mysql.createConnection(mysqlOption);
 }
+
+import * as auth from './auth'
+export const getUser = auth.getUser;
+export const addUser = auth.addUser;
+export const validateRegisterCode = auth.validateRegisterCode;

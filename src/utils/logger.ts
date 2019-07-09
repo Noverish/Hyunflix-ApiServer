@@ -13,7 +13,7 @@ const consoleTransport = new winston.transports.Console({
 })
 
 const fileTransport = new WinstonRotate({
-  dirname: 'log',
+  dirname: logDir,
   filename: '%DATE%.log',
   datePattern: 'YYYY-MM-DD'
 });

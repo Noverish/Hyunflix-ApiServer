@@ -10,3 +10,5 @@ export function createError(statusCode: number, message: string) {
 }
 
 export const smi2vtt = _smi2vtt;
+
+export const jwt = require('./jwt');
