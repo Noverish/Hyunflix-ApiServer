@@ -4,7 +4,8 @@ import * as fs from 'fs'
 import { createError } from './utils'
 
 import logger from './utils/logger';
-import indexRouter from './routes';
+import AuthRouter from './routes/auth';
+import ArchiveRouter from './routes/archive';
 
 const app = express();
 const port = 8080;
@@ -23,7 +24,8 @@ app.use(function (req, res, next) {
 
 app.use(logger);
 
-app.use('/', indexRouter);
+app.use('/auth', AuthRouter);
+app.use('/archive', ArchiveRouter);
 
 app.use(function(req, res, next) {
   res.json(createError(404, 'Not Found'));

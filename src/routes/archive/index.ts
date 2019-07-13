@@ -9,8 +9,45 @@ import processRaw from './raw';
 const router: Router = Router();
 
 router.get('/', function(req: Request, res: Response, next: NextFunction) {
-  process(req, res, next);
-})
+  const response = {
+    "type": "folder",
+    "path": "/archive",
+    "name": "archive",
+    "ext": "",
+    "payload": [
+        {
+            "name": "Movies",
+            "type": "folder",
+            "path": "/archive/Movies",
+            "isDir": true,
+            "size": null
+        },
+        {
+            "name": "TV_Series",
+            "type": "folder",
+            "path": "/archive/TV_Series",
+            "isDir": true,
+            "size": null
+        },
+        {
+            "name": "Documentaries",
+            "type": "folder",
+            "path": "/archive/Documentaries",
+            "isDir": true,
+            "size": null
+        },
+        {
+            "name": "torrents",
+            "type": "folder",
+            "path": "/archive/torrents",
+            "isDir": true,
+            "size": null
+        }
+    ]
+  };
+  
+  res.end(JSON.stringify(response, null, 4));
+});
 
 router.get('/:path*', function(req: Request, res: Response, next: NextFunction) {
   process(req, res, next);
