@@ -32,6 +32,7 @@ export async function getFileList(stat: fs.stat, path: string): Promise<File[]> 
     if(isDir) {
       const file: File = {
         name: f.name,
+        type: Type.folder,
         path: filePath,
         isDir: isDir,
         size: null,
@@ -44,6 +45,7 @@ export async function getFileList(stat: fs.stat, path: string): Promise<File[]> 
       
       results.push({
         name: parsed.base,
+        type: Type.parse(parsed.ext),
         path: filePath,
         isDir: isDir,
         size: prettyBytes(stat.size),
