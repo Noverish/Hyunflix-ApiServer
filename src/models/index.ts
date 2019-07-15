@@ -11,6 +11,8 @@ export namespace Type {
     ext = ext.toLowerCase();
     
     switch (ext) {
+      case '':
+       return Type.folder;
       case '.mp4':
         return Type.video;
       case '.vtt':

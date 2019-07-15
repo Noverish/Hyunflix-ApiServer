@@ -66,7 +66,7 @@ export async function getVideo(stat: fs.stat, path: string): Promise<Video> {
   return {
     posterUrl: (await isExist(posterPath)) ? ('http://' + join(SERVER, posterPath) + '?raw') : null,
     videoUrl: 'http://' + join(SERVER, path) + '?raw',
-    subtitleUrl: (await isExist(smiPath)) ? ('http://' + join(SERVER, vttPath) + '?raw') : null,
+    subtitleUrl: await getSubtitlePath(path),
     videoWidth: 640,
     videoHeight: 360
   };
@@ -95,4 +95,24 @@ async function isExist(path: string) {
   } catch(err) {
     return false;
   }
+}
+
+async function getSubtitlePath(videoPath: string): Promise<string | null> {
+  const folderPath = parse(videoPath).dir;
+  const videoName = parse(videoPath).name;
+  const smiBase = videoName + '.smi';
+  const fileList = await fs.readdir(folderPath);
+  
+  for(const fileBase of fileList) {
+    const fileName = parse(fileBase).name;
+    if(fileBase === 'ko.smi') {
+      return 'http://' + SERVER + join(folderPath, 'ko.vtt?raw');
+    }
+    
+    if(fileBase === smiBase) {
+      return 'http://' + SERVER + join(folderPath, fileName + '.vtt?raw');
+    }
+  }
+  
+  return null;
 }
