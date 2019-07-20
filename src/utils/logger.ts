@@ -1,36 +1,44 @@
+import * as morgan from 'morgan';
 import * as fs from 'fs';
-import * as winston from 'winston';
-import * as WinstonRotate from 'winston-daily-rotate-file';
+import * as path from 'path';
+import * as moment from 'moment';
+import { Address6, Address4 } from 'ip-address';
+var rfs = require("rotating-file-stream");
 
-const logDir = 'logs';
-
-if (!fs.existsSync(logDir)) {
-  fs.mkdirSync(logDir);
-}
-
-const consoleTransport = new winston.transports.Console({
-  level: 'info'
+morgan.token('path', function (req, res) { return decodeURI(req.path) })
+morgan.token('remote-addr', function (req, res) { 
+  const ip = req.ip ||
+    req._remoteAddress ||
+    (req.connection && req.connection.remoteAddress) ||
+    undefined
+  
+  if (ip) {
+    const addr6 = new Address6(ip);
+    if (addr6.isValid() && addr6.is4()) {
+      return addr6.to4().address;
+    }
+  }
+  
+  return ip;
 })
 
-const fileTransport = new WinstonRotate({
-  dirname: logDir,
-  filename: '%DATE%.log',
-  datePattern: 'YYYY-MM-DD'
-});
-
-const logger = winston.createLogger({
-  transports: [consoleTransport, fileTransport]
-});
-
-export default function (req, res, next) {
-  const ip = req.ip;
-  const method = req.method;
-  const url = req['decodedPath'];
-  const userAgent = req.headers['user-agent'];
-  
-  const payload = { ip, method, url, userAgent };
-  
-  logger.info(payload);
-  
-  next();
+function fileName(time: Date | null, index: number): string {
+  if (time) {
+    return moment(time).format('YYYY-MM-DD') + '.log';
+  } else {
+    return moment().format('YYYY-MM-DD') + '.log';
+  }
 }
+
+const consoleFormat = '[:date[iso]] :remote-addr - :method :status ":path"';
+export const consoleLogger = morgan(consoleFormat)
+
+const logDirectory = path.join(__dirname, '../../logs')
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+const accessLogStream = rfs(fileName, {
+  interval: '1h',
+  path: logDirectory
+})
+
+const fileFormat = '[:date[iso]] :remote-addr - :method :status ":path" ":user-agent"';
+export const fileLogger = morgan(fileFormat, { stream: accessLogStream })

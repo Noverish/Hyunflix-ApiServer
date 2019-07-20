@@ -3,7 +3,7 @@ import * as express from 'express';
 import * as fs from 'fs'
 import { createError } from './utils'
 
-import logger from './utils/logger';
+import { consoleLogger, fileLogger } from './utils/logger';
 import AuthRouter from './routes/auth';
 import ArchiveRouter from './routes/archive';
 
@@ -22,7 +22,8 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(logger);
+app.use(consoleLogger);
+app.use(fileLogger);
 
 app.use('/auth', AuthRouter);
 app.use('/archive', ArchiveRouter);
