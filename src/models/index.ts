@@ -1,18 +1,16 @@
 export enum Type {
-  folder = "folder",
-  video = "video",
-  image = "image",
-  text = "text",
-  etc = "etc"
+  folder = 'folder',
+  video = 'video',
+  image = 'image',
+  text = 'text',
+  etc = 'etc',
 }
 
 export namespace Type {
   export function parse(ext: string): Type {
-    ext = ext.toLowerCase();
-    
-    switch (ext) {
+    switch (ext.toLowerCase()) {
       case '':
-       return Type.folder;
+        return Type.folder;
       case '.mp4':
         return Type.video;
       case '.vtt':
@@ -30,35 +28,34 @@ export namespace Type {
   }
 }
 
-
 export interface ServerResponse {
-  type: Type,
-  path: string
-  name: string
-  ext: string
-  payload: File[] | Video | Image | Text
+  type: Type;
+  path: string;
+  name: string;
+  ext: string;
+  payload: File[] | Video | Image | Text;
 }
 
 export interface File {
-  name: string
-  type: Type
-  path: string
-  isDir: boolean
-  size: string | null
+  name: string;
+  type: Type;
+  path: string;
+  isDir: boolean;
+  size: string | null;
 }
 
 export interface Video {
-  posterUrl: string | null
-  videoUrl: string
-  subtitleUrl: string | null
-  videoWidth: number
-  videoHeight: number
+  posterUrl: string | null;
+  videoUrl: string;
+  subtitleUrl: string | null;
+  videoWidth: number;
+  videoHeight: number;
 }
 
 export interface Image {
-  rawUrl: string
+  rawUrl: string;
 }
 
 export interface Text {
-  rawUrl: string
+  rawUrl: string;
 }

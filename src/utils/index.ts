@@ -1,14 +1,14 @@
-import _smi2vtt from './subtitle';
+import subtitle from './subtitle';
 
-export const ForbiddenError = createError(403, 'Forbidden');
+export const forbiddenError = createError(403, 'Forbidden');
 
 export function createError(statusCode: number, message: string) {
   return {
     status: statusCode,
-    msg: message 
-  }
+    msg: message,
+  };
 }
 
-export const smi2vtt = _smi2vtt;
+export const smi2vtt = subtitle;
 
 export const jwt = require('./jwt');
