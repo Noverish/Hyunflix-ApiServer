@@ -28,6 +28,8 @@ export default function (path: string): string {
       korean = content['kr'];
     } else if (content.hasOwnProperty('ko')) {
       korean = content['ko'];
+    } else if (content.hasOwnProperty('en')) {
+      korean = content['en'];
     } else {
       console.log(sentence);
       continue;
