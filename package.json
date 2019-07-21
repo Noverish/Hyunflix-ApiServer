@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "express": "~4.16.1",
     "iconv-lite": "^0.5.0",
     "ip-address": "^5.9.2",

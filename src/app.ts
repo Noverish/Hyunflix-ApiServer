@@ -1,6 +1,7 @@
 import * as http from 'http';
 import * as express from 'express';
 import * as fs from 'fs';
+import * as cors from 'cors';
 import { createError } from './utils';
 
 import { consoleLogger, fileLogger } from './utils/logger';
@@ -13,12 +14,12 @@ const port = 8080;
 app.set('port', port);
 app.set('case sensitive routing', true);
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
   req['decodedPath'] = decodeURI(req.path);
-  res.set('Access-Control-Allow-Origin', '*');
   next();
 });
 
