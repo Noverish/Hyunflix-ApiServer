@@ -2,7 +2,7 @@ import * as fs from 'promise-fs';
 import * as mime from 'mime';
 import { Request, Response, NextFunction } from 'express';
 import { extname, parse, join } from 'path';
-import { createError, smi2vtt } from '../../utils';
+import { createError, smi2vtt, srt2vtt } from '../../utils';
 
 export default async function (path: string, req: Request, res: Response, next: NextFunction) {
   const ext = extname(path).toLowerCase();
@@ -63,13 +63,22 @@ async function mp4(req: Request, res: Response, path: string) {
 async function vtt(req: Request, res: Response, path: string) {
   const parsed = parse(path);
   const smiPath = join(parsed.dir, `${parsed.name}.smi`);
+  const srtPath = join(parsed.dir, `${parsed.name}.srt`);
   const header = {
-    'Content-Type': 'text/plain; charset=utf-8',
+    'Content-Type': 'text/vtt; charset=utf-8',
     'Access-Control-Allow-Origin': '*',
   };
-
-  res.writeHead(200, header);
-  res.end(smi2vtt(smiPath));
+  
+  if(fs.existsSync(smiPath)) {
+    res.writeHead(200, header);
+    res.end(smi2vtt(smiPath));
+  } else if(fs.existsSync(srtPath)) {
+    res.writeHead(200, header);
+    res.end(srt2vtt(srtPath));
+  } else {
+    res.status(404);
+    res.end('Not Found');
+  }
 }
 
 async function text(req: Request, res: Response, path: string) {

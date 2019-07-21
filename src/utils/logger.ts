@@ -5,7 +5,7 @@ import * as moment from 'moment';
 import { Address6, Address4 } from 'ip-address';
 const rfs = require('rotating-file-stream');
 
-morgan.token('date', (req, res) => { return moment().format('YYYY-MM-DD HH:mm:ss') })
+morgan.token('date', (req, res) => { return moment().format('YYYY-MM-DD HH:mm:ss'); });
 morgan.token('path', (req, res) => { return decodeURI(req.path); });
 morgan.token('remote-addr', (req, res) => {
   const ip = req.ip ||

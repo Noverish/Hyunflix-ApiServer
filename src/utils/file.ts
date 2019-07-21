@@ -60,8 +60,6 @@ export async function getVideo(stat: fs.stat, path: string): Promise<Video> {
   const parsed = parse(path);
 
   const posterPath = join(parsed.dir, `${parsed.name}.jpg`);
-  const vttPath = join(parsed.dir, `${parsed.name}.vtt`);
-  const smiPath = join(parsed.dir, `${parsed.name}.smi`);
 
   return {
     posterUrl: (await isExist(posterPath)) ? (`http://${join(SERVER, posterPath)}?raw`) : null,
@@ -101,15 +99,16 @@ async function getSubtitlePath(videoPath: string): Promise<string | null> {
   const folderPath = parse(videoPath).dir;
   const videoName = parse(videoPath).name;
   const smiBase = `${videoName}.smi`;
+  const srtBase = `${videoName}.srt`;
   const fileList = await fs.readdir(folderPath);
 
   for (const fileBase of fileList) {
     const fileName = parse(fileBase).name;
-    if (fileBase === 'ko.smi') {
+    if (fileBase === 'ko.smi' || fileBase === 'ko.srt') {
       return `http://${SERVER}${join(folderPath, 'ko.vtt?raw')}`;
     }
 
-    if (fileBase === smiBase) {
+    if (fileBase === smiBase || fileBase === srtBase) {
       return `http://${SERVER}${join(folderPath, `${fileName}.vtt?raw`)}`;
     }
   }
