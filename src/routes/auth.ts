@@ -7,19 +7,19 @@ import { createError, jwt } from '../utils';
 const router: Router = Router();
 
 router.post('/login', (req: Request, res: Response, next: NextFunction) => {
-  const username: string = req.body['username'];
+  const id: string = req.body['id'];
   const password: string = req.body['password'];
 
   (async function () {
-    const user = await database.getUser(username);
+    const user = await database.getUser(id);
 
     if (!user) {
-      next(createError(400, 'Invalid username of password'));
+      next(createError(400, '존재하지 않는 아이디입니다'));
       return;
     }
 
-    if (!bcrypt.compare(password, user['password'])) {
-      next(createError(400, 'Invalid username of password'));
+    if (!(await bcrypt.compare(password, user['password']))) {
+      next(createError(400, '패스워드가 틀렸습니다'));
       return;
     }
 
@@ -33,25 +33,27 @@ router.post('/login', (req: Request, res: Response, next: NextFunction) => {
 
 router.post('/register', (req: Request, res: Response, next: NextFunction) => {
   const registerCode: string = req.body['register_code'];
-  const username: string = req.body['username'];
+  const id: string = req.body['id'];
   const password: string = req.body['password'];
 
   (async function () {
     if (!(await database.validateRegisterCode(registerCode))) {
-      next(createError(401, 'Unvalid register code'));
+      next(createError(401, '존재하지 않는 회원가입 코드입니다'));
+      return;
+    }
+    
+    if (await database.alreadyRegistered(registerCode)) {
+      next(createError(400, '이미 사용된 회원가입 코드입니다'))
+    }
+
+    if (await database.getUser(id)) {
+      next(createError(409, '이미 존재하는 아이디입니다'));
       return;
     }
 
-    if (await database.getUser(username)) {
-      next(createError(409, 'Already exist username'));
-      return;
-    }
-
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(password, salt);
-
-    console.log(username, hash, registerCode);
-    const user = await database.addUser(username, hash, registerCode);
+    const hash = await bcrypt.hash(password, 10);
+    
+    const user = await database.addUser(id, hash, registerCode);
 
     const token = jwt.create({ user_id: user['user_id'] });
 
