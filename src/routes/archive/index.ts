@@ -56,9 +56,6 @@ router.get('/:path*', (req: Request, res: Response, next: NextFunction) => {
 async function process(req: Request, res: Response, next: NextFunction) {
   const isRaw = req.query.hasOwnProperty('raw');
   const path = req['decodedPath'];
-  
-  console.log(req.query);
-  console.log(isRaw);
 
   if (isRaw) {
     raw(path, req, res, next);

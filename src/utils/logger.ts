@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import { Address6, Address4 } from 'ip-address';
 const rfs = require('rotating-file-stream');
 
+morgan.token('date', (req, res) => { return moment().format('YYYY-MM-DD HH:mm:ss') })
 morgan.token('path', (req, res) => { return decodeURI(req.path); });
 morgan.token('remote-addr', (req, res) => {
   const ip = req.ip ||
@@ -29,7 +30,7 @@ function fileName(time: Date | null, index: number): string {
   return `${moment().format('YYYY-MM-DD')}.log`;
 }
 
-const consoleFormat = '[:date[iso]] :remote-addr - :method :status ":path"';
+const consoleFormat = '[:date] :remote-addr - :method :status ":path"';
 export const consoleLogger = morgan(consoleFormat);
 
 const logDirectory = path.join(__dirname, '../../logs');
@@ -39,5 +40,5 @@ const accessLogStream = rfs(fileName, {
   path: logDirectory,
 });
 
-const fileFormat = '[:date[iso]] :remote-addr - :method :status ":path" ":user-agent"';
+const fileFormat = '[:date] :remote-addr - :method :status ":path" ":user-agent"';
 export const fileLogger = morgan(fileFormat, { stream: accessLogStream });
