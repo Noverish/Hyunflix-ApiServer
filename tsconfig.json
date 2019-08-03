@@ -3,8 +3,7 @@
     "target": "ES6",
     "module": "commonjs",
     "moduleResolution": "node",
-    "removeComments": true,
-    "outDir": "dist"
+    "baseUrl": "src"
   },
   "include": [
     "src/**/*"

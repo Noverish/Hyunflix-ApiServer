@@ -1,6 +1,4 @@
-import * as http from 'http';
 import * as express from 'express';
-import * as fs from 'fs';
 import * as cors from 'cors';
 import { createError } from './utils';
 
@@ -38,11 +36,6 @@ app.use((err, req, res, next) => {
   res.json(err);
 });
 
-const server = http.createServer(app);
-server.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server Started at ${port}`);
-});
-
-server.on('error', (error) => {
-  console.error(error);
 });

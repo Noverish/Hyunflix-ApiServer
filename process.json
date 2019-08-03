@@ -1,7 +1,8 @@
 {
   "apps" : [{
-    "name": "api",
-    "script": "./dist/app.js",
-    "watch": "dist",
+    "name": "hyunsub-api",
+    "script": "ts-node",
+    "args": "src/app.ts",
+    "watch": "src"
   }]
 }
