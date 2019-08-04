@@ -1,8 +1,22 @@
 {
-  "apps" : [{
-    "name": "hyunsub-api",
-    "script": "ts-node",
-    "args": "src/app.ts",
-    "watch": "src"
-  }]
+  "apps" : [
+    {
+      "name": "hyunsub-api",
+      "script": "ts-node",
+      "args": "-r tsconfig-paths/register src/server-api/app.ts",
+      "watch": "src"
+    },
+    {
+      "name": "hyunsub-html",
+      "script": "ts-node",
+      "args": "-r tsconfig-paths/register src/server-html/app.ts",
+      "watch": "src"
+    },
+    {
+      "name": "hyunsub-file",
+      "script": "ts-node",
+      "args": "-r tsconfig-paths/register src/server-file/app.ts",
+      "watch": "src"
+    }
+  ]
 }

@@ -1,6 +1,7 @@
 import * as parser from 'sami-parser';
 import * as iconv from 'iconv-lite';
 import * as fs from 'fs';
+import * as detectEncoding from 'detect-character-encoding';
 
 export function srt2vtt(path: string) {
   const data = fs.readFileSync(path).toString();
@@ -62,11 +63,16 @@ function convertSrtCue(caption) {
 }
 
 export function smi2vtt(path: string): string {
-  const euckr = fs.readFileSync(path);
-  const utf8 = iconv.decode(euckr, 'euc-kr');
-  const parsed = parser.parse(utf8);
-
-  fs.writeFileSync('/home/hyunsub/result.json', JSON.stringify(parsed, null, 4));
+  const fileBuffer = fs.readFileSync(path);
+  const encoding = detectEncoding(fileBuffer).encoding;
+  
+  let content = ''
+  if (encoding == 'EUC-KR') {
+    content = iconv.decode(fileBuffer, 'euc-kr');
+  } else {
+    content = fileBuffer.toString();
+  }
+  const parsed = parser.parse(content);
 
   let result = 'WEBVTT\n\n';
 

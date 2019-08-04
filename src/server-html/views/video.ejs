@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <link href="https://vjs.zencdn.net/7.6.0/video-js.css" rel="stylesheet">
+    <script src='https://vjs.zencdn.net/7.6.0/video.js'></script>
+    <script src="/newskin.js"></script>
+
+    <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+    <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+  </head>
+  <body>
+    <h1><%= name %></h1>
+    <video id='my-video' class='video-js' controls preload='none' width='<%= videoWidth %>' height='<%= videoHeight %>' data-setup='{}'>
+      <source src='<%= videoUrl %>' type='video/mp4' />
+      <% if (subtitleUrl) { %>
+        <track kind="captions" src="<%= subtitleUrl %>"label="Korean" default />
+      <% } %>
+      <p class='vjs-no-js'>
+        To view this video please enable JavaScript, and consider upgrading to a web browser that
+        <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+      </p>
+    </video>
+  </body>
+</html>

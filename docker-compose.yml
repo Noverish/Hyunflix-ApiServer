@@ -1,12 +1,24 @@
-version: '3.7'
+version: '3.6'
+
+networks:
+  default:
+    name: hyunsub
+    external: true
 
 services:
-  api:
-    image: hyunsub/api:latest
+  backend:
+    image: hyunsub/backend:latest
     build: .
-    container_name: api-dev
+    container_name: backend_dev
     volumes:
       - ./:/app
+      - /archive:/archive
+    environment:
+      - FILE_SERVER=home.hyunsub.kim:8092
     restart: always
     ports:
-      - 8090:8080
+      - 8091:8080
+      - 8092:8081
+      - 8093:8082
+    networks:
+      - default

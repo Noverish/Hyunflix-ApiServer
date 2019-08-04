@@ -1,10 +1,18 @@
 import * as fs from 'promise-fs';
 import * as mime from 'mime';
+import * as detectCharacterEncoding from 'detect-character-encoding';
 import { Request, Response, NextFunction } from 'express';
 import { extname, parse, join } from 'path';
-import { createError, smi2vtt, srt2vtt } from '../../utils';
+
+import { smi2vtt, srt2vtt } from 'src/utils';
 
 export default async function (path: string, req: Request, res: Response, next: NextFunction) {
+  if(!exists(path)) {
+    res.status(404);
+    res.end('Not Found');
+    return;
+  }
+  
   const ext = extname(path).toLowerCase();
   const type = mime.getType(ext);
 
@@ -24,9 +32,22 @@ export default async function (path: string, req: Request, res: Response, next: 
       if (type) {
         await etc(req, res, path);
       } else {
-        next(createError(400, 'Cannot open this type of file'));
+        next({ satus: 400, msg: 'Cannot open this type of file' });
       }
   }
+}
+
+function exists(path: string) {
+  const { dir, name, ext } = parse(path);
+  
+  if (ext === '.vtt') {
+    const smiPath = join(dir, `${name}.smi`);
+    const srtPath = join(dir, `${name}.srt`);
+    
+    return fs.existsSync(path) || fs.existsSync(smiPath) || fs.existsSync(srtPath);
+  }
+  
+  return fs.existsSync(path);
 }
 
 async function mp4(req: Request, res: Response, path: string) {
@@ -82,14 +103,15 @@ async function vtt(req: Request, res: Response, path: string) {
 }
 
 async function text(req: Request, res: Response, path: string) {
-  const file = fs.createReadStream(path);
+  const buffer = fs.readFileSync(path);
+  const { encoding } = detectCharacterEncoding(buffer);
   const header = {
-    'Content-Type': 'text/plain; charset=utf-8',
+    'Content-Type': `text/plain; charset=${encoding}`,
     'Access-Control-Allow-Origin': '*',
   };
 
   res.writeHead(200, header);
-  file.pipe(res);
+  res.end(buffer);
 }
 
 async function etc(req: Request, res: Response, path: string) {
