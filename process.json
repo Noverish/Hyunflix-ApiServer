@@ -1,22 +1,39 @@
 {
   "apps" : [
     {
-      "name": "hyunsub-api",
+      "name": "api",
       "script": "ts-node",
       "args": "-r tsconfig-paths/register src/server-api/app.ts",
-      "watch": "src"
+      "watch": "src",
+      "env": {
+        "PORT": "8080",
+      }
     },
     {
-      "name": "hyunsub-html",
-      "script": "ts-node",
-      "args": "-r tsconfig-paths/register src/server-html/app.ts",
-      "watch": "src"
-    },
-    {
-      "name": "hyunsub-file",
+      "name": "file",
       "script": "ts-node",
       "args": "-r tsconfig-paths/register src/server-file/app.ts",
-      "watch": "src"
+      "watch": "src",
+      "env": {
+        "PORT": "8081",
+      }
+    },
+    {
+      "name": "html",
+      "script": "ts-node",
+      "args": "-r tsconfig-paths/register src/server-html/app.ts",
+      "watch": "src",
+      "env": {
+        "PORT": "8000",
+      }
+    },
+    {
+      "name": "ffmpeg",
+      "script": "ts-node",
+      "args": "-r tsconfig-paths/register src/server-ffmpeg/app.ts",
+      "env": {
+        "PORT": "9999",
+      }
     }
   ]
 }

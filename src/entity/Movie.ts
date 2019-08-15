@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, createConnection } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, createConnection } from 'typeorm';
 
-@Entity({name: "movies"})
+@Entity({ name: 'movies' })
 export class Movie {
   @PrimaryGeneratedColumn()
   movie_id: number;
@@ -21,11 +21,11 @@ export class Movie {
     await conn.close();
     return movies;
   }
-  
+
   static async findByPath(path: string): Promise<Movie | null> {
     const conn = await createConnection();
     const repo = conn.getRepository(Movie);
-    const movies = await repo.find({ where: { path }});
+    const movies = await repo.find({ where: { path } });
     await conn.close();
     return (movies.length > 0) ? movies[0] : null;
   }

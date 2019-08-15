@@ -10,7 +10,7 @@ export function srt2vtt(path: string) {
   // trim white space start and end
   srt = srt.replace(/^\s+|\s+$/g, '');
   // get cues
-  let cuelist = srt.split('\n\n');
+  const cuelist = srt.split('\n\n');
   let result = '';
   if (cuelist.length > 0) {
     result += 'WEBVTT\n\n';
@@ -25,10 +25,10 @@ function convertSrtCue(caption) {
   // remove all html tags for security reasons
   // srt = srt.replace(/<[a-zA-Z\/][^>]*>/g, '');
   let cue = '';
-  let s = caption.split(/\n/);
+  const s = caption.split(/\n/);
   // concatenate muilt-line string separated in array into one
   while (s.length > 3) {
-    for (let i = 3; i < s.length; i++) {
+    for (let i = 3; i < s.length; i += 1) {
       s[2] += '\n' + s[i];
     }
     s.splice(3, s.length - 3);
@@ -42,7 +42,7 @@ function convertSrtCue(caption) {
   // get time strings
   if (s[line].match(/\d+:\d+:\d+/)) {
     // convert time string
-    let m = s[1].match(/(\d+):(\d+):(\d+)(?:,(\d+))?\s*--?>\s*(\d+):(\d+):(\d+)(?:,(\d+))?/);
+    const m = s[1].match(/(\d+):(\d+):(\d+)(?:,(\d+))?\s*--?>\s*(\d+):(\d+):(\d+)(?:,(\d+))?/);
     if (m) {
       cue += m[1] + ':' + m[2] + ':' + m[3] + '.' + m[4] + ' --> '
            + m[5] + ':' + m[6] + ':' + m[7] + '.' + m[8] + '\n';
@@ -65,9 +65,9 @@ function convertSrtCue(caption) {
 export function smi2vtt(path: string): string {
   const fileBuffer = fs.readFileSync(path);
   const encoding = detectEncoding(fileBuffer).encoding;
-  
-  let content = ''
-  if (encoding == 'EUC-KR') {
+
+  let content = '';
+  if (encoding === 'EUC-KR') {
     content = iconv.decode(fileBuffer, 'euc-kr');
   } else {
     content = fileBuffer.toString();

@@ -34,19 +34,19 @@ router.post('/login', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.post('/register', (req: Request, res: Response, next: NextFunction) => {
-  const _regCode: string = req.body['reg_code'];
+  const regCode: string = req.body['reg_code'];
   const username: string = req.body['username'];
   const password: string = req.body['password'];
 
   (async function () {
-    const regCode: RegCode | null = await RegCode.getRegCode(_regCode)
-    
+    const regCode: RegCode | null = await RegCode.getRegCode(regCode);
+
     if (!regCode) {
       res.status(400);
       res.json({ msg: '존재하지 않는 회원가입 코드입니다' });
       return;
     }
-    
+
     if (await User.findByUserId(regCode.user_id)) {
       res.status(400);
       res.json({ msg: '이미 사용된 회원가입 코드입니다' });
@@ -59,7 +59,7 @@ router.post('/register', (req: Request, res: Response, next: NextFunction) => {
     }
 
     const hash: string = await bcrypt.hash(password, 10);
-    
+
     const user: User = await User.insert(regCode.user_id, username, hash);
 
     const token: string = jwt.create({ user_id: user.user_id });

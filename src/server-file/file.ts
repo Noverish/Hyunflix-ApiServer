@@ -7,12 +7,12 @@ import { extname, parse, join } from 'path';
 import { smi2vtt, srt2vtt } from 'src/utils';
 
 export default async function (path: string, req: Request, res: Response, next: NextFunction) {
-  if(!exists(path)) {
+  if (!exists(path)) {
     res.status(404);
     res.end('Not Found');
     return;
   }
-  
+
   const ext = extname(path).toLowerCase();
   const type = mime.getType(ext);
 
@@ -39,14 +39,14 @@ export default async function (path: string, req: Request, res: Response, next: 
 
 function exists(path: string) {
   const { dir, name, ext } = parse(path);
-  
+
   if (ext === '.vtt') {
     const smiPath = join(dir, `${name}.smi`);
     const srtPath = join(dir, `${name}.srt`);
-    
+
     return fs.existsSync(path) || fs.existsSync(smiPath) || fs.existsSync(srtPath);
   }
-  
+
   return fs.existsSync(path);
 }
 
@@ -89,11 +89,11 @@ async function vtt(req: Request, res: Response, path: string) {
     'Content-Type': 'text/vtt; charset=utf-8',
     'Access-Control-Allow-Origin': '*',
   };
-  
-  if(fs.existsSync(smiPath)) {
+
+  if (fs.existsSync(smiPath)) {
     res.writeHead(200, header);
     res.end(smi2vtt(smiPath));
-  } else if(fs.existsSync(srtPath)) {
+  } else if (fs.existsSync(srtPath)) {
     res.writeHead(200, header);
     res.end(srt2vtt(srtPath));
   } else {

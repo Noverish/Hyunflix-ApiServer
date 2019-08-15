@@ -1,13 +1,15 @@
 import * as express from 'express';
 import * as cors from 'cors';
-import "reflect-metadata";
+import 'reflect-metadata';
 
 import { consoleLogger, fileLogger } from 'src/utils/logger';
 import movies from './routes/movies';
 import auth from './routes/auth';
+import encode from './routes/encode';
+import explorer from './routes/explorer';
 
 const app = express();
-const port = 8080;
+const port = parseInt(process.env.PORT);
 
 app.set('port', port);
 
@@ -19,6 +21,8 @@ app.use(fileLogger);
 
 app.use('/auth', auth);
 app.use('/movies', movies);
+app.use('/encode', encode);
+app.use('/explorer', explorer);
 
 app.use((req, res, next) => {
   res.status(404);
@@ -26,7 +30,7 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  res.status(err['status'] || 500);
+  res.status(500);
   res.json(err);
 });
 
