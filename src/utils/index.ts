@@ -15,3 +15,6 @@ async function walk(dir) {
 
   return files.reduce((all, folderContents) => all.concat(folderContents), []);
 }
+
+import * as _subprocess from './subprocess';
+export const subprocess = _subprocess;

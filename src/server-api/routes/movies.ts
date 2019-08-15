@@ -17,7 +17,6 @@ router.get('/:path*', (req: Request, res: Response, next: NextFunction) => {
 
   Movie.findByPath(path)
     .then((movie: Movie | null) => {
-      console.log(movie);
       if (movie) {
         res.status(200);
         res.json(movieDetail(movie));

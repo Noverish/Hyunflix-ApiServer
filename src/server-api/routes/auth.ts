@@ -34,12 +34,12 @@ router.post('/login', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.post('/register', (req: Request, res: Response, next: NextFunction) => {
-  const regCode: string = req.body['reg_code'];
+  const _regCode: string = req.body['reg_code'];
   const username: string = req.body['username'];
   const password: string = req.body['password'];
 
   (async function () {
-    const regCode: RegCode | null = await RegCode.getRegCode(regCode);
+    const regCode: RegCode | null = await RegCode.getRegCode(_regCode);
 
     if (!regCode) {
       res.status(400);

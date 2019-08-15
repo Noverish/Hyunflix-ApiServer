@@ -1,10 +1,14 @@
-const ffprobe = require('ffprobe');
-const ffprobeStatic = require('ffprobe-static');
-
+import { subprocess } from 'src/utils';
 import { VideoInfo } from './';
 
 export default async function (path: string): Promise<VideoInfo> {
-  const info = await ffprobe(path, { path: ffprobeStatic.path });
+  
+  // ffprobe -v quiet -print_format json -show_format -show_streams "lolwut.mp4" > "lolwut.mp4.json"
+  const result = await subprocess.simple('ffprobe', [
+    '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', path  
+  ])
+  
+  const info = JSON.parse(result)
   const videoStream = info['streams'][0];
 
   return {
@@ -13,4 +17,3 @@ export default async function (path: string): Promise<VideoInfo> {
   };
 }
 
-// ffprobe -v quiet -print_format json -show_format -show_streams "lolwut.mp4" > "lolwut.mp4.json"

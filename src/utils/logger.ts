@@ -6,7 +6,7 @@ import { Address6, Address4 } from 'ip-address';
 const rfs = require('rotating-file-stream');
 
 morgan.token('date', (req, res) => { return moment().format('YYYY-MM-DD HH:mm:ss'); });
-morgan.token('path', (req, res) => { return decodeURI(req.path); });
+morgan.token('path', (req, res) => { return decodeURI(req.originalUrl); });
 morgan.token('remote-addr', (req, res) => {
   const ip = req.ip ||
     req._remoteAddress ||
