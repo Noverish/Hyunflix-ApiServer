@@ -16,13 +16,13 @@ async function encodeIfExists() {
     await ffmpeg.pass1(path, (status: EncodingStatus) => {
       const progress = status.frame / info.frame * 50;
       Encode.updateProgress(queued._id, progress);
-      console.log(basename(queued.target), progress);
+      console.log(new Date().toLocaleString(), basename(queued.target), progress);
     });
 
     await ffmpeg.pass2(path, outpath, (status: EncodingStatus) => {
       const progress = status.frame / info.frame * 50 + 50;
       Encode.updateProgress(queued._id, progress);
-      console.log(basename(queued.target), progress);
+      console.log(new Date().toLocaleString(), basename(queued.target), progress);
     });
 
     fs.unlinkSync(path);

@@ -71,12 +71,12 @@ export function pass2(path, outpath, callback: (EncodingStatus) => void) {
 
 function extract(data: string): EncodingStatus | null {
   try {
-    const regex = /frame=[ \d]* fps=[ \d]* q=[ .\d]* size=[ \d]*kB time=[:.\d]* bitrate=[.\d]*kbits\/s speed=[.\d]*x/;
+    const regex = /frame=[ \d]* fps=[ \d]* q=[ .-\d]* L?size=[ \d]*kB time=[:.\d]* bitrate=[.\d]*kbits\/s speed=[.\d]*x/;
     const matched: string = data.match(regex)[0];
 
     const frameMatched = matched.match(/frame=[ \d]*/);
     const fpsMatched = matched.match(/fps=[ \d]*/);
-    const qMatched = matched.match(/q=[ .\d]*/);
+    const qMatched = matched.match(/q=[ .-\d]*/);
     const sizeMatched = matched.match(/size=[ \d]*kB/);
     const timeMatched = matched.match(/time=[:.\d]*/)[0];
     const bitrateMatched = matched.match(/bitrate=[.\d]*kbits\/s/)[0];
@@ -84,7 +84,7 @@ function extract(data: string): EncodingStatus | null {
 
     const frameString = frameMatched[0].match(/[\d]+/)[0];
     const fpsString = fpsMatched[0].match(/[\d]+/)[0];
-    const qString = qMatched[0].match(/[.\d]+/)[0];
+    const qString = qMatched[0].match(/[.-\d]+/)[0];
     const sizeString = sizeMatched[0].match(/[.\d]+/)[0];
     const timeString = timeMatched.match(/[:.\d]+/)[0];
     const bitrateString = bitrateMatched.match(/[.\d]+/)[0];
