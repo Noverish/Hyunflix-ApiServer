@@ -14,7 +14,7 @@ app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/', indexRouter);
+app.use('/', routes);
 app.use('/', express.static(path.join(__dirname, './public')));
 
 app.use((req, res, next) => {

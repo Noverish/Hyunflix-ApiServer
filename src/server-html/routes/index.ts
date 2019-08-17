@@ -8,10 +8,10 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.render('index');
 });
 
-router.use('/login', LoginRouter);
-router.use('/archive/Movies', ExplorerRouter);
-router.use('/archive/TV_Programs', ExplorerRouter);
-router.use('/archive/Documentaries', ExplorerRouter);
-router.use('/archive/torrents', ExplorerRouter);
+router.use('/login', login);
+router.use('/archive/Movies', explorer);
+router.use('/archive/TV_Programs', explorer);
+router.use('/archive/Documentaries', explorer);
+router.use('/archive/torrents', explorer);
 
 export default router;
