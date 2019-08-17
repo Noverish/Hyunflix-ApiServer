@@ -20,19 +20,19 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
 router.get('/:path*', (req: Request, res: Response, next: NextFunction) => {
   const path = decodeURI(req.path);
 
-  Movie.findByPath(path)
-    .then((movie: Movie | null) => {
-      if (movie) {
-        res.status(200);
-        res.json(getVideoFromDirPath(join('/archive/Movies', movie.path)));
-      } else {
-        res.status(404);
-        res.json({ msg: 'Not Found' });
-      }
-    })
-    .catch((err) => {
-      next(err);
-    })
+  (async function() {
+    const movie: Movie | null = await Movie.findByPath(path);
+    
+    if (movie) {
+      res.status(200);
+      res.json(await getVideoFromDirPath(movie.path));
+    } else {
+      res.status(404);
+      res.json({ msg: 'Not Found' });
+    }
+  })().catch(err => {
+    next(err);
+  })
 });
 
 export default router;

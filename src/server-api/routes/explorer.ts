@@ -8,7 +8,7 @@ const router: Router = Router();
 router.post('/readdir', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
     const path = req.body['path'];
-    const files: File[] = await getFileList(join('/archive', path));
+    const files: File[] = await getFileList(path);
     files.forEach((file:File) => {
       file.path = file.path.substring(8);
     });

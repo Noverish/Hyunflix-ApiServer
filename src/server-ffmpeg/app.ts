@@ -9,7 +9,7 @@ async function encodeIfExists() {
 
   if (queuedList.length > 0) {
     const queued = queuedList[0];
-    const path = join('/archive', queued.target);
+    const path = join(queued.target);
     const parsed = parse(path);
     const outpath = parsed.dir + '/' + parsed.name + '.mp4';
     const tmppath = parsed.dir + '/' + parsed.name + '.tmp.mp4';
