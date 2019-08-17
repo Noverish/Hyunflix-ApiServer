@@ -1,4 +1,4 @@
-import { subprocess } from 'src/utils';
+import { subprocess } from '@src/utils';
 
 export interface FFProbe {
   duration: number;

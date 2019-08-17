@@ -1,8 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import * as bcrypt from 'bcryptjs';
 
-import { User, RegCode } from 'src/entity';
-import { jwt } from 'src/utils';
+import { User, RegCode } from '@src/entity';
+import { jwt } from '@src/utils';
 
 const router: Router = Router();
 

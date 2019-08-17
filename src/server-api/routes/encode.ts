@@ -1,8 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { join } from 'path';
 
-import { Encode } from 'src/entity';
-import { subprocess } from 'src/utils';
+import { Encode } from '@src/entity';
+import { subprocess } from '@src/utils';
 
 const router: Router = Router();
 

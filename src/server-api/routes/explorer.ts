@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { join } from 'path';
 
-import { getFileList, File } from 'src/fs';
+import { getFileList, File } from '@src/fs';
 
 const router: Router = Router();
 

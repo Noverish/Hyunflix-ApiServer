@@ -1,8 +1,8 @@
 import { join, basename, parse } from 'path';
 import * as fs from 'fs';
 
-import { ffprobe, ffmpeg, FFProbe, EncodingStatus } from 'src/ffmpeg';
-import { Encode } from 'src/entity';
+import { ffprobe, ffmpeg, FFProbe, EncodingStatus } from '@src/ffmpeg';
+import { Encode } from '@src/entity';
 
 async function encodeIfExists() {
   const queuedList: Encode[] = await Encode.findNotDone();

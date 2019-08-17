@@ -4,7 +4,7 @@ import * as detectCharacterEncoding from 'detect-character-encoding';
 import { Request, Response, NextFunction } from 'express';
 import { extname, parse, join } from 'path';
 
-import { smi2vtt, srt2vtt } from 'src/utils';
+import { smi2vtt, srt2vtt } from '@src/utils';
 
 export default async function (path: string, req: Request, res: Response, next: NextFunction) {
   if (!exists(path)) {

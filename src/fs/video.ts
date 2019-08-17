@@ -1,7 +1,7 @@
 import { parse, dirname, extname, basename, join } from 'path';
 import * as fs from 'fs';
 
-import { ffprobe, FFProbe } from 'src/ffmpeg'
+import { ffprobe, FFProbe } from '@src/ffmpeg'
 
 export interface VideoSubtitle {
   language: string;

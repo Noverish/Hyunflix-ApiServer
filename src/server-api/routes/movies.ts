@@ -1,8 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { join } from 'path';
 
-import { Movie } from 'src/entity';
-import { getVideoFromDirPath } from 'src/fs';
+import { Movie } from '@src/entity';
+import { getVideoFromDirPath } from '@src/fs';
 
 const router: Router = Router();
 

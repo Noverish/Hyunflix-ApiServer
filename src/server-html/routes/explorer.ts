@@ -2,9 +2,8 @@ import * as fs from 'promise-fs';
 import { join, extname } from 'path';
 import { Router, Request, Response, NextFunction } from 'express';
 
-import raw from 'src/server-file/file';
-
-import { getFileList, File, getVideoFromFilePath, Video } from 'src/fs';
+import raw from '@src/server-file/file';
+import { getFileList, File, getVideoFromFilePath, Video } from '@src/fs';
 
 const router = Router();
 

@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as cors from 'cors';
 import 'reflect-metadata';
 
-import { consoleLogger, fileLogger } from 'src/utils/logger';
+import { consoleLogger, fileLogger } from '@src/utils/logger';
 import movies from './routes/movies';
 import auth from './routes/auth';
 import encode from './routes/encode';
