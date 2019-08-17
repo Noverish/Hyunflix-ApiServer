@@ -8,11 +8,11 @@
     <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
   </head>
   <body>
-    <h1><%= name %></h1>
-    <video id='my-video' class='video-js' controls preload='none' width='<%= videoWidth %>' height='<%= videoHeight %>' data-setup='{}'>
-      <source src='<%= videoUrl %>' type='video/mp4' />
-      <% if (subtitleUrl) { %>
-        <track kind="captions" src="<%= subtitleUrl %>"label="Korean" default />
+    <h1><%= title %></h1>
+    <video id='my-video' class='video-js' controls preload='none' width='<%= srcs[0].width / 2 %>' height='<%= srcs[0].height / 2 %>' data-setup='{}'>
+      <source src='<%= srcs[0].path + '?raw' %>' type='video/mp4' />
+      <% if (subtitles.length > 0) { %>
+        <track kind="captions" src="<%= subtitles[0].path + '?raw' %>"label="Korean" default />
       <% } %>
       <p class='vjs-no-js'>
         To view this video please enable JavaScript, and consider upgrading to a web browser that

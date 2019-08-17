@@ -8,12 +8,9 @@ export interface EncodingStatus {
   speed: number;
 }
 
-export interface FFProbe {
-  duration: number;
-  frame: number;
-}
+
 
 import * as _ffmpeg from './ffmpeg';
 export const ffmpeg = _ffmpeg;
 
-export { default as ffprobe } from './ffprobe';
+export { default as ffprobe, FFProbe } from './ffprobe';

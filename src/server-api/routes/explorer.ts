@@ -1,15 +1,14 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { join } from 'path';
 
-import { readdir } from 'src/fs';
-import { File } from 'src/models';
+import { getFileList, File } from 'src/fs';
 
 const router: Router = Router();
 
 router.post('/readdir', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
     const path = req.body['path'];
-    const files: File[] = await readdir(join('/archive', path));
+    const files: File[] = await getFileList(join('/archive', path));
     files.forEach((file:File) => {
       file.path = file.path.substring(8);
     });

@@ -1,10 +1,17 @@
 import * as prettyBytes from 'pretty-bytes';
 import * as fs from 'fs';
 import { join, parse } from 'path';
-import { File } from 'src/models';
+
 const fsPromises = fs.promises;
 
-export async function readdir(path: string): Promise<File[]> {
+export interface File {
+  path: string;
+  name: string;
+  isdir: boolean;
+  size: string;
+}
+
+export async function getFileList(path: string): Promise<File[]> {
   try {
     await fsPromises.access(path, fs.constants.R_OK | fs.constants.W_OK);
   } catch {

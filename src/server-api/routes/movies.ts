@@ -1,6 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express';
+import { join } from 'path';
+
 import { Movie } from 'src/entity';
-import { movieDetail } from 'src/fs';
+import { getVideoFromDirPath } from 'src/fs';
 
 const router: Router = Router();
 
@@ -22,7 +24,7 @@ router.get('/:path*', (req: Request, res: Response, next: NextFunction) => {
     .then((movie: Movie | null) => {
       if (movie) {
         res.status(200);
-        res.json(movieDetail(movie));
+        res.json(getVideoFromDirPath(join('/archive/Movies', movie.path)));
       } else {
         res.status(404);
         res.json({ msg: 'Not Found' });

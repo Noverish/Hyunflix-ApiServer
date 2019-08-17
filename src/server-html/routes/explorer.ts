@@ -1,32 +1,34 @@
 import * as fs from 'promise-fs';
 import { join, extname } from 'path';
-import { File, Folder, Video } from '../models';
 import { Router, Request, Response, NextFunction } from 'express';
-import * as file from '../utils/file';
-import raw from './raw';
+
+import raw from 'src/server-file/file';
+
+import { getFileList, File, getVideoFromFilePath, Video } from 'src/fs';
 
 const router = Router();
 
 /* GET home page. */
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
-  process(req, res, req.baseUrl)
+  process(req.baseUrl, req, res, next)
     .catch((err) => {
       next(err);
     });
 });
 
 router.get('/:path*', (req: Request, res: Response, next: NextFunction) => {
-  process(req, res, join(req.baseUrl, decodeURIComponent(req.path)))
+  process(join(req.baseUrl, decodeURIComponent(req.path)), req, res, next)
     .catch((err) => {
       next(err);
     });
 });
 
-async function process(req: Request, res: Response, path: string) {
+async function process(path: string, req: Request, res: Response, next: NextFunction) {
+  
   const ext = extname(path).toLowerCase();
 
   if (ext === '.vtt') {
-    await raw(req, res, path);
+    await raw(path, req, res, next);
     return;
   }
 
@@ -38,19 +40,15 @@ async function process(req: Request, res: Response, path: string) {
 
   const stat = await fs.stat(path);
   if (stat.isDirectory()) {
-    const files: File[] = await file.getFileList(path);
-    const folder: Folder = {
-      path,
-      files,
-    };
-
-    res.render('explorer', folder);
+    const files: File[] = await getFileList(path);
+    res.render('explorer', { path, files });
+    
   } else if (stat.isFile()) {
-
     if (!req.query.hasOwnProperty('raw')) {
       switch (ext) {
         case '.mp4': {
-          const video: Video = await file.getVideoInfo(path);
+          const video: Video = await getVideoFromFilePath(path);
+          console.log(video);
           res.render('video', video);
           return;
         }
@@ -61,7 +59,7 @@ async function process(req: Request, res: Response, path: string) {
       }
     }
 
-    await raw(req, res, path);
+    await raw(path, req, res, next);
   }
 }
 

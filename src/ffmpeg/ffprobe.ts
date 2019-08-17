@@ -1,5 +1,11 @@
 import { subprocess } from 'src/utils';
-import { FFProbe } from './';
+
+export interface FFProbe {
+  duration: number;
+  frame: number;
+  width: number;
+  height: number;
+}
 
 export default async function (path: string): Promise<FFProbe> {
   
@@ -14,6 +20,8 @@ export default async function (path: string): Promise<FFProbe> {
   return {
     duration: parseFloat(videoStream['duration']),
     frame: parseInt(videoStream['nb_frames']),
+    width: parseInt(videoStream['width']),
+    height: parseInt(videoStream['height']),
   };
 }
 

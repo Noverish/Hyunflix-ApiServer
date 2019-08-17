@@ -18,8 +18,8 @@
         
         <% for(var i = 0; i < files.length; i++) { %>
         <tr>
-          <td><a href="<%= files[i].path %>"><%= files[i].displayName %></a></td>
-          <td><%= (files[i].displaySize !== null) ? files[i].displaySize : '-' %></td>
+          <td><a href="<%= files[i].path %>"><%= files[i].name %></a></td>
+          <td><%= (files[i].size !== null) ? files[i].size : '-' %></td>
         </tr>
         <% } %>
   
