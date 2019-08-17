@@ -8,7 +8,7 @@ export interface EncodingStatus {
   speed: number;
 }
 
-export interface VideoInfo {
+export interface FFProbe {
   duration: number;
   frame: number;
 }
