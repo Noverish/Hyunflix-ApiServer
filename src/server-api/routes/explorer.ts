@@ -16,8 +16,7 @@ router.post('/readdir', (req: Request, res: Response, next: NextFunction) => {
     res.status(200);
     res.json(files);
   })().catch((err) => {
-    res.status(500);
-    res.json(err);
+    next(err);
   });
 });
 

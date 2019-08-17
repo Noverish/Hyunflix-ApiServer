@@ -9,7 +9,10 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
     .then((movies: Movie[]) => {
       res.status(200);
       res.json(movies);
-    });
+    })
+    .catch((err) => {
+      next(err);
+    })
 });
 
 router.get('/:path*', (req: Request, res: Response, next: NextFunction) => {
@@ -24,7 +27,10 @@ router.get('/:path*', (req: Request, res: Response, next: NextFunction) => {
         res.status(404);
         res.json({ msg: 'Not Found' });
       }
-    });
+    })
+    .catch((err) => {
+      next(err);
+    })
 });
 
 export default router;

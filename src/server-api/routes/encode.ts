@@ -14,9 +14,7 @@ router.post('/file', (req: Request, res: Response, next: NextFunction) => {
       res.end();
     })
     .catch((err) => {
-      err['msg'] = 'ERROR';
-      res.status(500);
-      res.json(err);
+      next(err);
     });
 });
 
@@ -31,13 +29,11 @@ router.get('/status', (req: Request, res: Response, next: NextFunction) => {
       res.json(encodes);
     })
     .catch((err) => {
-      err['msg'] = 'ERROR';
-      res.status(500);
-      res.json(err);
+      next(err);
     });
 });
 
-router.get('/pause', (req: Request, res: Response, next: NextFunction) => {
+router.post('/pause', (req: Request, res: Response, next: NextFunction) => {
   (async function() {
     const pidStr = await subprocess.simple('pgrep', ['ffmpeg']);
     
@@ -50,13 +46,11 @@ router.get('/pause', (req: Request, res: Response, next: NextFunction) => {
       res.json({ msg: 'ffmpeg 프로세스가 존재하지 않습니다' });
     }
   })().catch((err) => {
-    err['msg'] = 'ERROR';
-    res.status(500);
-    res.json(err)
+    next(err);
   })
 });
 
-router.get('/resume', (req: Request, res: Response, next: NextFunction) => {
+router.post('/resume', (req: Request, res: Response, next: NextFunction) => {
   (async function() {
     const pidStr = await subprocess.simple('pgrep', ['ffmpeg']);
     
@@ -69,9 +63,7 @@ router.get('/resume', (req: Request, res: Response, next: NextFunction) => {
       res.json({ msg: 'ffmpeg 프로세스가 존재하지 않습니다' });
     }
   })().catch((err) => {
-    err['msg'] = 'ERROR';
-    res.status(500);
-    res.json(err)
+    next(err);
   })
 });
 
