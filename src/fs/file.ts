@@ -11,6 +11,19 @@ export interface File {
   size: string;
 }
 
+export async function exists(path: string): Promise<boolean> {
+  try {
+    await fsPromises.access(path, fs.constants.R_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function isdir(path: string): Promise<boolean> {
+  return (await fsPromises.stat(path)).isDirectory();
+}
+
 export async function getFileList(path: string): Promise<File[]> {
   try {
     await fsPromises.access(path, fs.constants.R_OK | fs.constants.W_OK);

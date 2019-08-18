@@ -16,8 +16,11 @@ export class Encode {
 
   static async findAll(): Promise<Encode[]> {
     const conn = await createConnection();
-    const repo = conn.getRepository(Encode);
-    const encodes = await repo.find();
+    const encodes = await conn
+      .getRepository(Encode)
+      .createQueryBuilder()
+      .orderBy("_id", "DESC")
+      .getMany();
     await conn.close();
     return encodes;
   }

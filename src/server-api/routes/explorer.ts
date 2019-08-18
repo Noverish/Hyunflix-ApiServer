@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import * as fs from 'fs';
 
-import { getFileList, File } from '@src/fs';
+import { getFileList, File, getVideoFromFilePath, Video, isdir, exists } from '@src/fs';
 const fsPromises = fs.promises;
 
 const router: Router = Router();
@@ -36,6 +36,40 @@ router.post('/rename', (req: Request, res: Response, next: NextFunction) => {
   })().catch((err) => {
     next(err);
   });
+})
+
+router.post('/video', (req: Request, res: Response, next: NextFunction) => {
+  const path = req.body['path'];
+  
+  (async function() {
+    const video: Video = await getVideoFromFilePath(path);
+    res.status(200);
+    res.json(video);
+  })().catch((err) => {
+    next(err);
+  })
+})
+
+router.post('/isdir', (req: Request, res: Response, next: NextFunction) => {
+  const path = req.body['path'];
+  
+  (async function() {
+    res.status(200);
+    res.json({ isdir: await isdir(path) });
+  })().catch((err) => {
+    next(err);
+  })
+})
+
+router.post('/exists', (req: Request, res: Response, next: NextFunction) => {
+  const path = req.body['path'];
+  
+  (async function() {
+    res.status(200);
+    res.json({ exists: await exists(path) });
+  })().catch((err) => {
+    next(err);
+  })
 })
 
 export default router;
