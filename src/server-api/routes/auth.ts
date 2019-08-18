@@ -3,12 +3,17 @@ import * as bcrypt from 'bcryptjs';
 
 import { User, RegCode } from '@src/entity';
 import { jwt } from '@src/utils';
+import * as rsa from '@src/utils/rsa';
 
 const router: Router = Router();
+let nowKeyPair: rsa.RSAKeyPair | null = null;
 
 router.post('/login', (req: Request, res: Response, next: NextFunction) => {
-  const username: string = req.body['username'];
-  const password: string = req.body['password'];
+  const usernameCipher: string = req.body['username'];
+  const passwordCipher: string = req.body['password'];
+  
+  const username = rsa.decrypt(usernameCipher, nowKeyPair.privateKey);
+  const password = rsa.decrypt(passwordCipher, nowKeyPair.privateKey);
 
   (async function () {
     const user: User | null = await User.findByUsername(username);
@@ -34,9 +39,13 @@ router.post('/login', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.post('/register', (req: Request, res: Response, next: NextFunction) => {
-  const _regCode: string = req.body['reg_code'];
-  const username: string = req.body['username'];
-  const password: string = req.body['password'];
+  const _regCodeCipher: string = req.body['reg_code'];
+  const usernameCipher: string = req.body['username'];
+  const passwordCipher: string = req.body['password'];
+  
+  const username = rsa.decrypt(usernameCipher, nowKeyPair.privateKey);
+  const password = rsa.decrypt(passwordCipher, nowKeyPair.privateKey);
+  const _regCode = rsa.decrypt(_regCodeCipher, nowKeyPair.privateKey);
 
   (async function () {
     const regCode: RegCode | null = await RegCode.getRegCode(_regCode);
@@ -69,5 +78,14 @@ router.post('/register', (req: Request, res: Response, next: NextFunction) => {
     next(err);
   });
 });
+
+router.get('/rsa-key', (req: Request, res: Response, next: NextFunction) => {
+  if(!nowKeyPair) {
+    nowKeyPair = rsa.generateKey();
+  }
+  
+  res.status(200);
+  res.json({ key: nowKeyPair.publicKey });
+})
 
 export default router;
