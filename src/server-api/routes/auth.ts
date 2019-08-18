@@ -11,8 +11,6 @@ export function validateToken(req: Request, res: Response, next: NextFunction) {
     return;
   }
   
-  console.log(req.headers);
-  
   if (!req.headers.hasOwnProperty('authorization')) {
     res.status(401);
     res.json({ msg: '인증이 필요합니다' });
@@ -23,7 +21,7 @@ export function validateToken(req: Request, res: Response, next: NextFunction) {
   
   try {
     const decoded = jwt.verify(token);
-    req.headers['user_id'] = decoded.user_id;
+    req['user_id'] = decoded.user_id;
     next();
   } catch (err) {
     res.status(401);
