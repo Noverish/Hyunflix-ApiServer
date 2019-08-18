@@ -4,7 +4,7 @@ import 'reflect-metadata';
 
 import { consoleLogger, fileLogger } from '@src/utils/logger';
 import movies from './routes/movies';
-import auth from './routes/auth';
+import auth, { validateToken } from './routes/auth';
 import encode from './routes/encode';
 import explorer from './routes/explorer';
 
@@ -19,6 +19,7 @@ app.use(express.json());
 app.use(consoleLogger);
 app.use(fileLogger);
 
+app.use(validateToken);
 app.use('/auth', auth);
 app.use('/movies', movies);
 app.use('/encode', encode);

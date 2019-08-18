@@ -5,6 +5,32 @@ import { User, RegCode } from '@src/entity';
 import * as jwt from '@src/utils/jwt';
 import * as rsa from '@src/utils/rsa';
 
+export function validateToken(req: Request, res: Response, next: NextFunction) {
+  if(req.originalUrl.startsWith('/auth')) {
+    next();
+    return;
+  }
+  
+  console.log(req.headers);
+  
+  if (!req.headers.hasOwnProperty('authorization')) {
+    res.status(401);
+    res.json({ msg: '인증이 필요합니다' });
+    return;
+  }
+  
+  const token = req.headers['authorization'].toString().replace('Bearer ', '');
+  
+  try {
+    const decoded = jwt.verify(token);
+    req.headers['user_id'] = decoded.user_id;
+    next();
+  } catch (err) {
+    res.status(401);
+    res.json({ msg: '만료되었거나 부적절한 토큰입니다' });
+  }
+};
+
 const router: Router = Router();
 let nowKeyPair: rsa.RSAKeyPair | null = null;
 
