@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import * as bcrypt from 'bcryptjs';
 
 import { User, RegCode } from '@src/entity';
-import { jwt } from '@src/utils';
+import * as jwt from '@src/utils/jwt';
 import * as rsa from '@src/utils/rsa';
 
 const router: Router = Router();

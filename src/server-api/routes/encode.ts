@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { join } from 'path';
 
 import { Encode } from '@src/entity';
-import { subprocess } from '@src/utils';
+import * as subprocess from '@src/utils/subprocess';
 
 const router: Router = Router();
 
