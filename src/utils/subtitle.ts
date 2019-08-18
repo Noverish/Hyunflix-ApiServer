@@ -65,13 +65,7 @@ function convertSrtCue(caption) {
 export function smi2vtt(path: string): string {
   const fileBuffer = fs.readFileSync(path);
   const encoding = detectEncoding(fileBuffer).encoding;
-
-  let content = '';
-  if (encoding === 'EUC-KR') {
-    content = iconv.decode(fileBuffer, 'euc-kr');
-  } else {
-    content = fileBuffer.toString();
-  }
+  const content = iconv.decode(fileBuffer, encoding);
   const parsed = parser.parse(content);
 
   let result = 'WEBVTT\n\n';
