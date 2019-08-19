@@ -3,6 +3,7 @@ import * as cors from 'cors';
 import 'reflect-metadata';
 
 import { consoleLogger, fileLogger } from '@src/utils/logger';
+import { initTypeORM } from '@src/entity'
 import movies from './routes/movies';
 import auth, { validateToken } from './routes/auth';
 import encode from './routes/encode';
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(consoleLogger);
 app.use(fileLogger);
 
+app.use(initTypeORM);
 app.use(validateToken);
 app.use('/auth', auth);
 app.use('/movies', movies);

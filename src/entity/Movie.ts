@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, createConnection } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
 
 @Entity({ name: 'movies' })
 export class Movie {
@@ -15,18 +15,17 @@ export class Movie {
   date: Date;
 
   static async get(): Promise<Movie[]> {
-    const conn = await createConnection();
-    const repo = conn.getRepository(Movie);
-    const movies = await repo.find();
-    await conn.close();
-    return movies;
+    return await getConnection()
+      .getRepository(Movie)
+      .createQueryBuilder()
+      .getMany();
   }
 
   static async findByPath(path: string): Promise<Movie | null> {
-    const conn = await createConnection();
-    const repo = conn.getRepository(Movie);
-    const movies = await repo.find({ where: { path } });
-    await conn.close();
-    return (movies.length > 0) ? movies[0] : null;
+    return await getConnection()
+      .getRepository(Movie)
+      .createQueryBuilder()
+      .where('path = :path', { path })
+      .getOne();
   }
 }
