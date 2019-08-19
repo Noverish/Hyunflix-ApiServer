@@ -41,9 +41,9 @@ export class User {
       .execute();
 
     const user: User = await conn
+      .getRepository(User)
       .createQueryBuilder()
-      .from(User, 'user')
-      .where('user.user_id = :user_id', { user_id })
+      .where('user_id = :user_id', { user_id })
       .getOne();
 
     await conn.close();

@@ -31,10 +31,10 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err);
+  console.error(err);
   if(!res.finished) {
     res.status(500);
-    res.json(err);
+    res.end(JSON.stringify(err, Object.getOwnPropertyNames(err), 4));
   }
 });
 

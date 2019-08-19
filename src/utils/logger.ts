@@ -22,15 +22,19 @@ morgan.token('remote-addr', (req, res) => {
 
   return ip;
 });
+morgan.token('user_id', (req, res) => {
+  return (req.user_id) ? req.user_id : '0';
+})
 
 function fileName(time: Date | null, index: number): string {
   if (time) {
     return `${moment(time).format('YYYY-MM-DD')}.log`;
+  } else {
+    return `${moment().format('YYYY-MM-DD')}.log`;
   }
-  return `${moment().format('YYYY-MM-DD')}.log`;
 }
 
-const consoleFormat = '[:date] :remote-addr - :method :status :response-time ms ":path"';
+const consoleFormat = '[:date] :remote-addr :user_id - :method :status :response-time ms ":path"';
 export const consoleLogger = morgan(consoleFormat);
 
 const logDirectory = path.join(__dirname, '../../logs');
@@ -38,7 +42,8 @@ fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 const accessLogStream = rfs(fileName, {
   interval: '1h',
   path: logDirectory,
+  immutable: true,
 });
 
-const fileFormat = '[:date] :remote-addr - :method :status :response-time ms ":path" ":user-agent"';
+const fileFormat = '[:date] :remote-addr :user_id - :method :status :response-time ms ":path" ":user-agent"';
 export const fileLogger = morgan(fileFormat, { stream: accessLogStream });
