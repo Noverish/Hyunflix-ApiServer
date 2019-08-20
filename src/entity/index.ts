@@ -4,6 +4,7 @@ export { RegCode } from './RegCode';
 export { Encode } from './Encode';
 export { UserGroup } from './UserGroup';
 export { UserGroupAuthority } from './UserGroupAuthority';
+export { Music } from './Music';
 
 import { Request, Response, NextFunction } from 'express';
 import { getConnection, createConnection } from 'typeorm';

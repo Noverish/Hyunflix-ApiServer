@@ -20,6 +20,9 @@ export default async function (path: string, req: Request, res: Response, next: 
     case '.mp4':
       await mp4(req, res, path);
       break;
+    case '.mp3':
+      await mp3(req, res, path);
+      break;
     case '.vtt':
       await vtt(req, res, path);
       break;
@@ -81,6 +84,37 @@ async function mp4(req: Request, res: Response, path: string) {
   }
 }
 
+async function mp3(req: Request, res: Response, path: string) {
+  const stat = await fs.stat(path);
+  const fileSize = stat.size;
+  const range = req.headers.range;
+
+  if (range) {
+    const parts = range.replace(/bytes=/, '').split('-');
+    const start = parseInt(parts[0], 10);
+    const end = parts[1]
+      ? parseInt(parts[1], 10)
+      : fileSize - 1;
+    const chunksize = (end - start) + 1;
+    const file = fs.createReadStream(path, { start, end });
+    const head = {
+      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': chunksize,
+      'Content-Type': 'audio/mpeg',
+    };
+    res.writeHead(206, head);
+    file.pipe(res);
+  } else {
+    const head = {
+      'Content-Length': fileSize,
+      'Content-Type': 'audio/mpeg',
+    };
+    res.writeHead(200, head);
+    fs.createReadStream(path).pipe(res);
+  }
+}
+
 async function vtt(req: Request, res: Response, path: string) {
   const parsed = parse(path);
   const smiPath = join(parsed.dir, `${parsed.name}.smi`);
@@ -115,10 +149,12 @@ async function text(req: Request, res: Response, path: string) {
 }
 
 async function etc(req: Request, res: Response, path: string) {
+  const stat = await fs.stat(path);
   const ext = extname(path).toLowerCase();
   const file = fs.createReadStream(path);
   const header = {
     'Content-Type': mime.getType(ext),
+    'Content-Length': stat.size,
     'Access-Control-Allow-Origin': '*',
   };
 

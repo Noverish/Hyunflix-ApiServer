@@ -1,7 +1,16 @@
 import { spawn } from 'child_process';
-import { EncodingStatus } from './';
 
-export function pass1(path, callback: (EncodingStatus) => void) {
+export interface FFMpegStatus {
+  frame: number;
+  fps: number;
+  q: number;
+  size: number;
+  time: string;
+  bitrate: number;
+  speed: number;
+}
+
+export function pass1(path, callback: (FFMpegStatus) => void) {
   return new Promise((resolve, reject) => {
     const ffmpeg = spawn('ffmpeg', [
       '-i', path,
@@ -34,7 +43,7 @@ export function pass1(path, callback: (EncodingStatus) => void) {
   });
 }
 
-export function pass2(path, outpath, callback: (EncodingStatus) => void) {
+export function pass2(path, outpath, callback: (FFMpegStatus) => void) {
   return new Promise((resolve, reject) => {
     const ffmpeg = spawn('ffmpeg', [
       '-i', path,
@@ -69,7 +78,7 @@ export function pass2(path, outpath, callback: (EncodingStatus) => void) {
   });
 }
 
-function extract(data: string): EncodingStatus | null {
+function extract(data: string): FFMpegStatus | null {
   try {
     const regex = /frame=[ \d]* fps=[ \d]* q=[ .-\d]* L?size=[ \d]*kB time=[:.\d]* bitrate=[.\d]*kbits\/s speed=[.\d]*x/;
     const matched: string = data.match(regex)[0];

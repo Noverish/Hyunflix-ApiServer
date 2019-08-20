@@ -1,7 +1,7 @@
 import { parse, dirname, extname, basename, join } from 'path';
 import * as fs from 'fs';
 
-import { ffprobe, FFProbe } from '@src/ffmpeg'
+import { ffprobeVideo, FFProbeVideo } from '@src/ffmpeg'
 
 export interface VideoSubtitle {
   language: string;
@@ -32,7 +32,7 @@ export async function getVideoFromFilePath(videoPath: string) {
   const dirPath = dirname(videoPath);
   const dirName = basename(dirPath);
   const files = fs.readdirSync(dirPath);
-  const probed: FFProbe = await ffprobe(videoPath);
+  const probed: FFProbeVideo = await ffprobeVideo(videoPath);
   
   const video: Video = {
     title: dirName + ' ' + basename(videoPath),
@@ -108,7 +108,7 @@ export async function getVideoFromDirPath(dirPath: string) {
 
     if (ext === '.mp4') {
       const filePath = join(dirPath, base);
-      const probed: FFProbe = await ffprobe(filePath);
+      const probed: FFProbeVideo = await ffprobeVideo(filePath);
       
       video.srcs.push({
         resolution: name,

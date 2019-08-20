@@ -2,7 +2,6 @@ import { Movie } from '@src/entity';
 import { createConnection } from 'typeorm';
 import { promises } from 'fs';
 import { extname, join, basename } from 'path';
-import { ffprobe, FFProbe } from '@src/ffmpeg';
 
 (async function() {
   const conn = await createConnection();
