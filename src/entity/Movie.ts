@@ -10,6 +10,12 @@ export class Movie {
 
   @Column()
   path: string;
+  
+  @Column()
+  duration: number;
+
+  @Column()
+  resolution: string;
 
   @Column()
   date: Date;
@@ -18,14 +24,25 @@ export class Movie {
     return await getConnection()
       .getRepository(Movie)
       .createQueryBuilder()
+      .orderBy("movie_id", "DESC")
       .getMany();
   }
-
-  static async findByPath(path: string): Promise<Movie | null> {
+  
+  static async findById(movie_id: number): Promise<Movie | null> {
     return await getConnection()
       .getRepository(Movie)
       .createQueryBuilder()
-      .where('path = :path', { path })
+      .where('movie_id = :movie_id', { movie_id })
       .getOne();
+  }
+  
+  static async updateOne(movie_id: number, query: object) {
+    return await getConnection()
+      .getRepository(Movie)
+      .createQueryBuilder()
+      .update()
+      .set(query)
+      .where('movie_id = :movie_id', { movie_id })
+      .execute();
   }
 }

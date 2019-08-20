@@ -46,4 +46,12 @@ const accessLogStream = rfs(fileName, {
 });
 
 const fileFormat = '[:date] :remote-addr :user_id - :method :status :response-time ms ":path" ":user-agent"';
-export const fileLogger = morgan(fileFormat, { stream: accessLogStream });
+export const fileLogger = morgan(fileFormat, {
+  stream: accessLogStream,
+  skip: function (req, res) {
+    if (req.user_id) {
+      return req.user_id === 1 || req.user_id === 4;
+    }
+    return false
+  }
+});
