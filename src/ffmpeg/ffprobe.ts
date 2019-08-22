@@ -17,7 +17,7 @@ export async function ffprobeVideo(path: string): Promise<FFProbeVideo> {
   ])
   
   const info = JSON.parse(result)
-  const stream = info['streams'][0];
+  const stream = info['streams'].find(s => s['codec_type'] === 'video');
 
   return {
     duration: parseFloat(stream['duration']),
