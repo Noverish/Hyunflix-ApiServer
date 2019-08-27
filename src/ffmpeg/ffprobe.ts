@@ -18,10 +18,16 @@ export async function ffprobeVideo(path: string): Promise<FFProbeVideo> {
   
   const info = JSON.parse(result)
   const stream = info['streams'].find(s => s['codec_type'] === 'video');
-
+  const format = info['format'];
+  
+  const tmp = stream['avg_frame_rate'].split('/');
+  const avgFrameRate = parseInt(tmp[0]) / parseInt(tmp[1]);
+  const duration = parseFloat(stream['duration'] || format['duration']);
+  const frame = parseInt(stream['nb_frames']) || (duration * avgFrameRate);
+  
   return {
-    duration: parseFloat(stream['duration']),
-    frame: parseInt(stream['nb_frames']),
+    duration: duration,
+    frame: frame,
     width: parseInt(stream['width']),
     height: parseInt(stream['height']),
   };

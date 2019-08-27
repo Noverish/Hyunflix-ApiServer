@@ -11,6 +11,11 @@ export function validateToken(req: Request, res: Response, next: NextFunction) {
     return;
   }
   
+  if(req.originalUrl.startsWith('/socket.io')) {
+    next();
+    return;
+  }
+  
   if (!req.headers.hasOwnProperty('authorization')) {
     res.status(401);
     res.json({ msg: '인증이 필요합니다' });

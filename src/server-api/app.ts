@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as cors from 'cors';
+import * as http from 'http';
 import 'reflect-metadata';
 
 import { consoleLogger, fileLogger } from '@src/utils/logger';
@@ -40,6 +41,13 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.listen(port, () => {
+export const server: http.Server = http.createServer(app);
+
+server.listen(port, () => {
   console.log(`API Server Started at ${port}`);
 });
+
+import * as ApiSocket from './sockets/api';
+import * as FFmpegSocket from './sockets/ffmpeg';
+ApiSocket.init();
+FFmpegSocket.init();

@@ -1,5 +1,4 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { join } from 'path';
 
 import { Encode } from '@src/entity';
 import * as subprocess from '@src/utils/subprocess';
