@@ -31,4 +31,11 @@ export class Music {
       .values({ title, path, duration, artist })
       .execute();
   }
+  
+  static async findAll(): Promise<Music[]> {
+    return await getConnection()
+      .getRepository(Music)
+      .createQueryBuilder()
+      .getMany();
+  }
 }

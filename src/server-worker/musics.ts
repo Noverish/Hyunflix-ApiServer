@@ -10,7 +10,7 @@ const fsPromises = fs.promises;
 
 (async function() {
   const conn = await createConnection();
-  const filePaths: string[] = await walk('/archive/Musics');
+  const filePaths: string[] = await walk('/archive/Musics/가요');
   
   await Music.truncate();
   

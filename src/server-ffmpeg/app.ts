@@ -51,6 +51,7 @@ async function encodeIfExists() {
       socket.send(JSON.stringify(payload));
     });
 
+    Encode.updateProgress(queued._id, 100);
     fs.unlinkSync(path);
     fs.renameSync(tmppath, outpath);
   }

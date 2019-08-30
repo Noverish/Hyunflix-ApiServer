@@ -9,6 +9,7 @@ import movies from './routes/movies';
 import auth, { validateToken } from './routes/auth';
 import encode from './routes/encode';
 import explorer from './routes/explorer';
+import musics from './routes/musics';
 
 const app = express();
 const port = parseInt(process.env.PORT);
@@ -27,6 +28,7 @@ app.use('/auth', auth);
 app.use('/movies', movies);
 app.use('/encode', encode);
 app.use('/explorer', explorer);
+app.use('/musics', musics);
 
 app.use((req, res, next) => {
   res.status(404);
