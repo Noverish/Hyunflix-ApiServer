@@ -10,9 +10,8 @@ export interface FFMpegStatus {
   speed: number;
 }
 
-export function pass1(path, callback: (FFMpegStatus) => void) {
-  const args = [
-    '-i', path,
+export const presets = {
+  pass1: [
     '-c:v', 'libx264',
     '-b:v', '2000k',
     '-pass', '1',
@@ -20,15 +19,9 @@ export function pass1(path, callback: (FFMpegStatus) => void) {
     '-map_chapters', '-1',
     '-f', 'mp4',
     '-an', '-y',
-    '/dev/null',
-  ];
+  ].join(' '),
   
-  return ffmpegPromise(args, callback);
-}
-
-export function pass2(path, outpath, callback: (FFMpegStatus) => void) {
-  const args = [
-    '-i', path,
+  pass2: [
     '-c:v', 'libx264',
     '-b:v', '2000k',
     '-pass', '2',
@@ -38,28 +31,19 @@ export function pass2(path, outpath, callback: (FFMpegStatus) => void) {
     '-ac', '2',
     '-map_chapters', '-1',
     '-y',
-    outpath,
-  ];
+  ].join(' '),
   
-  return ffmpegPromise(args, callback);
-}
-
-export function mkv2mp4(path: string, outpath: string, callback: (FFMpegStatus) => void): Promise<void> {
-  const args = [
-    '-i', path,
+  mkv2mp4: [
     '-c:v', 'copy',
     '-c:a', 'aac',
     '-b:a', '128k',
     '-ac', '2',
     '-map_chapters', '-1',
     '-y',
-    outpath,
-  ];
-  
-  return ffmpegPromise(args, callback);
+  ].join(' '),
 }
 
-function ffmpegPromise(args: string[], callback: (FFMpegStatus) => void): Promise<void> {
+export default function (args: string[], callback: (FFMpegStatus) => void): Promise<void> {
   return new Promise((resolve, reject) => {
     const ffmpeg = spawn('ffmpeg', args);
     

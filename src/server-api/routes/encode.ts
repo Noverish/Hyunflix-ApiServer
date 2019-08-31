@@ -1,13 +1,22 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
 import { Encode } from '@src/entity';
+import { presets } from '@src/utils/ffmpeg';
 import * as subprocess from '@src/utils/subprocess';
 
 const router: Router = Router();
 
-router.post('/file', (req: Request, res: Response, next: NextFunction) => {
-  const target = req.body['target'];
-  Encode.insert(target)
+router.get('/presets', (req: Request, res: Response, next: NextFunction) => {
+  res.status(200);
+  res.json(presets);
+})
+
+router.post('/', (req: Request, res: Response, next: NextFunction) => {
+  const inpath = req.body['inpath'];
+  const outpath = req.body['outpath'];
+  const options = req.body['options'];
+  
+  Encode.insert(inpath, outpath, options)
     .then(() => {
       res.status(204);
       res.end();
@@ -15,10 +24,6 @@ router.post('/file', (req: Request, res: Response, next: NextFunction) => {
     .catch((err) => {
       next(err);
     });
-});
-
-router.get('/folder', (req: Request, res: Response, next: NextFunction) => {
-
 });
 
 router.get('/status', (req: Request, res: Response, next: NextFunction) => {

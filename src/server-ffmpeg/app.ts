@@ -3,7 +3,8 @@ import { createConnection } from 'typeorm';
 import * as socketio from 'socket.io-client';
 import * as fs from 'fs';
 
-import { ffprobeVideo, FFProbeVideo, FFMpegStatus, pass1, pass2 } from '@src/ffmpeg';
+import { ffprobeVideo, FFProbeVideo } from '@src/utils/ffprobe';
+import { FFMpegStatus, default as ffmpeg } from '@src/utils/ffmpeg';
 import { Encode } from '@src/entity';
 
 const socket = socketio.connect("http://localhost:8080", { path: '/socket.io/ffmpeg' });
@@ -21,39 +22,34 @@ async function encodeIfExists() {
 
   if (queuedList.length > 0) {
     const queued = queuedList[0];
-    const path = join(queued.target);
-    const parsed = parse(path);
-    const outpath = parsed.dir + '/' + parsed.name + '.mp4';
-    const tmppath = parsed.dir + '/' + parsed.name + '.tmp.mp4';
-    const probed: FFProbeVideo = await ffprobeVideo(path);
-
-    await pass1(path, (status: FFMpegStatus) => {
-      const progress = status.frame / probed.frame * 50;
+    
+    const args: string[] = queued.options.split(' ');
+    const inpath: string = queued.inpath;
+    const outpath: string = (inpath === queued.outpath)
+      ? parse(inpath).dir + '/' + parse(inpath).name + '.tmp.mp4'
+      : queued.outpath;
+    
+    const probed: FFProbeVideo = await ffprobeVideo(inpath);
+    
+    const newArgs = ['-i', inpath, ...args, outpath];
+    
+    await ffmpeg(newArgs, (status: FFMpegStatus) => {
+      const progress = status.frame / probed.frame * 100;
       Encode.updateProgress(queued._id, progress);
-      console.log(new Date().toLocaleString(), basename(queued.target), progress);
-      
+      console.log(new Date().toLocaleString(), basename(queued.inpath), progress);
       const payload = {
         _id: queued._id,
         progress: progress
       }
       socket.send(JSON.stringify(payload));
-    });
-
-    await pass2(path, tmppath, (status: FFMpegStatus) => {
-      const progress = status.frame / probed.frame * 50 + 50;
-      Encode.updateProgress(queued._id, progress);
-      console.log(new Date().toLocaleString(), basename(queued.target), progress);
-      
-      const payload = {
-        _id: queued._id,
-        progress: progress
-      }
-      socket.send(JSON.stringify(payload));
-    });
+    })
 
     Encode.updateProgress(queued._id, 100);
-    fs.unlinkSync(path);
-    fs.renameSync(tmppath, outpath);
+    
+    if(queued.inpath === queued.outpath) {
+      fs.unlinkSync(outpath);
+      fs.renameSync(outpath, inpath);
+    }
   }
 
   setTimeout(encodeIfExists, 1000);

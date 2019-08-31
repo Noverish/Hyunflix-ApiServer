@@ -6,7 +6,13 @@ export class Encode {
   _id: number;
 
   @Column()
-  target: string;
+  inpath: string;
+
+  @Column()
+  outpath: string;
+  
+  @Column()
+  options: string;
 
   @Column()
   progress: number;
@@ -39,15 +45,12 @@ export class Encode {
       .execute();
   }
 
-  static async insert(target: string) {
+  static async insert(inpath: string, outpath: string, options: string) {
     return await getConnection()
       .createQueryBuilder()
       .insert()
       .into(Encode)
-      .values({
-        target,
-        date: new Date(),
-      })
+      .values({ inpath, outpath, options, date: new Date() })
       .execute();
   }
 }

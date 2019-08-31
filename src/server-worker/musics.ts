@@ -4,7 +4,7 @@ import { join, parse, extname, basename } from 'path';
 
 import { walk } from '@src/fs';
 import { Music } from '@src/entity';
-import { ffprobeAudio, FFProbeAudio } from '@src/ffmpeg';
+import { ffprobeAudio, FFProbeAudio } from '@src/utils/ffprobe';
 
 const fsPromises = fs.promises;
 

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { join, parse } from 'path';
 
-import { ffprobeVideo, FFProbeVideo } from '@src/ffmpeg';
+import { ffprobeVideo, FFProbeVideo } from '@src/utils/ffprobe';
 import { walkDir } from '@src/fs';
 const fsPromises = fs.promises;
 
