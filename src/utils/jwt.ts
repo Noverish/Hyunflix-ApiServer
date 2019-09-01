@@ -6,7 +6,6 @@ export function create(obj: object) {
 }
 
 export function verify(token: string) {
-  console.log(token);
   try {
     return jwt.verify(token, jwtSecret);
   } catch (err) {

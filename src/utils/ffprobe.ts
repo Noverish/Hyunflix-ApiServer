@@ -12,7 +12,7 @@ export interface FFProbeAudio {
 }
 
 export async function ffprobeVideo(path: string): Promise<FFProbeVideo> {
-  const result = await subprocess.simple('ffprobe', [
+  const result = await subprocess.spawn('ffprobe', [
     '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', path
   ])
   
@@ -34,7 +34,7 @@ export async function ffprobeVideo(path: string): Promise<FFProbeVideo> {
 }
 
 export async function ffprobeAudio(path: string): Promise<FFProbeAudio> {
-  const result = await subprocess.simple('ffprobe', [
+  const result = await subprocess.spawn('ffprobe', [
     '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', path
   ])
   
