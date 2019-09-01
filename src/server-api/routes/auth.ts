@@ -28,9 +28,9 @@ export function validateToken(req: Request, res: Response, next: NextFunction) {
     const decoded = jwt.verify(token);
     req['user_id'] = decoded.user_id;
     next();
-  } catch (err) {
+  } catch (msg) {
     res.status(401);
-    res.json({ msg: '만료되었거나 부적절한 토큰입니다' });
+    res.json({ msg });
   }
 };
 

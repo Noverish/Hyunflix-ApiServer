@@ -6,5 +6,14 @@ export function create(obj: object) {
 }
 
 export function verify(token: string) {
-  return jwt.verify(token, jwtSecret);
+  console.log(token);
+  try {
+    return jwt.verify(token, jwtSecret);
+  } catch (err) {
+    if (err instanceof jwt.TokenExpiredError) {
+      throw '로그인이 만료되었습니다.';
+    } else {
+      throw '부적절한 토큰입니다';
+    }
+  }
 }
