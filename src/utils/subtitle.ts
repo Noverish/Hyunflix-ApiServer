@@ -4,7 +4,9 @@ import * as fs from 'fs';
 import * as detectEncoding from 'detect-character-encoding';
 
 export function srt2vtt(path: string) {
-  const data = fs.readFileSync(path).toString();
+  const fileBuffer = fs.readFileSync(path);
+  const encoding = detectEncoding(fileBuffer).encoding;
+  const data = iconv.decode(fileBuffer, encoding);
   // remove dos newlines
   let srt = data.replace(/\r+/g, '');
   // trim white space start and end
