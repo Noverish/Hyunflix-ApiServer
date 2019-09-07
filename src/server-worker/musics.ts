@@ -1,16 +1,13 @@
-import * as fs from 'fs';
 import { createConnection } from 'typeorm';
-import { join, parse, extname, basename } from 'path';
+import { extname, basename } from 'path';
 
-import { walk } from '@src/fs';
+import { fs } from '@src/utils';
 import { Music } from '@src/entity';
-import { ffprobeAudio, FFProbeAudio } from '@src/utils/ffprobe';
-
-const fsPromises = fs.promises;
+import { ffprobeAudio } from '@src/utils/ffprobe';
 
 (async function() {
   const conn = await createConnection();
-  const filePaths: string[] = await walk('/archive/Musics/가요');
+  const filePaths: string[] = await fs.walk('/archive/Musics/가요');
   
   await Music.truncate();
   
