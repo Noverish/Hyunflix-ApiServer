@@ -2,8 +2,6 @@ export { Movie } from './Movie';
 export { User } from './User';
 export { RegCode } from './RegCode';
 export { Encode } from './Encode';
-export { UserGroup } from './UserGroup';
-export { UserGroupAuthority } from './UserGroupAuthority';
 export { Music } from './Music';
 
 import { Request, Response, NextFunction } from 'express';

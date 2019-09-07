@@ -47,7 +47,7 @@ async function encodeIfExists() {
     Encode.updateProgress(queued._id, 100);
     
     if(queued.inpath === queued.outpath) {
-      fs.unlinkSync(outpath);
+      fs.unlinkSync(inpath);
       fs.renameSync(outpath, inpath);
     }
   }

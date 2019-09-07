@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import * as bcrypt from 'bcryptjs';
 
-import { User, RegCode, UserGroupAuthority } from '@src/entity';
+import { User, RegCode } from '@src/entity';
 import * as jwt from '@src/utils/jwt';
 import * as rsa from '@src/utils/rsa';
 
@@ -33,25 +33,6 @@ export function validateToken(req: Request, res: Response, next: NextFunction) {
     res.json({ msg });
   }
 };
-
-export function fetchUserGroupAuthority(req: Request, res: Response, next: NextFunction) {
-  const user_id = req['user_id'];
-  
-  if(!user_id) {
-    res.status(500);
-    res.json({ msg: 'FetchUserGroupAuthority Error' });
-    return;
-  }
-  
-  (async function() {
-    const user: User = await User.findByUserId(user_id);
-    const authorities: UserGroupAuthority[] = await UserGroupAuthority.findAll(user.group_id);
-    req['authorities'] = authorities.map(a => a.path);
-    next();
-  })().catch(err => {
-    next(err);
-  })
-}
 
 const router: Router = Router();
 let nowKeyPair: rsa.RSAKeyPair | null = null;

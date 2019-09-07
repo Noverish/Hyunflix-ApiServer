@@ -4,9 +4,6 @@ import { Entity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
 export class User {
   @PrimaryGeneratedColumn()
   user_id: number;
-  
-  @Column()
-  group_id: number;
 
   @Column()
   username: string;
