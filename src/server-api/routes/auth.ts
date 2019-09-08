@@ -117,4 +117,33 @@ router.get('/rsa-key', (req: Request, res: Response, next: NextFunction) => {
   res.json({ key: nowKeyPair.publicKey });
 })
 
+router.get('/validate-token', (req: Request, res: Response, next: NextFunction) => {
+  const token = req.cookies['x-hyunsub-token'];
+  
+  try {
+    const decoded = jwt.verify(token);
+    const userId = decoded.user_id;
+    
+    res.status(200);
+    if(userId === 1) {
+      res.json({
+        userId,
+        authorizations: ['/'],
+      });
+    } else {
+      res.json({
+        userId,
+        authorizations: [
+          '/Movies',
+          '/torrents',
+          '/TV_Programs',
+        ],
+      });
+    }
+  } catch (msg) {
+    res.status(401);
+    res.end();
+  }
+})
+
 export default router;

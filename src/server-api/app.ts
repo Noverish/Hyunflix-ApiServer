@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as cors from 'cors';
 import * as http from 'http';
+import * as cookieParser from 'cookie-parser';
 import 'reflect-metadata';
 
 import { consoleLogger, fileLogger } from '@src/utils/logger';
@@ -12,12 +13,13 @@ import explorer from './routes/explorer';
 import musics from './routes/musics';
 
 const app = express();
-const port = parseInt(process.env.PORT);
+const port = parseInt(process.env.PORT) || 80;
 
 app.set('port', port);
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(consoleLogger);
 app.use(fileLogger);
