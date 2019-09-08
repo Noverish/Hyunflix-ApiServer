@@ -1,8 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import * as fs from 'fs';
 
-import { getFileList, File, getVideoFromFilePath, Video, isdir, exists } from '@src/fs';
-const fsPromises = fs.promises;
+import { ARCHIVE_PATH } from '@src/config';
+import { getFileList, File, getVideoFromFilePath, Video, isdir, exists, rename } from '@src/fs';
 
 const router: Router = Router();
 
@@ -10,7 +9,8 @@ router.post('/readdir', (req: Request, res: Response, next: NextFunction) => {
   const path = req.body['path'];
   
   (async function () {
-    let files: File[] = await getFileList(path);
+    let files: File[] = await getFileList(path, ARCHIVE_PATH);
+    
     res.status(200);
     res.json(files);
   })().catch((err) => {
@@ -28,7 +28,7 @@ router.post('/rename', (req: Request, res: Response, next: NextFunction) => {
   }
   
   (async function () {
-    await fsPromises.rename(fromPath, toPath);
+    await rename(fromPath, toPath, ARCHIVE_PATH);
     res.status(204);
     res.end();
   })().catch((err) => {
@@ -40,7 +40,7 @@ router.post('/video', (req: Request, res: Response, next: NextFunction) => {
   const path = req.body['path'];
   
   (async function() {
-    const video: Video = await getVideoFromFilePath(path);
+    const video: Video = await getVideoFromFilePath(path, ARCHIVE_PATH);
     res.status(200);
     res.json(video);
   })().catch((err) => {
@@ -53,7 +53,7 @@ router.post('/isdir', (req: Request, res: Response, next: NextFunction) => {
   
   (async function() {
     res.status(200);
-    res.json({ isdir: await isdir(path) });
+    res.json({ isdir: await isdir(path, ARCHIVE_PATH) });
   })().catch((err) => {
     next(err);
   })
@@ -64,7 +64,7 @@ router.post('/exists', (req: Request, res: Response, next: NextFunction) => {
   
   (async function() {
     res.status(200);
-    res.json({ exists: await exists(path) });
+    res.json({ exists: await exists(path, ARCHIVE_PATH) });
   })().catch((err) => {
     next(err);
   })

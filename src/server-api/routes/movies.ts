@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { join } from 'path';
 
+import { ARCHIVE_PATH } from '@src/config';
 import { Movie } from '@src/entity';
 import { getVideoFromDirPath, Video } from '@src/fs';
 
@@ -25,7 +25,7 @@ router.get('/:movie_id', (req: Request, res: Response, next: NextFunction) => {
     const movie: Movie | null = await Movie.findById(movieId);
     
     if (movie) {
-      const video: Video = await getVideoFromDirPath(movie.path);
+      const video: Video = await getVideoFromDirPath(movie.path, ARCHIVE_PATH);
       video.title = movie.title;
       
       res.status(200);
