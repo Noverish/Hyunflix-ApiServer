@@ -1,69 +1,65 @@
-import { Entity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
+import { Entity, PrimaryColumn, Column, getConnection, Connection } from 'typeorm';
 import { dateToString } from '@src/utils/date';
 
 @Entity({ name: 'movies' })
 export class MovieEntity {
-  @PrimaryGeneratedColumn()
-  movie_id: number;
+  @PrimaryColumn({ name: 'video_id' })
+  videoId: number;
 
   @Column()
   title: string;
-
-  @Column()
-  path: string;
-  
-  @Column()
-  duration: number;
-
-  @Column()
-  resolution: string;
 
   @Column()
   date: Date;
 }
 
 export class Movie {
-  movie_id: number;
+  videoId: number;
   title: string;
-  path: string;
-  duration: number;
-  resolution: string[];
   date: string;
   
   constructor(e: MovieEntity) {
-    this.movie_id = e.movie_id;
+    this.videoId = e.videoId;
     this.title = e.title;
-    this.path = e.path;
-    this.duration = e.duration;
-    this.resolution = e.resolution.split(',');
     this.date = dateToString(e.date);
   }
+  
+  static async insert(videoId: number, title: string, date: Date): Promise<void> {
+    const movie = new MovieEntity();
+    movie.videoId = videoId;
+    movie.title = title;
+    movie.date = date;
+    
+    await getConnection()
+      .getRepository(MovieEntity)
+      .save(movie);
+  }
 
-  static async get(): Promise<Movie[]> {
+  static async findAll(): Promise<Movie[]> {
     const es = await getConnection()
       .getRepository(MovieEntity)
       .createQueryBuilder()
-      .orderBy("movie_id", "DESC")
+      .orderBy("video_id", "DESC")
       .getMany();
     return es.map(e => new Movie(e));
   }
   
-  static async findById(movie_id: number): Promise<Movie | null> {
+  static async findById(videoId: number): Promise<Movie | null> {
     const e = await getConnection()
       .getRepository(MovieEntity)
       .createQueryBuilder()
-      .where('movie_id = :movie_id', { movie_id })
+      .where('video_id = :video_id', { videoId })
       .getOne();
     return (e) ? new Movie(e) : null;
   }
   
-  static async updateOne(movie_id: number, query: object) {
+  static async updateOne(videoId: number, query: object) {
     return await getConnection()
       .getRepository(MovieEntity)
       .createQueryBuilder()
       .update()
       .set(query)
-      .where('movie_id = :movie_id', { movie_id })
+      .where('video_id = :video_id', { videoId })
       .execute();
   }
 }

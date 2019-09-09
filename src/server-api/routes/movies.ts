@@ -1,14 +1,14 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
 import { ARCHIVE_PATH } from '@src/config';
-import { Movie } from '@src/entity';
-import { getVideoFromDirPath, Video } from '@src/fs';
+import { MovieDetail } from '@src/entity';
+import { getVideoFromFilePath, Video } from '@src/fs';
 
 const router: Router = Router();
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
-  Movie.get()
-    .then((movies: Movie[]) => {
+  MovieDetail.findAll()
+    .then((movies: MovieDetail[]) => {
       res.status(200);
       res.json(movies);
     })
@@ -22,10 +22,10 @@ router.get('/:movie_id', (req: Request, res: Response, next: NextFunction) => {
   // TODO 숫자가 아닐 경우 대처
 
   (async function() {
-    const movie: Movie | null = await Movie.findById(movieId);
+    const movie: MovieDetail | null = await MovieDetail.findById(movieId);
     
     if (movie) {
-      const video: Video = await getVideoFromDirPath(movie.path, ARCHIVE_PATH);
+      const video: Video = await getVideoFromFilePath(movie.path, ARCHIVE_PATH);
       video.title = movie.title;
       
       res.status(200);

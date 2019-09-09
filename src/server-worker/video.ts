@@ -1,11 +1,10 @@
 import { createConnection } from 'typeorm';
 import { extname } from 'path';
-import { promises as fsPromises } from 'fs';
 
 import { Video } from '@src/entity';
 import { fs, ffprobe } from '@src/utils';
 
-const paths = ['/archive/TV_Programs'];
+const paths = ['/archive/Movies', '/archive/TV_Programs'];
 
 export async function start() {
   for(const path of paths) {
@@ -20,6 +19,12 @@ async function startFolder(folderPath: String) {
     const ext = extname(path);
     
     if(ext === '.mp4') {
+      const already: Video | null = await Video.findByPath(path);
+      
+      if(already) {
+        continue;
+      }
+      
       const probed: ffprobe.FFProbeVideo = await ffprobe.ffprobeVideo(path);
       
       const video = new Video();
@@ -29,7 +34,6 @@ async function startFolder(folderPath: String) {
       video.height = probed.height;
       video.bitrate = probed.bitrate;
       video.size = probed.size;
-      video.date = (await fsPromises.stat(path)).ctime;
       
       Video.insert(video);
       

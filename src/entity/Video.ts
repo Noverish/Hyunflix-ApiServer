@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
-import { dateToString } from '@src/utils/date';
 
 @Entity({ name: 'videos' })
 export class Video {
@@ -23,13 +22,18 @@ export class Video {
 
   @Column()
   size: number;
-
-  @Column()
-  date: Date;
   
   static async insert(video: Video): Promise<void> {
     await getConnection()
       .getRepository(Video)
       .save(video);
+  }
+  
+  static async findByPath(path: string): Promise<Video | null> {
+    return await getConnection()
+      .getRepository(Video)
+      .createQueryBuilder()
+      .where('path = :path', { path })
+      .getOne();
   }
 }

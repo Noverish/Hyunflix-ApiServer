@@ -33,7 +33,7 @@ export async function walkDir(path): Promise<string[]> {
       const filePath = join(dirPath, file);
       const stat = await fsPromises.stat(filePath);
       if(stat.isDirectory()) {
-        dirList.push(dirPath);
+        dirList.push(filePath);
         toGoList.push(filePath);
       }
     }
