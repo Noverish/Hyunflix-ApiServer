@@ -3,11 +3,12 @@ import { createConnection } from 'typeorm';
 import * as socketio from 'socket.io-client';
 import * as fs from 'fs';
 
+import { ARCHIVE_PATH } from '@src/config';
 import { ffprobeVideo, FFProbeVideo } from '@src/utils/ffprobe';
 import { FFMpegStatus, default as ffmpeg } from '@src/utils/ffmpeg';
 import { Encode } from '@src/entity';
 
-const socket = socketio.connect("http://localhost:8080", { path: '/socket.io/ffmpeg' });
+const socket = socketio.connect(`http://${process.env.BACKEND_HOST || 'localhost'}`, { path: '/socket.io/ffmpeg' });
 
 socket.on('connect_error', () => {
   console.log(new Date().toLocaleString(), 'connect_error');
@@ -28,27 +29,30 @@ async function encodeIfExists() {
     const outpath: string = (inpath === queued.outpath)
       ? parse(inpath).dir + '/' + parse(inpath).name + '.tmp.mp4'
       : queued.outpath;
+      
+    const realInPath = join(ARCHIVE_PATH, inpath);
+    const realOutPath = (outpath === '/dev/null') ? outpath : join(ARCHIVE_PATH, outpath);
     
-    const probed: FFProbeVideo = await ffprobeVideo(inpath);
+    const probed: FFProbeVideo = await ffprobeVideo(realInPath);
     
-    const newArgs = ['-i', inpath, ...args, outpath];
+    const newArgs = ['-i', realInPath, ...args, realOutPath];
     
     await ffmpeg(newArgs, (status: FFMpegStatus) => {
       const progress = status.frame / probed.frame * 100;
-      Encode.updateProgress(queued._id, progress);
+      Encode.updateProgress(queued.encodeId, progress);
       console.log(new Date().toLocaleString(), basename(queued.inpath), progress);
       const payload = {
-        _id: queued._id,
-        progress: progress
+        encodeId: queued.encodeId,
+        progress: progress,
       }
       socket.send(JSON.stringify(payload));
     })
 
-    Encode.updateProgress(queued._id, 100);
+    Encode.updateProgress(queued.encodeId, 100);
     
     if(queued.inpath === queued.outpath) {
-      fs.unlinkSync(inpath);
-      fs.renameSync(outpath, inpath);
+      fs.unlinkSync(realInPath);
+      fs.renameSync(realOutPath, realInPath);
     }
   }
 

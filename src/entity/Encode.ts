@@ -1,7 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
 
+import { dateToString } from '@src/utils/date';
+
 @Entity({ name: 'encode' })
-export class Encode {
+export class EncodeEntity {
   @PrimaryGeneratedColumn()
   _id: number;
 
@@ -19,27 +21,47 @@ export class Encode {
 
   @Column()
   date: Date;
+}
+
+export class Encode {
+  encodeId: number;
+  inpath: string;
+  outpath: string;
+  options: string;
+  progress: number;
+  date: string;
+  
+  constructor(e: EncodeEntity) {
+    this.encodeId = e._id;
+    this.inpath = e.inpath;
+    this.outpath = e.outpath;
+    this.options = e.options;
+    this.progress = e.progress;
+    this.date = dateToString(e.date);
+  }
 
   static async findAll(): Promise<Encode[]> {
-    return await getConnection()
-      .getRepository(Encode)
+    const entities = await getConnection()
+      .getRepository(EncodeEntity)
       .createQueryBuilder()
       .orderBy("_id", "DESC")
       .getMany();
+    return entities.map(e => new Encode(e));
   }
 
   static async findNotDone(): Promise<Encode[]> {
-    return await getConnection()
-      .getRepository(Encode)
+    const entities = await getConnection()
+      .getRepository(EncodeEntity)
       .createQueryBuilder()
       .where('progress < 100')
       .getMany();
+    return entities.map(e => new Encode(e));
   }
 
   static async updateProgress(_id: number, progress: number) {
     return await getConnection()
       .createQueryBuilder()
-      .update(Encode)
+      .update(EncodeEntity)
       .set({ progress })
       .where('_id = :_id', { _id })
       .execute();
@@ -49,7 +71,7 @@ export class Encode {
     return await getConnection()
       .createQueryBuilder()
       .insert()
-      .into(Encode)
+      .into(EncodeEntity)
       .values({ inpath, outpath, options, date: new Date() })
       .execute();
   }
