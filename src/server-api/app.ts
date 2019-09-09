@@ -11,6 +11,7 @@ import auth, { validateToken } from './routes/auth';
 import encode from './routes/encode';
 import explorer from './routes/explorer';
 import musics from './routes/musics';
+import tvPrograms from './routes/tv-programs';
 
 const app = express();
 const port = parseInt(process.env.PORT) || 80;
@@ -31,6 +32,7 @@ app.use('/movies', movies);
 app.use('/encode', encode);
 app.use('/explorer', explorer);
 app.use('/musics', musics);
+app.use('/tv-programs', tvPrograms);
 
 app.use((req, res, next) => {
   res.status(404);

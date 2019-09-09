@@ -5,6 +5,7 @@ export { Encode } from './Encode';
 export { Music } from './Music';
 export { Video } from './Video';
 export { MovieDetail } from './MovieDetail';
+export { TVProgram } from './TVProgram';
 
 import { Request, Response, NextFunction } from 'express';
 import { getConnection, createConnection } from 'typeorm';
