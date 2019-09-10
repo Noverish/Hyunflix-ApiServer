@@ -6,6 +6,8 @@ export { Music } from './Music';
 export { Video } from './Video';
 export { MovieDetail } from './MovieDetail';
 export { TVProgram } from './TVProgram';
+export { VideoArticle } from './VideoArticle';
+export { VideoArticleView } from './VideoArticleView';
 
 import { Request, Response, NextFunction } from 'express';
 import { getConnection, createConnection } from 'typeorm';

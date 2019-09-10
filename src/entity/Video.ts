@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
 
-@Entity({ name: 'videos' })
+@Entity({ name: 'Video' })
 export class Video {
   @PrimaryGeneratedColumn({ name: 'video_id' })
   videoId: number;
@@ -27,6 +27,13 @@ export class Video {
     await getConnection()
       .getRepository(Video)
       .save(video);
+  }
+  
+  static async findAll(): Promise<Video[]> {
+    return await getConnection()
+      .getRepository(Video)
+      .createQueryBuilder()
+      .getMany();
   }
   
   static async findByPath(path: string): Promise<Video | null> {

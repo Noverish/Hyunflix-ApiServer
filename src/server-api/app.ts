@@ -8,6 +8,7 @@ import { consoleLogger, fileLogger } from '@src/utils/logger';
 import { initTypeORM } from '@src/entity'
 import movies from './routes/movies';
 import auth, { validateToken } from './routes/auth';
+import articles from './routes/articles';
 import encode from './routes/encode';
 import explorer from './routes/explorer';
 import musics from './routes/musics';
@@ -28,6 +29,7 @@ app.use(fileLogger);
 app.use(initTypeORM);
 app.use(validateToken);
 app.use('/auth', auth);
+app.use('/articles', articles);
 app.use('/movies', movies);
 app.use('/encode', encode);
 app.use('/explorer', explorer);
