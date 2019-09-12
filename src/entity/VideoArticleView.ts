@@ -43,4 +43,12 @@ export class VideoArticleView {
       .createQueryBuilder()
       .getMany();
   }
+  
+  static async findById(articleId: number): Promise<VideoArticleView | null> {
+    return await getConnection()
+      .getRepository(VideoArticleView)
+      .createQueryBuilder()
+      .where('article_id = :articleId', { articleId })
+      .getOne();
+  }
 }

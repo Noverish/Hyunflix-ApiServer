@@ -1,11 +1,8 @@
-export { Movie } from './Movie';
 export { User } from './User';
 export { RegCode } from './RegCode';
 export { Encode } from './Encode';
 export { Music } from './Music';
 export { Video } from './Video';
-export { MovieDetail } from './MovieDetail';
-export { TVProgram } from './TVProgram';
 export { VideoArticle } from './VideoArticle';
 export { VideoArticleView } from './VideoArticleView';
 

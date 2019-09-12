@@ -5,14 +5,9 @@ import * as cookieParser from 'cookie-parser';
 import 'reflect-metadata';
 
 import { consoleLogger, fileLogger } from '@src/utils/logger';
-import { initTypeORM } from '@src/entity'
-import movies from './routes/movies';
-import auth, { validateToken } from './routes/auth';
-import articles from './routes/articles';
-import encode from './routes/encode';
-import explorer from './routes/explorer';
-import musics from './routes/musics';
-import tvPrograms from './routes/tv-programs';
+import { initTypeORM } from '@src/entity';
+import { validateToken } from '@src/server-api/routes/auth';
+import routes from './routes';
 
 const app = express();
 const port = parseInt(process.env.PORT) || 80;
@@ -28,13 +23,7 @@ app.use(fileLogger);
 
 app.use(initTypeORM);
 app.use(validateToken);
-app.use('/auth', auth);
-app.use('/articles', articles);
-app.use('/movies', movies);
-app.use('/encode', encode);
-app.use('/explorer', explorer);
-app.use('/musics', musics);
-app.use('/tv-programs', tvPrograms);
+app.use('/', routes);
 
 app.use((req, res, next) => {
   res.status(404);
