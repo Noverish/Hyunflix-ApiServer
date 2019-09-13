@@ -17,8 +17,8 @@ morgan.token('date', (req, res) => {
   return moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
 });
 
-morgan.token('user_id', (req, res) => {
-  return (req.user_id) ? req.user_id : undefined;
+morgan.token('user-id', (req, res) => {
+  return (req.userId) ? req.userId : undefined;
 })
 
 function fileName(time: Date | null, index: number): string {
@@ -29,7 +29,7 @@ function fileName(time: Date | null, index: number): string {
   }
 }
 
-const consoleFormat = '[:date] <:remote-addr> :user_id - :method :status :response-time ms ":url"';
+const consoleFormat = '[:date] <:remote-addr> :user-id - :method :status :response-time ms ":url"';
 export const consoleLogger = morgan(consoleFormat);
 
 const logDirectory = path.join(__dirname, '../../logs');
@@ -40,7 +40,7 @@ const accessLogStream = rfs(fileName, {
   immutable: true,
 });
 
-const fileFormat = '[:date] <:remote-addr> :user_id - :method :status :response-time ms ":url" ":user-agent"';
+const fileFormat = '[:date] <:remote-addr> :user-id - :method :status :response-time ms ":url" ":user-agent"';
 export const fileLogger = morgan(fileFormat, {
   stream: accessLogStream,
   skip: function (req, res) {

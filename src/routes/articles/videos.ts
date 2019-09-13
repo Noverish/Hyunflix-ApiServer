@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { join, relative } from 'path';
 
 import { VideoArticleView } from '@src/entity';
-import { fs } from '@src/utils';
+import * as fs from '@src/utils/fs';
 import { ARCHIVE_PATH, FILE_SERVER } from '@src/config';
 
 const router: Router = Router();

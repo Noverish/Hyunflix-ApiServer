@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
 import { ARCHIVE_PATH } from '@src/config';
-import { getFileList, File, getVideoFromFilePath, Video, isdir, exists, rename } from '@src/fs';
+import { readdir, File, getVideoFromFilePath, Video, isdir, exists, rename } from '@src/fs';
 
 const router: Router = Router();
 
@@ -9,7 +9,7 @@ router.post('/readdir', (req: Request, res: Response, next: NextFunction) => {
   const path = req.body['path'];
   
   (async function () {
-    let files: File[] = await getFileList(path, ARCHIVE_PATH);
+    let files: File[] = await readdir(path, ARCHIVE_PATH);
     
     res.status(200);
     res.json(files);

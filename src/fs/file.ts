@@ -34,7 +34,7 @@ export async function rename(fromPath: string, toPath: string, root: string) {
   return await fsPromises.rename(realFromPath, realToPath);
 }
 
-export async function getFileList(path: string, root: string): Promise<File[]> {
+export async function readdir(path: string, root: string): Promise<File[]> {
   const realPath = join(root, path);
   try {
     await fsPromises.access(realPath, fs.constants.R_OK | fs.constants.W_OK);

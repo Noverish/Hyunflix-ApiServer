@@ -1,26 +1,22 @@
 import * as express from 'express';
 import * as cors from 'cors';
 import * as http from 'http';
-import * as cookieParser from 'cookie-parser';
 import 'reflect-metadata';
 
+import { PORT } from '@src/config';
 import { consoleLogger, fileLogger } from '@src/utils/logger';
 import { initTypeORM } from '@src/entity';
-import { validateToken } from '@src/server-api/routes/auth';
+import { validateToken } from '@src/middlewares/validate-token';
 import routes from './routes';
 
 const app = express();
-const port = parseInt(process.env.PORT) || 80;
 
-app.set('port', port);
+app.set('port', PORT);
 
 app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
-
 app.use(consoleLogger);
 app.use(fileLogger);
-
 app.use(initTypeORM);
 app.use(validateToken);
 app.use('/', routes);
@@ -40,6 +36,6 @@ app.use((err, req, res, next) => {
 
 export const server: http.Server = http.createServer(app);
 
-server.listen(port, () => {
-  console.log(`API Server Started at ${port}`);
+server.listen(PORT, () => {
+  console.log(`* API Server Started at ${PORT}`);
 });
