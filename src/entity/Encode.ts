@@ -49,24 +49,6 @@ export class Encode {
     return entities.map(e => new Encode(e));
   }
 
-  static async findNotDone(): Promise<Encode[]> {
-    const entities = await getConnection()
-      .getRepository(EncodeEntity)
-      .createQueryBuilder()
-      .where('progress < 100')
-      .getMany();
-    return entities.map(e => new Encode(e));
-  }
-
-  static async updateProgress(_id: number, progress: number) {
-    return await getConnection()
-      .createQueryBuilder()
-      .update(EncodeEntity)
-      .set({ progress })
-      .where('_id = :_id', { _id })
-      .execute();
-  }
-
   static async insert(inpath: string, outpath: string, options: string) {
     return await getConnection()
       .createQueryBuilder()

@@ -43,8 +43,3 @@ export const server: http.Server = http.createServer(app);
 server.listen(port, () => {
   console.log(`API Server Started at ${port}`);
 });
-
-import * as ApiSocket from './sockets/api';
-import * as FFmpegSocket from './sockets/ffmpeg';
-ApiSocket.init();
-FFmpegSocket.init();

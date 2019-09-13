@@ -1,4 +1,4 @@
-import * as subprocess from '@src/utils/subprocess';
+import { exec } from '@src/utils/child-process';
 
 export interface FFProbeVideo {
   duration: number;
@@ -14,9 +14,7 @@ export interface FFProbeAudio {
 }
 
 export async function ffprobeVideo(path: string): Promise<FFProbeVideo> {
-  const result = await subprocess.spawn('ffprobe', [
-    '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', path
-  ])
+  const result = await exec(`ffprobe -v quiet -print_format json -show_format -show_streams '${path}'`);
   
   const info = JSON.parse(result)
   const stream = info['streams'].find(s => s['codec_type'] === 'video');
@@ -40,9 +38,7 @@ export async function ffprobeVideo(path: string): Promise<FFProbeVideo> {
 }
 
 export async function ffprobeAudio(path: string): Promise<FFProbeAudio> {
-  const result = await subprocess.spawn('ffprobe', [
-    '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', path
-  ])
+  const result = await exec(`ffprobe -v quiet -print_format json -show_format -show_streams '${path}'`);
   
   const info = JSON.parse(result)
   const stream = info['streams'][0];
