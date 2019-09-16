@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
 
 import { FILE_SERVER } from '@src/config';
 
-@Entity({ name: 'musics' })
+@Entity({ name: 'Music' })
 export class MusicEntity {
   @PrimaryGeneratedColumn({ name: 'music_id' })
   musicId: number;
@@ -40,7 +40,7 @@ export class Music {
   static async truncate() {
     return await getConnection()
       .getRepository(MusicEntity)
-      .query('TRUNCATE musics');
+      .query('TRUNCATE Music');
   }
   
   static async insertOne(title: string, path: string, duration: number, artist: string) {

@@ -38,7 +38,7 @@ export async function ffprobeVideo(path: string): Promise<FFProbeVideo> {
 }
 
 export async function ffprobeAudio(path: string): Promise<FFProbeAudio> {
-  const result = await exec(`ffprobe -v quiet -print_format json -show_format -show_streams '${path}'`);
+  const result = await exec(`ffprobe -v quiet -print_format json -show_format -show_streams "${path}"`);
   
   const info = JSON.parse(result)
   const stream = info['streams'][0];

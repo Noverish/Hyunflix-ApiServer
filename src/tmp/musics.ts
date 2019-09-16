@@ -1,7 +1,7 @@
 import { createConnection } from 'typeorm';
 import { extname, basename } from 'path';
 
-import { fs } from '@src/utils';
+import * as fs from '@src/utils/fs';
 import { Music } from '@src/entity';
 import { ffprobeAudio } from '@src/utils/ffprobe';
 
@@ -20,7 +20,7 @@ import { ffprobeAudio } from '@src/utils/ffprobe';
     const name = basename(filePath, ext);
     
     const duration = (await ffprobeAudio(filePath)).duration;
-    await Music.insertOne(name, filePath, duration, '');
+    await Music.insertOne(name, filePath.replace('/archive', ''), duration, '');
     console.log(name, duration);
   }
 })().then(() => {

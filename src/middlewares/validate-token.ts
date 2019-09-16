@@ -34,7 +34,7 @@ export function validateToken(req: Request, res: Response, next: NextFunction) {
       next();
     } else if (authRes.statusCode === 401) {
       res.status(401);
-      res.json({ msg: '인증이 필요합니다' });
+      res.json({ msg: '로그인이 필요합니다' });
     } else {
       res.status(500);
       res.json(authRes.body);

@@ -41,6 +41,7 @@ export class VideoArticleView {
     return await getConnection()
       .getRepository(VideoArticleView)
       .createQueryBuilder()
+      .orderBy('article_id', 'DESC')
       .getMany();
   }
   

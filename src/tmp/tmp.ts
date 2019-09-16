@@ -1,29 +1,33 @@
-import { Movie } from '@src/entity';
-import { createConnection } from 'typeorm';
-import { promises } from 'fs';
-import { extname, join, basename } from 'path';
+import { promises as fsPromises } from 'fs';
+import { dirname, join, basename } from 'path';
+import { walk } from '@src/utils/fs';
 
 (async function() {
-  const conn = await createConnection();
-  const movies: Movie[] = await Movie.get();
+  const ROOT = '/archive/Musics/가요';
   
-  for(const movie of movies) {
-    const files = await promises.readdir(movie.path);
-      
-    const resolutions: string[] = []
-    
-    for(const file of files) {
-      const path = join(movie.path, file);
-      const ext = extname(file);
-      
-      if(ext === '.mp4') {
-        const name = basename(file, ext);
-        
-        resolutions.push(name);
-      }
+  const filePaths = await walk(ROOT);
+  
+  for (const filePath of filePaths) {
+    const parent = basename(dirname(filePath));
+    if(parent !== '가요') {
+      continue;
     }
     
-    await Movie.updateOne(movie.movie_id, { resolution: resolutions.join(',') })
+    const name = basename(filePath);
+    
+    const artist = name.split(' - ')[0];
+    const artistFolderPath = join('/archive/Musics/가요', artist);
+    
+    try {
+      await fsPromises.access(artistFolderPath);
+    } catch (err) {
+      console.log('mkdir', artistFolderPath);
+      await fsPromises.mkdir(artistFolderPath);
+    }
+    
+    console.log('rename', filePath, join(dirname(filePath), artist, name));
+    await fsPromises.rename(filePath, join(dirname(filePath), artist, name));
+    
+    // console.log(artist, name);
   }
-  
 })();
