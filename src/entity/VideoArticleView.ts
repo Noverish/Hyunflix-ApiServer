@@ -35,7 +35,7 @@ export class VideoArticleView {
   bitrate: number;
 
   @Column()
-  size: number;
+  size: string;
   
   static async findAll() {
     return await getConnection()

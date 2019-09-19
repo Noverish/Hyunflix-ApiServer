@@ -46,6 +46,7 @@ function processArticle(article: VideoArticleView) {
     ...article,
     url: FILE_SERVER + '/' + relative(ARCHIVE_PATH, article.path),
     date: dateToString(article.date),
+    size: parseInt(article.size),
   }
   delete tmp['path'];
   return tmp;
