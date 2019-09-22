@@ -31,6 +31,7 @@ export function validateToken(req: Request, res: Response, next: NextFunction) {
     
     if(authRes.statusCode === 204) {
       req['userId'] = authRes.headers['x-hyunsub-userid'];
+      req['authority'] = authRes.headers['x-hyunsub-authority'].toString().split(', ');
       next();
     } else if (authRes.statusCode === 401) {
       res.status(401);

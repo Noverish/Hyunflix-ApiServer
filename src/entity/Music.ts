@@ -1,9 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
 
-import { FILE_SERVER } from '@src/config';
-
 @Entity({ name: 'Music' })
-export class MusicEntity {
+export class Music {
   @PrimaryGeneratedColumn({ name: 'music_id' })
   musicId: number;
 
@@ -18,45 +16,42 @@ export class MusicEntity {
 
   @Column()
   artist: string;
-}
-
-export class Music {
-  musicId: number;
-  title: string;
-  path: string;
-  duration: number;
-  artist: string;
-  url: string;
   
-  constructor(e: MusicEntity) {
-    this.musicId = e.musicId;
-    this.title = e.title;
-    this.path = e.path;
-    this.duration = e.duration;
-    this.artist = e.artist;
-    this.url = FILE_SERVER + e.path;
-  }
+  @Column()
+  tags: string;
+  
+  @Column()
+  authority: string;
   
   static async truncate() {
     return await getConnection()
-      .getRepository(MusicEntity)
+      .getRepository(Music)
       .query('TRUNCATE Music');
   }
   
-  static async insertOne(title: string, path: string, duration: number, artist: string) {
+  static async insertOne(title: string, path: string, duration: number, artist: string, tags: string, authority: string) {
     return await getConnection()
       .createQueryBuilder()
       .insert()
-      .into(MusicEntity)
-      .values({ title, path, duration, artist })
+      .into(Music)
+      .values({ title, path, duration, artist, tags, authority })
       .execute();
   }
   
   static async findAll(): Promise<Music[]> {
-    const entities = await getConnection()
-      .getRepository(MusicEntity)
+    return await getConnection()
+      .getRepository(Music)
       .createQueryBuilder()
       .getMany();
-    return entities.map(e => new Music(e));
+  }
+  
+  static async findTags(): Promise<string[]> {
+    const tmp = await getConnection()
+      .getRepository(Music)
+      .createQueryBuilder()
+      .select('tags')
+      .groupBy('tags')
+      .getRawMany();
+    return tmp.map(t => t['tags']);
   }
 }

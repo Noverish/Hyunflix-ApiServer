@@ -44,7 +44,7 @@ export default router;
 function processArticle(article: VideoArticleView) {
   const tmp = {
     ...article,
-    url: FILE_SERVER + '/' + relative(ARCHIVE_PATH, article.path),
+    url: FILE_SERVER + article.path,
     date: dateToString(article.date),
     size: parseInt(article.size),
   }
