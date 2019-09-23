@@ -14,8 +14,16 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
     
     res.status(200);
     res.json(articles.map(a => processArticle(a)));
-  })().catch(err => next(err));
+  })().catch(next);
 })
+
+router.get('/tags', (req: Request, res: Response, next: NextFunction) => {
+  (async function() {
+    const tags: string[] = await VideoArticleView.findTags();
+    res.status(200);
+    res.json(tags);
+  })().catch(next);
+});
 
 router.get('/:articleId', (req: Request, res: Response, next: NextFunction) => {
   const articleId: number = parseInt(req.params['articleId']);
@@ -36,7 +44,7 @@ router.get('/:articleId', (req: Request, res: Response, next: NextFunction) => {
       article: processArticle(article),
       subtitles: subtitles.map(s => processSubtitle(s))
     });
-  })().catch(err => next(err));
+  })().catch(next);
 })
 
 export default router;
@@ -44,6 +52,7 @@ export default router;
 function processArticle(article: VideoArticleView) {
   const tmp = {
     ...article,
+    tags: article.tags.split(','),
     url: FILE_SERVER + article.path,
     date: dateToString(article.date),
     size: parseInt(article.size),

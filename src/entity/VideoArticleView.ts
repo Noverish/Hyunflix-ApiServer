@@ -11,7 +11,7 @@ export class VideoArticleView {
   videoId: number;
   
   @Column()
-  category: string;
+  tags: string;
 
   @Column()
   title: string;
@@ -51,5 +51,15 @@ export class VideoArticleView {
       .createQueryBuilder()
       .where('article_id = :articleId', { articleId })
       .getOne();
+  }
+  
+  static async findTags(): Promise<string[]> {
+    const tmp = await getConnection()
+      .getRepository(VideoArticleView)
+      .createQueryBuilder()
+      .select('tags')
+      .groupBy('tags')
+      .getRawMany();
+    return tmp.map(t => t['tags']);
   }
 }

@@ -11,7 +11,7 @@ export class VideoArticleEntity {
   videoId: number;
   
   @Column()
-  category: string;
+  tags: string;
 
   @Column()
   title: string;
@@ -23,24 +23,24 @@ export class VideoArticleEntity {
 export class VideoArticle {
   articleId: number;
   videoId: number;
-  category: string;
+  tags: string;
   title: string;
   date: string;
   
   constructor(e: VideoArticleEntity) {
     this.articleId = e.articleId;
     this.videoId = e.videoId;
-    this.category = e.category;
+    this.tags = e.tags;
     this.title = e.title;
     this.date = dateToString(e.date);
   }
   
-  static async insert(videoId: number, category: string, title: string, date: Date) {
+  static async insert(videoId: number, tags: string, title: string, date: Date) {
     await getConnection()
       .createQueryBuilder()
       .insert()
       .into(VideoArticleEntity)
-      .values({ videoId, category, title, date })
+      .values({ videoId, tags, title, date })
       .execute();
   }
 }
