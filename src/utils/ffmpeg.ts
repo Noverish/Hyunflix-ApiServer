@@ -29,4 +29,17 @@ export const presets = {
     '-map_chapters', '-1',
     '-y',
   ].join(' '),
+  
+  maxrate: [
+    '-c:v', 'libx264',
+    '-b:v', '2000k',
+    '-maxrate', '2000k',
+    '-bufsize', '4000k',
+    '-vf', 'scale=1280:-2',
+    '-c:a', 'aac',
+    '-b:a', '128k',
+    '-ac', '2',
+    '-map_chapters', '-1',
+    '-y',
+  ].join(' '),
 }
