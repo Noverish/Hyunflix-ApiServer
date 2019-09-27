@@ -8,7 +8,7 @@ export const presets = {
     '-f', 'mp4',
     '-an', '-y',
   ].join(' '),
-  
+
   pass2: [
     '-c:v', 'libx264',
     '-b:v', '2000k',
@@ -20,7 +20,7 @@ export const presets = {
     '-map_chapters', '-1',
     '-y',
   ].join(' '),
-  
+
   mkv2mp4: [
     '-c:v', 'copy',
     '-c:a', 'aac',
@@ -29,7 +29,7 @@ export const presets = {
     '-map_chapters', '-1',
     '-y',
   ].join(' '),
-  
+
   maxrate: [
     '-c:v', 'libx264',
     '-b:v', '2000k',
@@ -42,4 +42,4 @@ export const presets = {
     '-map_chapters', '-1',
     '-y',
   ].join(' '),
-}
+};

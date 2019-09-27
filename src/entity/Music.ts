@@ -14,26 +14,26 @@ export class Music {
 
   @Column()
   path: string;
-  
+
   @Column()
   duration: number;
 
   @Column()
   artist: string;
-  
+
   @Column()
   tags: string;
-  
+
   @Column()
   authority: string;
-  
+
   static async findAll(): Promise<Music[]> {
     return await getConnection()
       .getRepository(Music)
       .createQueryBuilder()
       .getMany();
   }
-  
+
   static async findTags(): Promise<string[]> {
     const tmp = await getConnection()
       .getRepository(Music)
@@ -43,7 +43,7 @@ export class Music {
       .getRawMany();
     return tmp.map(t => t['tags']);
   }
-  
+
   convert(): IMusic {
     return {
       musicId: this.musicId,
@@ -52,6 +52,6 @@ export class Music {
       duration: this.duration,
       artist: this.artist,
       tags: this.tags.split(','),
-    }
+    };
   }
 }

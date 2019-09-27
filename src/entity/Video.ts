@@ -12,7 +12,7 @@ export class Video {
 
   @Column()
   path: string;
-  
+
   @Column()
   duration: number;
 
@@ -25,19 +25,19 @@ export class Video {
   @Column()
   bitrate: number;
 
-  @Column("bigint")
+  @Column('bigint')
   size: string;
-  
+
   @ManyToOne(type => VideoArticle, article => article.videos)
   article: VideoArticle;
-  
+
   static async findAll(): Promise<Video[]> {
     return await getConnection()
       .getRepository(Video)
       .createQueryBuilder()
       .getMany();
   }
-  
+
   static async findByPath(path: string): Promise<Video | null> {
     return await getConnection()
       .getRepository(Video)
@@ -45,7 +45,7 @@ export class Video {
       .where('path = :path', { path })
       .getOne();
   }
-  
+
   static async findById(videoId: number): Promise<Video | null> {
     return await getConnection()
       .getRepository(Video)
@@ -53,7 +53,7 @@ export class Video {
       .where('videoId = :videoId', { videoId })
       .getOne();
   }
-  
+
   async convert(): Promise<IVideo> {
     return {
       videoId: this.videoId,
@@ -63,6 +63,6 @@ export class Video {
       height: this.height,
       bitrate: this.bitrate,
       size: this.size,
-    }
+    };
   }
 }

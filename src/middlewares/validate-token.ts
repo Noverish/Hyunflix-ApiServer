@@ -9,27 +9,27 @@ export function auth(headers): Promise<request.Response> {
       url: AUTH_URL,
       method: 'GET',
       headers: {
-        'authorization': headers['authorization'],
-        'cookie': headers['cookie'],
+        authorization: headers['authorization'],
+        cookie: headers['cookie'],
       },
     };
-    
+
     request(options, (err: any, res: request.Response, body: any) => {
       if (err) {
         reject(err);
         return;
       }
-      
+
       resolve(res);
-    })
-  })
+    });
+  });
 }
 
 export function validateToken(req: Request, res: Response, next: NextFunction) {
-  (async function() {
+  (async function () {
     const authRes: request.Response = await auth(req.headers);
-    
-    if(authRes.statusCode === 204) {
+
+    if (authRes.statusCode === 204) {
       req['userId'] = authRes.headers['x-hyunsub-userid'];
       req['authority'] = authRes.headers['x-hyunsub-authority'].toString().split(', ');
       next();
@@ -41,4 +41,4 @@ export function validateToken(req: Request, res: Response, next: NextFunction) {
       res.json(authRes.body);
     }
   })().catch(err => next(err));
-};
+}

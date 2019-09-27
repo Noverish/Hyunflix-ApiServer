@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   console.error(err);
-  if(!res.finished) {
+  if (!res.finished) {
     res.status(500);
     res.end(JSON.stringify(err, Object.getOwnPropertyNames(err), 4));
   }

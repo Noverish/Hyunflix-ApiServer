@@ -8,13 +8,13 @@ const router: Router = Router();
 router.get('/presets', (req: Request, res: Response, next: NextFunction) => {
   res.status(200);
   res.json(presets);
-})
+});
 
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
   const inpath = req.body['inpath'];
   const outpath = req.body['outpath'];
   const options = req.body['options'];
-  
+
   Encode.insert(inpath, outpath, options)
     .then(() => {
       res.status(204);
@@ -35,6 +35,5 @@ router.get('/status', (req: Request, res: Response, next: NextFunction) => {
       next(err);
     });
 });
-
 
 export default router;

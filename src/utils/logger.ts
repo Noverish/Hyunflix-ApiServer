@@ -6,11 +6,11 @@ const rfs = require('rotating-file-stream');
 
 morgan.token('remote-addr', (req, res) => {
   const ip = req.ip || req._remoteAddress || (req.connection && req.connection.remoteAddress) || undefined;
-  if(ip && typeof ip === 'string' && ip.split(':').length === 4) {
+  if (ip && typeof ip === 'string' && ip.split(':').length === 4) {
     return ip.split(':')[3];
-  } else {
-    return ip;
   }
+
+  return ip;
 });
 
 morgan.token('date', (req, res) => {
@@ -19,14 +19,14 @@ morgan.token('date', (req, res) => {
 
 morgan.token('user-id', (req, res) => {
   return (req.userId) ? req.userId : undefined;
-})
+});
 
 function fileName(time: Date | null, index: number): string {
   if (time) {
     return `${moment(time).format('YYYY-MM-DD')}.log`;
-  } else {
-    return `${moment().format('YYYY-MM-DD')}.log`;
   }
+
+  return `${moment().format('YYYY-MM-DD')}.log`;
 }
 
 const consoleFormat = '[:date] <:remote-addr> :user-id - :method :status :response-time ms ":url"';
@@ -43,10 +43,10 @@ const accessLogStream = rfs(fileName, {
 const fileFormat = '[:date] <:remote-addr> :user-id - :method :status :response-time ms ":url" ":user-agent"';
 export const fileLogger = morgan(fileFormat, {
   stream: accessLogStream,
-  skip: function (req, res) {
+  skip (req, res) {
     if (req.user_id) {
       return req.user_id === 1 || req.user_id === 4;
     }
-    return false
-  }
+    return false;
+  },
 });

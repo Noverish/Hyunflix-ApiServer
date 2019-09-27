@@ -17,6 +17,6 @@ export function initTypeORM(req: Request, res: Response, next: NextFunction) {
       })
       .catch((err2) => {
         next(err2);
-      })
+      });
   }
 }
