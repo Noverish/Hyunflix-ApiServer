@@ -1,8 +1,12 @@
 import { Entity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
+import { relative } from 'path';
 
-@Entity({ name: 'Music' })
+import { IMusic } from '@src/models';
+import { ARCHIVE_PATH, FILE_SERVER } from '@src/config';
+
+@Entity()
 export class Music {
-  @PrimaryGeneratedColumn({ name: 'music_id' })
+  @PrimaryGeneratedColumn()
   musicId: number;
 
   @Column()
@@ -23,21 +27,6 @@ export class Music {
   @Column()
   authority: string;
   
-  static async truncate() {
-    return await getConnection()
-      .getRepository(Music)
-      .query('TRUNCATE Music');
-  }
-  
-  static async insertOne(title: string, path: string, duration: number, artist: string, tags: string, authority: string) {
-    return await getConnection()
-      .createQueryBuilder()
-      .insert()
-      .into(Music)
-      .values({ title, path, duration, artist, tags, authority })
-      .execute();
-  }
-  
   static async findAll(): Promise<Music[]> {
     return await getConnection()
       .getRepository(Music)
@@ -53,5 +42,16 @@ export class Music {
       .groupBy('tags')
       .getRawMany();
     return tmp.map(t => t['tags']);
+  }
+  
+  convert(): IMusic {
+    return {
+      musicId: this.musicId,
+      title: this.title,
+      url: FILE_SERVER + '/' + relative(ARCHIVE_PATH, this.path),
+      duration: this.duration,
+      artist: this.artist,
+      tags: this.tags.split(','),
+    }
   }
 }

@@ -1,8 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, getConnection } from 'typeorm';
+import { relative } from 'path';
 
-@Entity({ name: 'Video' })
+import { VideoArticle } from '@src/entity';
+import { IVideo } from '@src/models';
+import { ARCHIVE_PATH, FILE_SERVER } from '@src/config';
+
+@Entity()
 export class Video {
-  @PrimaryGeneratedColumn({ name: 'video_id' })
+  @PrimaryGeneratedColumn()
   videoId: number;
 
   @Column()
@@ -20,14 +25,11 @@ export class Video {
   @Column()
   bitrate: number;
 
-  @Column()
-  size: number;
+  @Column("bigint")
+  size: string;
   
-  static async insert(video: Video): Promise<void> {
-    await getConnection()
-      .getRepository(Video)
-      .save(video);
-  }
+  @ManyToOne(type => VideoArticle, article => article.videos)
+  article: VideoArticle;
   
   static async findAll(): Promise<Video[]> {
     return await getConnection()
@@ -48,7 +50,19 @@ export class Video {
     return await getConnection()
       .getRepository(Video)
       .createQueryBuilder()
-      .where('video_id = :videoId', { videoId })
+      .where('videoId = :videoId', { videoId })
       .getOne();
+  }
+  
+  async convert(): Promise<IVideo> {
+    return {
+      videoId: this.videoId,
+      url: FILE_SERVER + '/' + relative(ARCHIVE_PATH, this.path),
+      duration: this.duration,
+      width: this.width,
+      height: this.height,
+      bitrate: this.bitrate,
+      size: this.size,
+    }
   }
 }

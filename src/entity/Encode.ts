@@ -1,11 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
 
-import { dateToString } from '@src/utils/date';
-
-@Entity({ name: 'encode' })
-export class EncodeEntity {
+@Entity()
+export class Encode {
   @PrimaryGeneratedColumn()
-  _id: number;
+  encodeId: number;
 
   @Column()
   inpath: string;
@@ -16,44 +14,25 @@ export class EncodeEntity {
   @Column()
   options: string;
 
-  @Column()
+  @Column("float", { default: 0 })
   progress: number;
 
   @Column()
   date: Date;
-}
-
-export class Encode {
-  encodeId: number;
-  inpath: string;
-  outpath: string;
-  options: string;
-  progress: number;
-  date: string;
   
-  constructor(e: EncodeEntity) {
-    this.encodeId = e._id;
-    this.inpath = e.inpath;
-    this.outpath = e.outpath;
-    this.options = e.options;
-    this.progress = e.progress;
-    this.date = dateToString(e.date);
-  }
-
   static async findAll(): Promise<Encode[]> {
-    const entities = await getConnection()
-      .getRepository(EncodeEntity)
+    return await getConnection()
+      .getRepository(Encode)
       .createQueryBuilder()
-      .orderBy("_id", "DESC")
+      .orderBy("encodeId", "DESC")
       .getMany();
-    return entities.map(e => new Encode(e));
   }
-
+  
   static async insert(inpath: string, outpath: string, options: string) {
     return await getConnection()
       .createQueryBuilder()
       .insert()
-      .into(EncodeEntity)
+      .into(Encode)
       .values({ inpath, outpath, options, date: new Date() })
       .execute();
   }

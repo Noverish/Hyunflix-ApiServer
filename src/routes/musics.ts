@@ -15,7 +15,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
       }
       
       res.status(200);
-      res.json(musics.map(m => processMusic(m)));
+      res.json(musics.map(m => m.convert()));
     })
     .catch((err) => {
       next(err);
@@ -37,13 +37,3 @@ router.get('/tags', (req: Request, res: Response, next: NextFunction) => {
 })
 
 export default router;
-
-function processMusic(music: Music) {
-  const tmp = {
-    ...music,
-    url: FILE_SERVER + music.path,
-    tags: music.tags.split(','),
-  }
-  delete tmp['authority'];
-  return tmp;
-}

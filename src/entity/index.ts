@@ -2,7 +2,6 @@ export { Encode } from './Encode';
 export { Music } from './Music';
 export { Video } from './Video';
 export { VideoArticle } from './VideoArticle';
-export { VideoArticleView } from './VideoArticleView';
 
 import { Request, Response, NextFunction } from 'express';
 import { getConnection, createConnection } from 'typeorm';
