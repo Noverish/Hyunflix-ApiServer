@@ -1,9 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, getConnection } from 'typeorm';
-import { relative } from 'path';
 
 import { VideoArticle } from '@src/entity';
 import { IVideo } from '@src/models';
-import { ARCHIVE_PATH, FILE_SERVER } from '@src/config';
+import { pathToURL } from '@src/utils';
 
 @Entity()
 export class Video {
@@ -42,7 +41,7 @@ export class Video {
   convert(): IVideo {
     return {
       videoId: this.videoId,
-      url: FILE_SERVER + '/' + relative(ARCHIVE_PATH, this.path),
+      url: pathToURL(this.path),
       duration: this.duration,
       width: this.width,
       height: this.height,

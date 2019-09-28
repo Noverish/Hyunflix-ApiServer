@@ -9,7 +9,7 @@ import { ARCHIVE_PATH } from '@src/config';
 const router: Router = Router();
 
 router.get('/:videoId', (req: Request, res: Response, next: NextFunction) => {
-  const videoId: number = parseInt(req.params['videoId']);
+  const videoId: number = parseInt(req.params['videoId'], 10);
 
   (async function () {
     const video: Video | null = await Video.findById(videoId);
@@ -28,7 +28,7 @@ router.get('/:videoId', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get('/:videoId/subtitles', (req: Request, res: Response, next: NextFunction) => {
-  const videoId: number = parseInt(req.params['videoId']);
+  const videoId: number = parseInt(req.params['videoId'], 10);
 
   (async function () {
     const video: Video | null = await Video.findById(videoId);

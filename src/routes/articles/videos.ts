@@ -28,7 +28,7 @@ router.get('/tags', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get('/:articleId', (req: Request, res: Response, next: NextFunction) => {
-  const articleId: number = parseInt(req.params['articleId']);
+  const articleId: number = parseInt(req.params['articleId'], 10);
 
   (async function () {
     const article: VideoArticle | null = await VideoArticle.findById(articleId);

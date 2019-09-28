@@ -1,6 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
-import { ARCHIVE_PATH } from '@src/config';
 import { readdir, isdir, exists, rename } from '@src/fs';
 import { File } from '@src/models';
 import { checkAdmin } from '@src/middlewares/check-admin';
@@ -11,7 +10,7 @@ router.post('/readdir', checkAdmin, (req: Request, res: Response, next: NextFunc
   (async function () {
     const path = req.body['path'];
 
-    const files: File[] = await readdir(path, ARCHIVE_PATH);
+    const files: File[] = await readdir(path);
 
     res.status(200);
     res.json(files);
@@ -23,7 +22,7 @@ router.post('/rename', checkAdmin, (req: Request, res: Response, next: NextFunct
     const fromPath = req.body['fromPath'];
     const toPath = req.body['toPath'];
 
-    await rename(fromPath, toPath, ARCHIVE_PATH);
+    await rename(fromPath, toPath);
 
     res.status(204);
     res.end();
@@ -35,7 +34,7 @@ router.post('/isdir', checkAdmin, (req: Request, res: Response, next: NextFuncti
     const path = req.body['path'];
 
     res.status(200);
-    res.json({ isdir: await isdir(path, ARCHIVE_PATH) });
+    res.json({ isdir: await isdir(path) });
   })().catch(next);
 });
 
@@ -44,7 +43,7 @@ router.post('/exists', checkAdmin, (req: Request, res: Response, next: NextFunct
     const path = req.body['path'];
 
     res.status(200);
-    res.json({ exists: await exists(path, ARCHIVE_PATH) });
+    res.json({ exists: await exists(path) });
   })().catch(next);
 });
 

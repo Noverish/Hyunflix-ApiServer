@@ -1,3 +1,6 @@
+import { relative } from 'path';
+import { ARCHIVE_PATH, FILE_SERVER } from '@src/config';
+
 export function dateToString(date: Date) {
   const year = leadingZeros(date.getFullYear(), 4);
   const month = leadingZeros(date.getMonth() + 1, 2);
@@ -18,4 +21,12 @@ function leadingZeros(num: number, digits: number) {
     }
   }
   return zero + n;
+}
+
+export function pathToURL(path: string): string {
+  const uri = path.startsWith(ARCHIVE_PATH)
+    ? `/${relative(ARCHIVE_PATH, path)}`
+    : path;
+
+  return FILE_SERVER + uri;
 }

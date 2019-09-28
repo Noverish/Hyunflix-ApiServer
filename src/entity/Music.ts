@@ -1,8 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
-import { relative } from 'path';
 
 import { IMusic } from '@src/models';
-import { ARCHIVE_PATH, FILE_SERVER } from '@src/config';
+import { pathToURL } from '@src/utils';
 
 @Entity()
 export class Music {
@@ -38,7 +37,7 @@ export class Music {
     return {
       musicId: this.musicId,
       title: this.title,
-      url: FILE_SERVER + '/' + relative(ARCHIVE_PATH, this.path),
+      url: pathToURL(this.path),
       duration: this.duration,
       artist: this.artist,
       tags: this.tags.split(','),

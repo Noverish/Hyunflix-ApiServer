@@ -1,13 +1,14 @@
 import * as prettyBytes from 'pretty-bytes';
 import * as fs from 'fs';
-import { join, parse } from 'path';
+import { join } from 'path';
 
-import { FILE_SERVER } from '@src/config';
+import { ARCHIVE_PATH } from '@src/config';
 import { File } from '@src/models';
+import { pathToURL } from '@src/utils';
 const fsPromises = fs.promises;
 
-export async function exists(path: string, root: string): Promise<boolean> {
-  const realPath = join(root, path);
+export async function exists(path: string): Promise<boolean> {
+  const realPath = join(ARCHIVE_PATH, path);
   try {
     await fsPromises.access(realPath, fs.constants.R_OK);
     return true;
@@ -16,19 +17,19 @@ export async function exists(path: string, root: string): Promise<boolean> {
   }
 }
 
-export async function isdir(path: string, root: string): Promise<boolean> {
-  const realPath = join(root, path);
+export async function isdir(path: string): Promise<boolean> {
+  const realPath = join(ARCHIVE_PATH, path);
   return (await fsPromises.stat(realPath)).isDirectory();
 }
 
-export async function rename(fromPath: string, toPath: string, root: string) {
-  const realFromPath = join(root, fromPath);
-  const realToPath = join(root, toPath);
+export async function rename(fromPath: string, toPath: string) {
+  const realFromPath = join(ARCHIVE_PATH, fromPath);
+  const realToPath = join(ARCHIVE_PATH, toPath);
   return await fsPromises.rename(realFromPath, realToPath);
 }
 
-export async function readdir(path: string, root: string): Promise<File[]> {
-  const realPath = join(root, path);
+export async function readdir(path: string): Promise<File[]> {
+  const realPath = join(ARCHIVE_PATH, path);
   try {
     await fsPromises.access(realPath, fs.constants.R_OK | fs.constants.W_OK);
   } catch {
@@ -54,7 +55,7 @@ export async function readdir(path: string, root: string): Promise<File[]> {
         path: filePath,
         name: f.name,
         size: null,
-        url: FILE_SERVER + filePath,
+        url: pathToURL(filePath),
       };
 
       results.push(file);
@@ -66,7 +67,7 @@ export async function readdir(path: string, root: string): Promise<File[]> {
         path: filePath,
         name: f.name,
         size: prettyBytes(stat.size),
-        url: FILE_SERVER + filePath,
+        url: pathToURL(filePath),
       });
     }
   }

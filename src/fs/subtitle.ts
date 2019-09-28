@@ -1,16 +1,19 @@
 import { promises as fsPromises } from 'fs';
-import { join, extname, dirname, parse, relative } from 'path';
+import { join, extname, dirname, parse } from 'path';
 
+import { ARCHIVE_PATH } from '@src/config';
 import { ISubtitle } from '@src/models';
-import { ARCHIVE_PATH, FILE_SERVER } from '@src/config';
+import { pathToURL } from '@src/utils';
 
 export async function findSubtitle(videoPath: string): Promise<ISubtitle[]> {
+  const realVideoPath = join(ARCHIVE_PATH, videoPath);
+
   if (extname(videoPath) !== '.mp4') {
     throw new Error(`'${videoPath}' is not mp4`);
   }
 
   const dirPath = dirname(videoPath);
-  const files = await fsPromises.readdir(dirPath);
+  const files = await fsPromises.readdir(dirname(realVideoPath));
   const subtitles: ISubtitle[] = [];
 
   for (const file of files) {
@@ -19,7 +22,7 @@ export async function findSubtitle(videoPath: string): Promise<ISubtitle[]> {
     if (name === parse(videoPath).name && (ext === '.smi' || ext === '.srt')) {
       subtitles.push({
         language: 'ko',
-        url: FILE_SERVER + '/' + relative(ARCHIVE_PATH, join(dirPath, `${name}.vtt`)),
+        url: pathToURL(join(dirPath, `${name}.vtt`)),
       });
     }
   }
@@ -31,7 +34,7 @@ export async function findSubtitle(videoPath: string): Promise<ISubtitle[]> {
       if (ext === '.smi' || ext === '.srt') {
         subtitles.push({
           language: name,
-          url: FILE_SERVER + '/' + relative(ARCHIVE_PATH, join(dirPath, `${name}.vtt`)),
+          url: pathToURL(join(dirPath, `${name}.vtt`)),
         });
       }
     }
