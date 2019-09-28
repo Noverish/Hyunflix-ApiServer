@@ -31,21 +31,6 @@ export class Video {
   @ManyToOne(type => VideoArticle, article => article.videos)
   article: VideoArticle;
 
-  static async findAll(): Promise<Video[]> {
-    return await getConnection()
-      .getRepository(Video)
-      .createQueryBuilder()
-      .getMany();
-  }
-
-  static async findByPath(path: string): Promise<Video | null> {
-    return await getConnection()
-      .getRepository(Video)
-      .createQueryBuilder()
-      .where('path = :path', { path })
-      .getOne();
-  }
-
   static async findById(videoId: number): Promise<Video | null> {
     return await getConnection()
       .getRepository(Video)
@@ -54,7 +39,7 @@ export class Video {
       .getOne();
   }
 
-  async convert(): Promise<IVideo> {
+  convert(): IVideo {
     return {
       videoId: this.videoId,
       url: FILE_SERVER + '/' + relative(ARCHIVE_PATH, this.path),

@@ -1,36 +1,31 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
 import { Music } from '@src/entity';
-import { FILE_SERVER } from '@src/config';
+import { filterWithAuthority } from '@src/utils/authority';
 
 const router: Router = Router();
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
-  const authority: string[] = req['authority'];
+  (async function () {
+    const authority: string[] = req['authority'];
 
-  Music.findAll()
-    .then((musics: Music[]) => {
-      let musics2 = musics;
-      if (authority.indexOf('admin') < 0) {
-        musics2 = musics.filter(m => (m.authority === '') || m.authority.split(',').every(a => authority.indexOf(a) >= 0));
-      }
+    let musics = await Music.findAll();
+    musics = filterWithAuthority(authority, musics);
 
-      res.status(200);
-      res.json(musics2.map(m => m.convert()));
-    })
-    .catch((err) => {
-      next(err);
-    });
+    res.status(200);
+    res.json(musics.map(m => m.convert()));
+  })().catch(next);
 });
 
 router.get('/tags', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
-    const tags: string[] = await Music.findTags();
-    const tagSet = new Set();
+    const authority: string[] = req['authority'];
 
-    tags.forEach((t1) => {
-      t1.split(',').forEach(t2 => tagSet.add(t2));
-    });
+    let musics: Music[] = await Music.findAll();
+    musics = filterWithAuthority(authority, musics);
+
+    const tagSet = new Set();
+    musics.forEach(m => m.tags.split(',').reduce((s, t) => s.add(t), tagSet));
 
     res.status(200);
     res.json([...tagSet]);

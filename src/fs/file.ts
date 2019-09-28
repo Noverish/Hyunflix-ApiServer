@@ -3,15 +3,8 @@ import * as fs from 'fs';
 import { join, parse } from 'path';
 
 import { FILE_SERVER } from '@src/config';
+import { File } from '@src/models';
 const fsPromises = fs.promises;
-
-export interface File {
-  url: string;
-  path: string;
-  name: string;
-  isdir: boolean;
-  size: string;
-}
 
 export async function exists(path: string, root: string): Promise<boolean> {
   const realPath = join(root, path);

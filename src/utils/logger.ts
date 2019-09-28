@@ -1,7 +1,7 @@
 import * as morgan from 'morgan';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as moment from 'moment-timezone';
+import { dateToString } from '@src/utils';
 const rfs = require('rotating-file-stream');
 
 morgan.token('remote-addr', (req, res) => {
@@ -14,7 +14,7 @@ morgan.token('remote-addr', (req, res) => {
 });
 
 morgan.token('date', (req, res) => {
-  return moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
+  return dateToString(new Date());
 });
 
 morgan.token('user-id', (req, res) => {
@@ -23,10 +23,10 @@ morgan.token('user-id', (req, res) => {
 
 function fileName(time: Date | null, index: number): string {
   if (time) {
-    return `${moment(time).format('YYYY-MM-DD')}.log`;
+    return `${dateToString(time).split(' ')[0]}.log`;
   }
 
-  return `${moment().format('YYYY-MM-DD')}.log`;
+  return `${dateToString(new Date()).split(' ')[0]}.log`;
 }
 
 const consoleFormat = '[:date] <:remote-addr> :user-id - :method :status :response-time ms ":url"';

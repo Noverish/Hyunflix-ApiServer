@@ -29,3 +29,11 @@ export interface IMusic {
   artist: string;
   tags: string[];
 }
+
+export interface File {
+  url: string;
+  path: string;
+  name: string;
+  isdir: boolean;
+  size: string;
+}

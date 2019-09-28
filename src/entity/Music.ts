@@ -34,16 +34,6 @@ export class Music {
       .getMany();
   }
 
-  static async findTags(): Promise<string[]> {
-    const tmp = await getConnection()
-      .getRepository(Music)
-      .createQueryBuilder()
-      .select('tags')
-      .groupBy('tags')
-      .getRawMany();
-    return tmp.map(t => t['tags']);
-  }
-
   convert(): IMusic {
     return {
       musicId: this.musicId,

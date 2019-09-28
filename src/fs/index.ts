@@ -1,2 +1,2 @@
 export * from './file';
-export * from './video';
+export * from './subtitle';

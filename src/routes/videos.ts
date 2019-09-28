@@ -3,8 +3,8 @@ import { join } from 'path';
 
 import { Video } from '@src/entity';
 import { IVideo, ISubtitle } from '@src/models';
-import { findSubtitle } from '@src/utils/fs';
-import { ARCHIVE_PATH, FILE_SERVER } from '@src/config';
+import { findSubtitle } from '@src/fs';
+import { ARCHIVE_PATH } from '@src/config';
 
 const router: Router = Router();
 
