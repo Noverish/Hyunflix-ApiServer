@@ -39,7 +39,7 @@ router.get('/:videoId/subtitles', (req: Request, res: Response, next: NextFuncti
       return;
     }
 
-    const subtitles: ISubtitle[] = await findSubtitle(join(ARCHIVE_PATH, video.path));
+    const subtitles: ISubtitle[] = await findSubtitle(video.path);
 
     res.status(200);
     res.json(subtitles);

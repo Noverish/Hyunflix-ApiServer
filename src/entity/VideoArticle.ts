@@ -38,6 +38,15 @@ export class VideoArticle {
       .where('articleId = :articleId', { articleId })
       .getOne();
   }
+  
+  static async update(articleId: number, params: Partial<VideoArticle>) {
+    await getConnection()
+      .createQueryBuilder()
+      .update(VideoArticle)
+      .set(params)
+      .where('articleId = :articleId', { articleId })
+      .execute();
+  }
 
   convert(): IVideoArticle {
     return {
