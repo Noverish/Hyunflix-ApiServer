@@ -25,12 +25,27 @@ export class Music {
 
   @Column()
   authority: string;
+  
+  @Column({ default: () => "CURRENT_TIMESTAMP" })
+  date: Date;
 
   static async findAll(): Promise<Music[]> {
     return await getConnection()
       .getRepository(Music)
       .createQueryBuilder()
+      .orderBy('date', 'DESC')
       .getMany();
+  }
+  
+  static async insert(title: string, path: string, duration: number, artist: string, tags: string[], authority: string[]): Promise<number> {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .insert()
+      .into(Music)
+      .values({ title, path, duration, artist, tags: tags.join(','), authority: authority.join(',') })
+      .execute();
+      
+    return result.identifiers[0].musicId;
   }
 
   convert(): IMusic {

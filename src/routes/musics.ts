@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 
 import { Music } from '@src/entity';
 import { filterWithAuthority } from '@src/utils/authority';
+import { checkAdmin } from '@src/middlewares/check-admin';
 
 const router: Router = Router();
 
@@ -16,6 +17,22 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
     res.json(musics.map(m => m.convert()));
   })().catch(next);
 });
+
+router.post('/', checkAdmin, (req: Request, res: Response, next: NextFunction) => {
+  (async function() {
+    const title: string = req.body['title'];
+    const path: string = req.body['path'];
+    const duration: number = req.body['duration'];
+    const artist: string = req.body['artist'];
+    const tags: string[] = req.body['tags'];
+    const authority: string[] = req.body['authority'];
+    
+    await Music.insert(title, path, duration, artist, tags, authority);
+    
+    res.status(204);
+    res.end();
+  })().catch(next);
+})
 
 router.get('/tags', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
