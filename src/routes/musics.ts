@@ -23,11 +23,11 @@ router.post('/', checkAdmin, (req: Request, res: Response, next: NextFunction) =
     const title: string = req.body['title'];
     const path: string = req.body['path'];
     const duration: number = req.body['duration'];
-    const artist: string = req.body['artist'];
+    const youtube: string | null = req.body['youtube'];
     const tags: string[] = req.body['tags'];
     const authority: string[] = req.body['authority'];
     
-    await Music.insert(title, path, duration, artist, tags, authority);
+    await Music.insert(title, path, duration, youtube, tags, authority);
     
     res.status(204);
     res.end();

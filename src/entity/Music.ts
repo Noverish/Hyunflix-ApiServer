@@ -13,18 +13,18 @@ export class Music {
 
   @Column()
   path: string;
-
+  
   @Column()
   duration: number;
-
-  @Column()
-  artist: string;
-
+  
   @Column()
   tags: string;
-
+  
   @Column()
   authority: string;
+  
+  @Column({ nullable: true })
+  youtube: string | null;
   
   @Column({ default: () => "CURRENT_TIMESTAMP" })
   date: Date;
@@ -37,12 +37,12 @@ export class Music {
       .getMany();
   }
   
-  static async insert(title: string, path: string, duration: number, artist: string, tags: string[], authority: string[]): Promise<number> {
+  static async insert(title: string, path: string, duration: number, youtube: string | null, tags: string[], authority: string[]): Promise<number> {
     const result = await getConnection()
       .createQueryBuilder()
       .insert()
       .into(Music)
-      .values({ title, path, duration, artist, tags: tags.join(','), authority: authority.join(',') })
+      .values({ title, path, duration, youtube, tags: tags.join(','), authority: authority.join(',') })
       .execute();
       
     return result.identifiers[0].musicId;
@@ -54,7 +54,7 @@ export class Music {
       title: this.title,
       url: pathToURL(this.path),
       duration: this.duration,
-      artist: this.artist,
+      youtube: this.youtube,
       tags: this.tags.split(','),
     };
   }

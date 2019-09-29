@@ -26,7 +26,7 @@ export interface IMusic {
   title: string;
   url: string;
   duration: number;
-  artist: string;
+  youtube: string | null;
   tags: string[];
 }
 
