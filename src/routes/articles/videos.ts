@@ -2,16 +2,33 @@ import { Router, Request, Response, NextFunction } from 'express';
 
 import { VideoArticle } from '@src/entity';
 import { checkAdmin } from '@src/middlewares/check-admin';
+import { search } from '@src/workers/video';
+import { IVideoArticle } from '@src/models';
 
 const router: Router = Router();
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
-    const articles: VideoArticle[] = await VideoArticle.findAll();
+    const query: string = req.query['q'];
+    const page: number = parseInt(req.query['p'], 10);
+    const pageSize: number = parseInt(req.query['ps'], 10);
+    
+    const tmp: VideoArticle[] = await VideoArticle.findAll();
+    const articles: IVideoArticle[] = tmp.map(a => a.convert());
+    
+    const searched = (query)
+      ? search(articles, query)
+      : articles;
+    
+    const sliced = searched.slice((page - 1) * pageSize, (page) * pageSize);
+    
     // TODO Check authority
 
     res.status(200);
-    res.json(articles.map(a => a.convert()));
+    res.json({
+      total: searched.length,
+      results: sliced,
+    });
   })().catch(next);
 });
 

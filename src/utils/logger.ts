@@ -21,6 +21,10 @@ morgan.token('user-id', (req, res) => {
   return (req.userId) ? req.userId : undefined;
 });
 
+morgan.token('url', (req, res) => {
+  return decodeURI(req.originalUrl);
+})
+
 function fileName(time: Date | null, index: number): string {
   if (time) {
     return `${dateToString(time).split(' ')[0]}.log`;
