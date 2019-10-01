@@ -20,18 +20,19 @@ export class VideoBundle {
   static async findByCategory(category: string): Promise<VideoBundle[]> {
     return await getConnection()
       .getRepository(VideoBundle)
-      .createQueryBuilder()
-      .where('category = :category', { category })
-      .getMany();
+      .find({
+        relations: [ "articles" ],
+        where: { category },
+      });
   }
 
   static async findByCategoryAndId(category: string, bundleId: number): Promise<VideoBundle | null> {
     return await getConnection()
       .getRepository(VideoBundle)
-      .createQueryBuilder()
-      .leftJoinAndSelect('VideoBundle.articles', 'video_article')
-      .where('category = :category && bundleId = :bundleId', { category, bundleId })
-      .getOne();
+      .findOne({
+        relations: [ "articles", "articles.videos" ],
+        where: { category, bundleId },
+      });
   }
 
   convert(): IVideoBundle {
