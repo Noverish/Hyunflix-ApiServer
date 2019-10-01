@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 
 import { Music } from '@src/entity';
 import { filterWithAuthority } from '@src/utils/authority';
-import { checkAdmin } from '@src/middlewares/check-admin';
+import { checkFFMpeg } from '@src/middlewares/check-admin';
 
 const router: Router = Router();
 
@@ -18,7 +18,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
   })().catch(next);
 });
 
-router.post('/', checkAdmin, (req: Request, res: Response, next: NextFunction) => {
+router.post('/', checkFFMpeg, (req: Request, res: Response, next: NextFunction) => {
   (async function() {
     const title: string = req.body['title'];
     const path: string = req.body['path'];
