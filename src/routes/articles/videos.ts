@@ -57,7 +57,7 @@ router.put('/:articleId', checkAdmin, (req: Request, res: Response, next: NextFu
       res.json({ msg: 'Not Found' });
       return;
     }
-    
+
     await VideoArticle.update(articleId, params);
 
     res.status(204);

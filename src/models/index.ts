@@ -21,6 +21,13 @@ export interface IVideoArticle {
   date: string;
 }
 
+export interface IVideoBundle {
+  bundleId: number;
+  articles: IVideoArticle[];
+  title: string;
+  category: string;
+}
+
 export interface IMusic {
   musicId: number;
   title: string;

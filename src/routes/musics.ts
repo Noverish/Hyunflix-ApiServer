@@ -19,20 +19,20 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.post('/', checkFFMpeg, (req: Request, res: Response, next: NextFunction) => {
-  (async function() {
+  (async function () {
     const title: string = req.body['title'];
     const path: string = req.body['path'];
     const duration: number = req.body['duration'];
     const youtube: string | null = req.body['youtube'];
     const tags: string[] = req.body['tags'];
     const authority: string[] = req.body['authority'];
-    
+
     await Music.insert(title, path, duration, youtube, tags, authority);
-    
+
     res.status(204);
     res.end();
   })().catch(next);
-})
+});
 
 router.get('/tags', (req: Request, res: Response, next: NextFunction) => {
   (async function () {

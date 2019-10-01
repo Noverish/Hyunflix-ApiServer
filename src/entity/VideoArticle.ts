@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, getConnection } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, getConnection } from 'typeorm';
 
-import { Video } from '@src/entity';
+import { Video, VideoBundle } from '@src/entity';
 import { IVideoArticle } from '@src/models';
 import { dateToString } from '@src/utils';
 
@@ -21,6 +21,9 @@ export class VideoArticle {
   @Column()
   date: Date;
 
+  @ManyToOne(type => VideoBundle, bundle => bundle.articles)
+  bundle: VideoBundle;
+
   static async findAll(): Promise<VideoArticle[]> {
     return await getConnection()
       .getRepository(VideoArticle)
@@ -38,7 +41,7 @@ export class VideoArticle {
       .where('articleId = :articleId', { articleId })
       .getOne();
   }
-  
+
   static async update(articleId: number, params: Partial<VideoArticle>) {
     await getConnection()
       .createQueryBuilder()
@@ -54,7 +57,7 @@ export class VideoArticle {
       tags: this.tags.split(','),
       title: this.title,
       date: dateToString(this.date),
-      videos: this.videos.map(v => v.convert()),
+      videos: (this.videos || []).map(v => v.convert()),
     };
   }
 }

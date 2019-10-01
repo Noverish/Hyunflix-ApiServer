@@ -13,20 +13,20 @@ export class Music {
 
   @Column()
   path: string;
-  
+
   @Column()
   duration: number;
-  
+
   @Column()
   tags: string;
-  
+
   @Column()
   authority: string;
-  
+
   @Column({ nullable: true })
   youtube: string | null;
-  
-  @Column({ default: () => "CURRENT_TIMESTAMP" })
+
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
   date: Date;
 
   static async findAll(): Promise<Music[]> {
@@ -36,7 +36,7 @@ export class Music {
       .orderBy('date', 'DESC')
       .getMany();
   }
-  
+
   static async insert(title: string, path: string, duration: number, youtube: string | null, tags: string[], authority: string[]): Promise<number> {
     const result = await getConnection()
       .createQueryBuilder()
@@ -44,7 +44,7 @@ export class Music {
       .into(Music)
       .values({ title, path, duration, youtube, tags: tags.join(','), authority: authority.join(',') })
       .execute();
-      
+
     return result.identifiers[0].musicId;
   }
 

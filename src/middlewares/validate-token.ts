@@ -5,7 +5,7 @@ import { AUTH_URL } from '@src/config';
 
 export function auth(req: Request): Promise<request.Response> {
   const headers = req.headers;
-  
+
   return new Promise((resolve, reject) => {
     const options = {
       url: AUTH_URL,
@@ -13,7 +13,7 @@ export function auth(req: Request): Promise<request.Response> {
       headers: {
         authorization: headers['authorization'],
         cookie: headers['cookie'],
-        'x-forwarded-for': req.connection.remoteAddress
+        'x-forwarded-for': req.connection.remoteAddress,
       },
     };
 
