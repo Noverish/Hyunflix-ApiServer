@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, getConnection } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 import { Video, VideoBundle } from '@src/entity';
 import { IVideoArticle } from '@src/models';
@@ -50,11 +51,22 @@ export class VideoArticle {
       .where('articleId = :articleId', { articleId })
       .execute();
   }
+  
+  static async insert(param: QueryDeepPartialEntity<VideoArticle>): Promise<number> {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .insert()
+      .into(VideoArticle)
+      .values(param)
+      .execute();
+      
+    return result.identifiers[0].articleId;
+  }
 
   convert(): IVideoArticle {
     return {
       articleId: this.articleId,
-      tags: this.tags.split(','),
+      tags: this.tags.split(',').filter(t => !!t),
       title: this.title,
       date: dateToString(this.date),
       videos: (this.videos || []).map(v => v.convert()),

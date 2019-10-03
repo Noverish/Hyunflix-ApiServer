@@ -55,7 +55,7 @@ export class Music {
       url: pathToURL(this.path),
       duration: this.duration,
       youtube: this.youtube,
-      tags: this.tags.split(','),
+      tags: this.tags.split(',').filter(t => !!t),
     };
   }
 }

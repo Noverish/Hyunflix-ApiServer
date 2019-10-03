@@ -44,3 +44,14 @@ export interface File {
   isdir: boolean;
   size: string;
 }
+
+export interface FFProbe {
+  duration: number;
+}
+
+export interface FFProbeVideo extends FFProbe {
+  width: number;
+  height: number;
+  bitrate: number;
+  size: number;
+}
