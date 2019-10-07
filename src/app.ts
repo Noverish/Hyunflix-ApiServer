@@ -5,6 +5,7 @@ import { createConnection } from 'typeorm';
 import 'reflect-metadata';
 
 import { PORT } from '@src/config';
+import sockets from '@src/sockets';
 import { consoleLogger, fileLogger } from '@src/utils/logger';
 import { validateToken } from '@src/middlewares/validate-token';
 import routes from './routes';
@@ -33,9 +34,10 @@ app.use((err, req, res, next) => {
   res.json({ msg: err.stack });
 });
 
-export const server: http.Server = http.createServer(app);
+const server: http.Server = http.createServer(app);
 
 server.listen(PORT, () => {
   console.log(`* API Server Started at ${PORT}`);
   createConnection().catch(console.error);
+  sockets(server);
 });

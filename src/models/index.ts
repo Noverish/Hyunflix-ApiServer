@@ -55,3 +55,9 @@ export interface FFProbeVideo extends FFProbe {
   bitrate: number;
   size: number;
 }
+
+export interface UserVideoTime {
+  userId: number;
+  articleId: number;
+  time: number;
+}
