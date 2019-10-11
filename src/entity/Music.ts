@@ -6,7 +6,7 @@ import { pathToURL } from '@src/utils';
 @Entity()
 export class Music {
   @PrimaryGeneratedColumn()
-  musicId: number;
+  id: number;
 
   @Column()
   title: string;
@@ -45,12 +45,12 @@ export class Music {
       .values({ title, path, duration, youtube, tags: tags.join(','), authority: authority.join(',') })
       .execute();
 
-    return result.identifiers[0].musicId;
+    return result.identifiers[0].id;
   }
 
   convert(): IMusic {
     return {
-      musicId: this.musicId,
+      id: this.id,
       title: this.title,
       url: pathToURL(this.path),
       duration: this.duration,

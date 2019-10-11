@@ -8,7 +8,7 @@ import { pathToURL } from '@src/utils';
 @Entity()
 export class Video {
   @PrimaryGeneratedColumn()
-  videoId: number;
+  id: number;
 
   @Column()
   path: string;
@@ -31,11 +31,11 @@ export class Video {
   @ManyToOne(type => VideoArticle, article => article.videos)
   article: VideoArticle;
 
-  static async findById(videoId: number): Promise<Video | null> {
+  static async findById(id: number): Promise<Video | null> {
     return await getConnection()
       .getRepository(Video)
       .createQueryBuilder()
-      .where('videoId = :videoId', { videoId })
+      .where('id = :id', { id })
       .getOne();
   }
   
@@ -45,12 +45,12 @@ export class Video {
       .findOne({ where: { path } });
   }
   
-  static async update(videoId: number, values: QueryDeepPartialEntity<Video>) {
+  static async update(id: number, values: QueryDeepPartialEntity<Video>) {
     await getConnection()
       .createQueryBuilder()
       .update(Video)
       .set(values)
-      .where('videoId = :videoId', { videoId })
+      .where('id = :id', { id })
       .execute();
   }
   
@@ -62,12 +62,12 @@ export class Video {
       .values(values)
       .execute();
     
-    return result.identifiers[0].videoId;
+    return result.identifiers[0].id;
   }
 
   convert(): IVideo {
     return {
-      videoId: this.videoId,
+      id: this.id,
       url: pathToURL(this.path),
       duration: this.duration,
       width: this.width,

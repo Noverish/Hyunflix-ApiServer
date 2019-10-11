@@ -1,5 +1,5 @@
 export interface IVideo {
-  videoId: number;
+  id: number;
   url: string;
   duration: number;
   width: number;
@@ -14,7 +14,7 @@ export interface ISubtitle {
 }
 
 export interface IVideoArticle {
-  articleId: number;
+  id: number;
   videos: IVideo[];
   tags: string[];
   title: string;
@@ -29,7 +29,7 @@ export interface IVideoBundle {
 }
 
 export interface IMusic {
-  musicId: number;
+  id: number;
   title: string;
   url: string;
   duration: number;

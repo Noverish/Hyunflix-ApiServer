@@ -26,7 +26,7 @@ export class UserVideo {
     return await getConnection()
       .getRepository(UserVideo)
       .findOne({
-        where: { userId, articleArticleId: articleId },
+        where: { userId, articleId },
         relations: ['article', 'article.videos'],
       });
   }

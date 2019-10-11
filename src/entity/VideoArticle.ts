@@ -8,7 +8,7 @@ import { dateToString } from '@src/utils';
 @Entity()
 export class VideoArticle {
   @PrimaryGeneratedColumn()
-  articleId: number;
+  id: number;
 
   @OneToMany(type => Video, video => video.article)
   videos: Video[];
@@ -28,27 +28,27 @@ export class VideoArticle {
   static async findAll(): Promise<VideoArticle[]> {
     return await getConnection()
       .getRepository(VideoArticle)
-      .createQueryBuilder()
-      .leftJoinAndSelect('VideoArticle.videos', 'video')
-      .orderBy('articleId', 'DESC')
-      .getMany();
+      .find({
+        relations: ['videos'],
+        order: { id: 'DESC' },
+      });
   }
 
-  static async findById(articleId: number): Promise<VideoArticle | null> {
+  static async findById(id: number): Promise<VideoArticle | null> {
     return await getConnection()
       .getRepository(VideoArticle)
       .createQueryBuilder()
       .leftJoinAndSelect('VideoArticle.videos', 'video')
-      .where('articleId = :articleId', { articleId })
+      .where('id = :id', { id })
       .getOne();
   }
 
-  static async update(articleId: number, params: Partial<VideoArticle>) {
+  static async update(id: number, params: Partial<VideoArticle>) {
     await getConnection()
       .createQueryBuilder()
       .update(VideoArticle)
       .set(params)
-      .where('articleId = :articleId', { articleId })
+      .where('id = :id', { id })
       .execute();
   }
   
@@ -60,12 +60,12 @@ export class VideoArticle {
       .values(param)
       .execute();
       
-    return result.identifiers[0].articleId;
+    return result.identifiers[0].id;
   }
 
   convert(): IVideoArticle {
     return {
-      articleId: this.articleId,
+      id: this.id,
       tags: this.tags.split(',').filter(t => !!t),
       title: this.title,
       date: dateToString(this.date),
