@@ -61,3 +61,10 @@ export interface UserVideoTime {
   articleId: number;
   time: number;
 }
+
+export interface IUserVideo {
+  userId: number;
+  article: IVideoArticle;
+  time: number;
+  date: string;
+}

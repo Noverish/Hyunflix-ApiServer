@@ -3,7 +3,7 @@ import { Server } from 'http';
 import { createSocket, setReceiveListener } from '@src/sockets';
 import { USER_VIDEO_SOCKET_PATH } from '@src/config';
 import { UserVideoTime } from '@src/models';
-import { UserVideo } from '@src/entity';
+import { UserVideo, VideoArticle } from '@src/entity';
 
 export default function (server: Server) {
   createSocket(server, USER_VIDEO_SOCKET_PATH);
@@ -15,9 +15,10 @@ function receive(payload: UserVideoTime) {
     const { userId, articleId, time } = payload;
     
     const userVideo: UserVideo | null = await UserVideo.find(userId, articleId);
+    const article = await VideoArticle.findById(articleId);
     
     if (!userVideo) {
-      await UserVideo.insert(userId, articleId);
+      await UserVideo.insert(userId, article);
     }
     
     await UserVideo.update(userId, articleId, time);
