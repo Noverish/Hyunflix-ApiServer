@@ -22,11 +22,11 @@ export class UserVideo {
   @Column({ default: () => "CURRENT_TIMESTAMP" })
   date: Date;
   
-  static async find(userId: number, articleId: number): Promise<UserVideo | null> {
+  static async find(userId: number, article: VideoArticle): Promise<UserVideo | null> {
     return await getConnection()
       .getRepository(UserVideo)
       .findOne({
-        where: { userId, articleId },
+        where: { userId, article },
         relations: ['article', 'article.videos'],
       });
   }
@@ -49,12 +49,12 @@ export class UserVideo {
       .execute();
   }
   
-  static async update(userId: number, articleId: number, time: number) {
+  static async update(userId: number, article: VideoArticle, time: number) {
     await getConnection()
       .createQueryBuilder()
       .update(UserVideo)
       .set({ time, date: new Date() })
-      .where({ userId, articleId })
+      .where({ userId, article })
       .execute();
   }
   

@@ -22,7 +22,7 @@ export interface IVideoArticle {
 }
 
 export interface IVideoBundle {
-  bundleId: number;
+  id: number;
   articles: IVideoArticle[];
   title: string;
   category: string;

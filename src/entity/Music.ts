@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 import { IMusic } from '@src/models';
 import { pathToURL } from '@src/utils';
@@ -32,17 +33,17 @@ export class Music {
   static async findAll(): Promise<Music[]> {
     return await getConnection()
       .getRepository(Music)
-      .createQueryBuilder()
-      .orderBy('date', 'DESC')
-      .getMany();
+      .find({
+        order: { date: 'DESC' }
+      });
   }
-
-  static async insert(title: string, path: string, duration: number, youtube: string | null, tags: string[], authority: string[]): Promise<number> {
+  
+  static async insert(param: QueryDeepPartialEntity<Music>): Promise<number> {
     const result = await getConnection()
       .createQueryBuilder()
       .insert()
       .into(Music)
-      .values({ title, path, duration, youtube, tags: tags.join(','), authority: authority.join(',') })
+      .values(param)
       .execute();
 
     return result.identifiers[0].id;

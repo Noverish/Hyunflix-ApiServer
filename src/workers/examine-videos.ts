@@ -36,8 +36,17 @@ async function examineVideo(videoPath: string) {
     const stat = await fsPromises.stat(videoPath);
     
     if (stat.size.toString() !== video.size.toString()) {
+      const ffprobe: FFProbeVideo = await ffprobeVideo(relativeVideoPath);
+      
+      await Video.update(video.id, {
+        duration: ffprobe.duration,
+        width: ffprobe.width,
+        height: ffprobe.height,
+        bitrate: ffprobe.bitrate,
+        size: ffprobe.size.toString(),
+      });
+      
       console.log('[Modified]', videoPath);
-      process.exit(0);
     }
   } else {
     const ffprobe: FFProbeVideo = await ffprobeVideo(relativeVideoPath);

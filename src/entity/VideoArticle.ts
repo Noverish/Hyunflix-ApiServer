@@ -37,10 +37,10 @@ export class VideoArticle {
   static async findById(id: number): Promise<VideoArticle | null> {
     return await getConnection()
       .getRepository(VideoArticle)
-      .createQueryBuilder()
-      .leftJoinAndSelect('VideoArticle.videos', 'video')
-      .where('id = :id', { id })
-      .getOne();
+      .findOne({
+        relations: ['videos'],
+        where: { id },
+      });
   }
 
   static async update(id: number, params: Partial<VideoArticle>) {

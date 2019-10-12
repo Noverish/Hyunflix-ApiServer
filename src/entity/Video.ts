@@ -34,9 +34,7 @@ export class Video {
   static async findById(id: number): Promise<Video | null> {
     return await getConnection()
       .getRepository(Video)
-      .createQueryBuilder()
-      .where('id = :id', { id })
-      .getOne();
+      .findOne({ where: { id } });
   }
   
   static async findByPath(path: string): Promise<Video | null> {

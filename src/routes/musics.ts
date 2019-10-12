@@ -27,7 +27,14 @@ router.post('/', checkFFMpeg, (req: Request, res: Response, next: NextFunction) 
     const tags: string[] = req.body['tags'];
     const authority: string[] = req.body['authority'];
 
-    await Music.insert(title, path, duration, youtube, tags, authority);
+    await Music.insert({
+      title,
+      path,
+      duration,
+      youtube,
+      tags: tags.join(','), 
+      authority: authority.join(','),
+    });
 
     res.status(204);
     res.end();
