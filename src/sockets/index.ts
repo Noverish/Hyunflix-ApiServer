@@ -13,18 +13,18 @@ export default function (server: Server) {
 export function createSocket(server: Server, path: string) {
   const io = socketio(server, { path });
   sockets[path] = [];
-  
+
   io.on('connection', (socket) => {
     console.log(`[Socket] Connected ${socket.id} at "${path}"`);
     sockets[path].push(socket);
-    
+
     if (listeners[path]) {
       socket.on('message', (data: Buffer) => {
         const payload = JSON.parse(data.toString());
         listeners[path](payload);
       });
     }
-    
+
     socket.on('disconnect', () => {
       console.log(`[Socket] Disconnected ${socket.id} at "${path}"`);
       sockets[path] = sockets[path].filter(s => s !== socket);
@@ -34,7 +34,7 @@ export function createSocket(server: Server, path: string) {
 
 export function send(path: string, payload: object) {
   const socketList: socketio.Socket[] = sockets[path];
-  
+
   for (const socket of socketList) {
     socket.send(JSON.stringify(payload));
   }

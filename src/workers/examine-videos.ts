@@ -14,7 +14,7 @@ async function main() {
   } catch (err) {
     await createConnection();
   }
-  
+
   for (const folderPath of VIDEO_FOLDER_PATHS) {
     await examineFolder(folderPath);
   }
@@ -22,22 +22,22 @@ async function main() {
 
 async function examineFolder(folderPath: string) {
   const videoPaths: string[] = (await walk(folderPath)).filter(f => extname(f) === '.mp4');
-  
+
   for (const videoPath of videoPaths) {
-    await examineVideo(videoPath)
+    await examineVideo(videoPath);
   }
 }
 
 async function examineVideo(videoPath: string) {
   const relativeVideoPath = videoPath.replace(ARCHIVE_PATH, '');
   const video: Video | null = await Video.findByPath(relativeVideoPath);
-  
+
   if (video) {
     const stat = await fsPromises.stat(videoPath);
-    
+
     if (stat.size.toString() !== video.size.toString()) {
       const ffprobe: FFProbeVideo = await ffprobeVideo(relativeVideoPath);
-      
+
       await Video.update(video.id, {
         duration: ffprobe.duration,
         width: ffprobe.width,
@@ -45,12 +45,12 @@ async function examineVideo(videoPath: string) {
         bitrate: ffprobe.bitrate,
         size: ffprobe.size.toString(),
       });
-      
+
       console.log('[Modified]', videoPath);
     }
   } else {
     const ffprobe: FFProbeVideo = await ffprobeVideo(relativeVideoPath);
-    
+
     const videoId: number = await Video.insert({
       path: relativeVideoPath,
       duration: ffprobe.duration,
@@ -58,21 +58,21 @@ async function examineVideo(videoPath: string) {
       height: ffprobe.height,
       bitrate: ffprobe.bitrate,
       size: ffprobe.size.toString(),
-    })
-    
+    });
+
     const video: Video = await Video.findById(videoId);
-    
+
     const articleId: number = await VideoArticle.insert({
       videos: [video],
       tags: '',
       title: basename(videoPath, extname(videoPath)),
-      date: new Date()
-    })
-    
+      date: new Date(),
+    });
+
     const article: VideoArticle = await VideoArticle.findById(articleId);
-    
-    await Video.update(videoId, { article })
-    
+
+    await Video.update(videoId, { article });
+
     console.log('[Inserted]', videoPath);
   }
 }
@@ -84,4 +84,4 @@ main()
   .catch((err) => {
     console.error(err);
     process.exit(1);
-  })
+  });

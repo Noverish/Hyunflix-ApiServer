@@ -36,13 +36,13 @@ export class Video {
       .getRepository(Video)
       .findOne({ where: { id } });
   }
-  
+
   static async findByPath(path: string): Promise<Video | null> {
     return await getConnection()
       .getRepository(Video)
       .findOne({ where: { path } });
   }
-  
+
   static async update(id: number, values: QueryDeepPartialEntity<Video>) {
     await getConnection()
       .createQueryBuilder()
@@ -51,7 +51,7 @@ export class Video {
       .where('id = :id', { id })
       .execute();
   }
-  
+
   static async insert(values: QueryDeepPartialEntity<Video>): Promise<number> {
     const result = await getConnection()
       .createQueryBuilder()
@@ -59,7 +59,7 @@ export class Video {
       .into(Video)
       .values(values)
       .execute();
-    
+
     return result.identifiers[0].id;
   }
 

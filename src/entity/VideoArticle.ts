@@ -51,7 +51,7 @@ export class VideoArticle {
       .where('id = :id', { id })
       .execute();
   }
-  
+
   static async insert(param: QueryDeepPartialEntity<VideoArticle>): Promise<number> {
     const result = await getConnection()
       .createQueryBuilder()
@@ -59,7 +59,7 @@ export class VideoArticle {
       .into(VideoArticle)
       .values(param)
       .execute();
-      
+
     return result.identifiers[0].id;
   }
 

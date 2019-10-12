@@ -8,7 +8,7 @@ function send(url, method, payload = undefined): Promise<object> {
     const options = {
       url,
       method,
-      json: payload
+      json: payload,
     };
 
     request(options, (err: Error, res: request.Response, body: object) => {
@@ -24,7 +24,7 @@ function send(url, method, payload = undefined): Promise<object> {
 
 export async function ffprobeVideo(path: string): Promise<FFProbeVideo> {
   const url = `${FFMPEG_HOST}/ffprobe/video?path=${encodeURI(path)}`;
-  const method = `GET`;
-  
+  const method = 'GET';
+
   return (await send(url, method)) as FFProbeVideo;
 }

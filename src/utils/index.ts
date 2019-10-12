@@ -1,10 +1,10 @@
 import { relative } from 'path';
 import { ARCHIVE_PATH, FILE_SERVER } from '@src/config';
 
-import TimeAgo from 'javascript-time-ago'
+import javascriptTimeAgo from 'javascript-time-ago';
 require('javascript-time-ago/load-all-locales');
 
-export const timeAgo = new TimeAgo('ko-KR');
+export const timeAgo = new javascriptTimeAgo('ko-KR');
 
 export function dateToString(date: Date) {
   const year = leadingZeros(date.getFullYear(), 4);

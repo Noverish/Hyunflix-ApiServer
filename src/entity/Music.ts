@@ -34,10 +34,10 @@ export class Music {
     return await getConnection()
       .getRepository(Music)
       .find({
-        order: { date: 'DESC' }
+        order: { date: 'DESC' },
       });
   }
-  
+
   static async insert(param: QueryDeepPartialEntity<Music>): Promise<number> {
     const result = await getConnection()
       .createQueryBuilder()

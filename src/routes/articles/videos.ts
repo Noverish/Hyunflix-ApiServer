@@ -12,16 +12,16 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
     const query: string = req.query['q'];
     const page: number = parseInt(req.query['p'], 10);
     const pageSize: number = parseInt(req.query['ps'], 10);
-    
+
     const tmp: VideoArticle[] = await VideoArticle.findAll();
     const articles: IVideoArticle[] = tmp.map(a => a.convert());
-    
+
     const searched = (query)
       ? search(articles, query)
       : articles;
-    
+
     const sliced = searched.slice((page - 1) * pageSize, (page) * pageSize);
-    
+
     // TODO Check authority
 
     res.status(200);

@@ -7,7 +7,7 @@ export function search(articles: IVideoArticle[], query: string): IVideoArticle[
     shouldSort: true,
     threshold: 0.5,
     maxPatternLength: 32,
-    keys: [ "tags", "title" ],
+    keys: ['tags', 'title'],
   };
   const fuse = new Fuse(articles, options);
   const result = fuse.search(query);

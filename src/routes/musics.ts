@@ -32,7 +32,7 @@ router.post('/', checkFFMpeg, (req: Request, res: Response, next: NextFunction) 
       path,
       duration,
       youtube,
-      tags: tags.join(','), 
+      tags: tags.join(','),
       authority: authority.join(','),
     });
 

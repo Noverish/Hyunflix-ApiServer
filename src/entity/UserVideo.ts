@@ -8,20 +8,20 @@ import { IUserVideo } from '@src/models';
 export class UserVideo {
   @PrimaryGeneratedColumn()
   id: number;
-  
+
   @Column()
   userId: number;
 
   @OneToOne(type => VideoArticle)
   @JoinColumn()
   article: VideoArticle;
-  
+
   @Column({ default: 0 })
   time: number;
 
-  @Column({ default: () => "CURRENT_TIMESTAMP" })
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
   date: Date;
-  
+
   static async find(userId: number, article: VideoArticle): Promise<UserVideo | null> {
     return await getConnection()
       .getRepository(UserVideo)
@@ -30,7 +30,7 @@ export class UserVideo {
         relations: ['article', 'article.videos'],
       });
   }
-  
+
   static async findAll(userId: number): Promise<UserVideo[]> {
     return await getConnection()
       .getRepository(UserVideo)
@@ -39,7 +39,7 @@ export class UserVideo {
         relations: ['article', 'article.videos'],
       });
   }
-  
+
   static async insert(userId: number, article: VideoArticle) {
     await getConnection()
       .createQueryBuilder()
@@ -48,7 +48,7 @@ export class UserVideo {
       .values({ userId, article })
       .execute();
   }
-  
+
   static async update(userId: number, article: VideoArticle, time: number) {
     await getConnection()
       .createQueryBuilder()
@@ -57,13 +57,13 @@ export class UserVideo {
       .where({ userId, article })
       .execute();
   }
-  
+
   convert(): IUserVideo {
     return {
       userId: this.userId,
       article: this.article.convert(),
       time: this.time,
       date: dateToString(this.date),
-    }
+    };
   }
 }

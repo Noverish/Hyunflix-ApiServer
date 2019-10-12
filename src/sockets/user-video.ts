@@ -13,14 +13,14 @@ export default function (server: Server) {
 function receive(payload: UserVideoTime) {
   (async function () {
     const { userId, articleId, time } = payload;
-    
+
     const article = await VideoArticle.findById(articleId);
     const userVideo: UserVideo | null = await UserVideo.find(userId, article);
-    
+
     if (!userVideo) {
       await UserVideo.insert(userId, article);
     }
-    
+
     await UserVideo.update(userId, article, time);
   })().catch(console.error);
 }

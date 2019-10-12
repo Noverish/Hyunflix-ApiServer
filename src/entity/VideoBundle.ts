@@ -21,7 +21,7 @@ export class VideoBundle {
     return await getConnection()
       .getRepository(VideoBundle)
       .find({
-        relations: [ "articles" ],
+        relations: ['articles'],
         where: { category },
       });
   }
@@ -30,7 +30,7 @@ export class VideoBundle {
     return await getConnection()
       .getRepository(VideoBundle)
       .findOne({
-        relations: [ "articles", "articles.videos" ],
+        relations: ['articles', 'articles.videos'],
         where: { category, id },
       });
   }
