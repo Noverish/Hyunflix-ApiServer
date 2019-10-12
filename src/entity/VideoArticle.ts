@@ -3,7 +3,7 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 
 import { Video, VideoBundle } from '@src/entity';
 import { IVideoArticle } from '@src/models';
-import { dateToString } from '@src/utils';
+import { timeAgo } from '@src/utils';
 
 @Entity()
 export class VideoArticle {
@@ -68,7 +68,7 @@ export class VideoArticle {
       id: this.id,
       tags: this.tags.split(',').filter(t => !!t),
       title: this.title,
-      date: dateToString(this.date),
+      date: timeAgo.format(this.date),
       videos: (this.videos || []).map(v => v.convert()),
     };
   }
