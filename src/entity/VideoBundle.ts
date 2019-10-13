@@ -17,6 +17,16 @@ export class VideoBundle {
   @Column({ default: '' })
   category: string;
 
+  static async findAllCategories(): Promise<string[]> {
+    const tmp = await getConnection()
+      .getRepository(VideoBundle)
+      .createQueryBuilder()
+      .select('category')
+      .groupBy('category')
+      .getRawMany();
+    return tmp.map(t => t['category']);
+  }
+
   static async findByCategory(category: string): Promise<VideoBundle[]> {
     return await getConnection()
       .getRepository(VideoBundle)

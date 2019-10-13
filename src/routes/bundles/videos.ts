@@ -4,6 +4,15 @@ import { VideoBundle } from '@src/entity';
 
 const router: Router = Router();
 
+router.get('/categories', (req: Request, res: Response, next: NextFunction) => {
+  (async function () {
+    const categories: string[] = await VideoBundle.findAllCategories();
+
+    res.status(200);
+    res.json(categories);
+  })().catch(next);
+});
+
 router.get('/:category', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
     const category: string = req.params['category'];
