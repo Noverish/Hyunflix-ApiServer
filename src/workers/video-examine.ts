@@ -1,34 +1,37 @@
-import { extname, basename, dirname } from 'path';
-import { getConnection, createConnection } from 'typeorm';
+import { extname, basename, dirname, join } from 'path';
 import { promises as fsPromises } from 'fs';
 
 import { Video, VideoArticle } from '@src/entity';
 import { walk } from '@src/fs';
-import { ARCHIVE_PATH, VIDEO_FOLDER_PATHS } from '@src/config';
+import { ARCHIVE_PATH, VIDEO_FOLDER_PATHS, VIDEO_EXAMINE_SOCKET_PATH } from '@src/config';
 import { ffprobeVideo } from '@src/api';
 import { FFProbeVideo } from '@src/models';
+import { send } from '@src/sockets';
 
-async function main() {
-  try {
-    await getConnection();
-  } catch (err) {
-    await createConnection();
+export default function() {
+  const callback = (msg: string) => {
+    send(VIDEO_EXAMINE_SOCKET_PATH, msg);
   }
-
-  for (const folderPath of VIDEO_FOLDER_PATHS) {
-    await examineFolder(folderPath);
-  }
+  
+  (async function() {
+    for (const folderPath of VIDEO_FOLDER_PATHS) {
+      await examineFolder(folderPath, callback);
+    }
+    await examineDeleted(callback);
+    
+    callback('Done!');
+  })().catch((err) => callback(err.stack));
 }
 
-async function examineFolder(folderPath: string) {
+async function examineFolder(folderPath: string, callback: (msg: string) => void) {
   const videoPaths: string[] = (await walk(folderPath)).filter(f => extname(f) === '.mp4');
 
   for (const videoPath of videoPaths) {
-    await examineVideo(videoPath);
+    await examineVideo(videoPath, callback);
   }
 }
 
-async function examineVideo(videoPath: string) {
+async function examineVideo(videoPath: string, callback: (msg: string) => void) {
   const relativeVideoPath = videoPath.replace(ARCHIVE_PATH, '');
   const video: Video | null = await Video.findByPath(relativeVideoPath);
 
@@ -46,7 +49,7 @@ async function examineVideo(videoPath: string) {
         size: ffprobe.size.toString(),
       });
 
-      console.log('[Modified]', videoPath);
+      callback('[Modified] ' + videoPath);
     }
   } else {
     const ffprobe: FFProbeVideo = await ffprobeVideo(relativeVideoPath);
@@ -73,15 +76,29 @@ async function examineVideo(videoPath: string) {
 
     await Video.update(videoId, { article });
 
-    console.log('[Inserted]', videoPath);
+    callback('[Inserted] ' + videoPath);
   }
 }
 
-main()
-  .then(() => {
-    process.exit(0);
-  })
-  .catch((err) => {
-    console.error(err);
-    process.exit(1);
-  });
+async function examineDeleted(callback: (msg: string) => void) {
+  const videos: Video[] = await Video.findAll();
+  
+  for (const video of videos) {
+    const realVideoPath = join(ARCHIVE_PATH, video.path);
+    try {
+      await fsPromises.access(realVideoPath);
+    } catch (err) {
+      await Video.delete(video.id);
+      callback('[Deleted Video] ' + video.path);
+    }
+  }
+  
+  const videoArticles: VideoArticle[] = await VideoArticle.findAll();
+  
+  for (const videoArticle of videoArticles) {
+    if (videoArticle.videos.length === 0) {
+      await VideoArticle.delete(videoArticle.id);
+      callback('[Deleted VideoArticle] ' + videoArticle.title);
+    }
+  }
+}

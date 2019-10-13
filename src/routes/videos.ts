@@ -1,12 +1,18 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { join } from 'path';
 
 import { Video } from '@src/entity';
 import { IVideo, ISubtitle } from '@src/models';
 import { findSubtitle } from '@src/fs';
-import { ARCHIVE_PATH } from '@src/config';
+import { checkAdmin } from '@src/middlewares/check-admin';
+import videoExamine from '@src/workers/video-examine';
 
 const router: Router = Router();
+
+router.post('/examine', checkAdmin, (req: Request, res: Response, next: NextFunction) => {
+  videoExamine();
+  res.status(204);
+  res.end();
+})
 
 router.get('/:videoId', (req: Request, res: Response, next: NextFunction) => {
   const videoId: number = parseInt(req.params['videoId'], 10);

@@ -30,6 +30,12 @@ export class Video {
 
   @ManyToOne(type => VideoArticle, article => article.videos)
   article: VideoArticle;
+  
+  static async findAll(): Promise<Video[]> {
+    return await getConnection()
+      .getRepository(Video)
+      .find();
+  }
 
   static async findById(id: number): Promise<Video | null> {
     return await getConnection()
@@ -61,6 +67,15 @@ export class Video {
       .execute();
 
     return result.identifiers[0].id;
+  }
+  
+  static async delete(id: number) {
+    await getConnection()
+      .getRepository(Video)
+      .createQueryBuilder()
+      .delete()
+      .where('id = :id', { id })
+      .execute();
   }
 
   convert(): IVideo {

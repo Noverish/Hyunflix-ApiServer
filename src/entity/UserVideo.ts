@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, getConnection } from 'typeorm';
 
 import { VideoArticle } from '@src/entity';
-import { dateToString } from '@src/utils';
+import { timeAgo } from '@src/utils';
 import { IUserVideo } from '@src/models';
 
 @Entity()
@@ -63,7 +63,7 @@ export class UserVideo {
       userId: this.userId,
       article: this.article.convert(),
       time: this.time,
-      date: dateToString(this.date),
+      date: timeAgo.format(this.date),
     };
   }
 }

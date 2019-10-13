@@ -2,12 +2,14 @@ import * as socketio from 'socket.io';
 import { Server } from 'http';
 
 import userVideo from './user-video';
+import videoExamine from './video-examine';
 
 const sockets = {};
 const listeners = {};
 
 export default function (server: Server) {
   userVideo(server);
+  videoExamine(server);
 }
 
 export function createSocket(server: Server, path: string) {
@@ -32,11 +34,15 @@ export function createSocket(server: Server, path: string) {
   });
 }
 
-export function send(path: string, payload: object) {
+export function send(path: string, payload: object | string) {
   const socketList: socketio.Socket[] = sockets[path];
 
   for (const socket of socketList) {
-    socket.send(JSON.stringify(payload));
+    if (typeof payload === 'string') {
+      socket.send(payload);
+    } else {
+      socket.send(JSON.stringify(payload));
+    }
   }
 }
 

@@ -13,6 +13,10 @@ export default function (server: Server) {
 function receive(payload: UserVideoTime) {
   (async function () {
     const { userId, articleId, time } = payload;
+    
+    if (time === 0) {
+      return;
+    }
 
     const article = await VideoArticle.findById(articleId);
     const userVideo: UserVideo | null = await UserVideo.find(userId, article);
