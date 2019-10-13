@@ -46,7 +46,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh hyunsub@home.hyunsub.kim "touch asdf.asdf"
+            ssh hyunsub@home.hyunsub.kim "echo hello"
 
 workflows:
   version: 2

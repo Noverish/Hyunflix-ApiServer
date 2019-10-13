@@ -62,7 +62,7 @@ export class VideoArticle {
 
     return result.identifiers[0].id;
   }
-  
+
   static async delete(id: number) {
     await getConnection()
       .getRepository(VideoArticle)

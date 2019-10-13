@@ -12,7 +12,7 @@ router.post('/examine', checkAdmin, (req: Request, res: Response, next: NextFunc
   videoExamine();
   res.status(204);
   res.end();
-})
+});
 
 router.get('/:videoId', (req: Request, res: Response, next: NextFunction) => {
   const videoId: number = parseInt(req.params['videoId'], 10);

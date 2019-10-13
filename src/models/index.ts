@@ -5,7 +5,11 @@ export interface IVideo {
   width: number;
   height: number;
   bitrate: number;
-  size: string;
+  size: number;
+  durationString: string;
+  bitrateString: string;
+  sizeString: string;
+  resolution: string;
 }
 
 export interface ISubtitle {

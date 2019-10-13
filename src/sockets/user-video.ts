@@ -13,7 +13,7 @@ export default function (server: Server) {
 function receive(payload: UserVideoTime) {
   (async function () {
     const { userId, articleId, time } = payload;
-    
+
     if (time === 0) {
       return;
     }

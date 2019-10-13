@@ -1,9 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, getConnection } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import * as prettyBytes from 'pretty-bytes';
 
 import { VideoArticle } from '@src/entity';
 import { IVideo } from '@src/models';
-import { pathToURL } from '@src/utils';
+import { pathToURL, second2String, width2Resolution } from '@src/utils';
 
 @Entity()
 export class Video {
@@ -30,7 +31,7 @@ export class Video {
 
   @ManyToOne(type => VideoArticle, article => article.videos)
   article: VideoArticle;
-  
+
   static async findAll(): Promise<Video[]> {
     return await getConnection()
       .getRepository(Video)
@@ -68,7 +69,7 @@ export class Video {
 
     return result.identifiers[0].id;
   }
-  
+
   static async delete(id: number) {
     await getConnection()
       .getRepository(Video)
@@ -86,7 +87,12 @@ export class Video {
       width: this.width,
       height: this.height,
       bitrate: this.bitrate,
-      size: this.size,
+      size: parseInt(this.size, 10),
+
+      durationString: second2String(this.duration),
+      bitrateString: `${prettyBytes(this.bitrate, { bits: true })}/s`,
+      sizeString: prettyBytes(parseInt(this.size, 10)),
+      resolution: width2Resolution(this.width),
     };
   }
 }

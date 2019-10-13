@@ -8,26 +8,31 @@ import { ffprobeVideo } from '@src/api';
 import { FFProbeVideo } from '@src/models';
 import { send } from '@src/sockets';
 
-export default function() {
+export default function () {
   const callback = (msg: string) => {
     send(VIDEO_EXAMINE_SOCKET_PATH, msg);
-  }
-  
-  (async function() {
+  };
+
+  (async function () {
     for (const folderPath of VIDEO_FOLDER_PATHS) {
       await examineFolder(folderPath, callback);
     }
     await examineDeleted(callback);
-    
+
     callback('Done!');
-  })().catch((err) => callback(err.stack));
+  })().catch(err => callback(err.stack));
 }
 
 async function examineFolder(folderPath: string, callback: (msg: string) => void) {
   const videoPaths: string[] = (await walk(folderPath)).filter(f => extname(f) === '.mp4');
 
   for (const videoPath of videoPaths) {
-    await examineVideo(videoPath, callback);
+    try {
+      await examineVideo(videoPath, callback);
+    } catch (err) {
+      callback(videoPath);
+      callback(err.stack);
+    }
   }
 }
 
@@ -49,7 +54,7 @@ async function examineVideo(videoPath: string, callback: (msg: string) => void) 
         size: ffprobe.size.toString(),
       });
 
-      callback('[Modified] ' + videoPath);
+      callback(`[Modified] ${videoPath}`);
     }
   } else {
     const ffprobe: FFProbeVideo = await ffprobeVideo(relativeVideoPath);
@@ -76,29 +81,29 @@ async function examineVideo(videoPath: string, callback: (msg: string) => void) 
 
     await Video.update(videoId, { article });
 
-    callback('[Inserted] ' + videoPath);
+    callback(`[Inserted] ${videoPath}`);
   }
 }
 
 async function examineDeleted(callback: (msg: string) => void) {
   const videos: Video[] = await Video.findAll();
-  
+
   for (const video of videos) {
     const realVideoPath = join(ARCHIVE_PATH, video.path);
     try {
       await fsPromises.access(realVideoPath);
     } catch (err) {
       await Video.delete(video.id);
-      callback('[Deleted Video] ' + video.path);
+      callback(`[Deleted Video] ${video.path}`);
     }
   }
-  
+
   const videoArticles: VideoArticle[] = await VideoArticle.findAll();
-  
+
   for (const videoArticle of videoArticles) {
     if (videoArticle.videos.length === 0) {
       await VideoArticle.delete(videoArticle.id);
-      callback('[Deleted VideoArticle] ' + videoArticle.title);
+      callback(`[Deleted VideoArticle] ${videoArticle.title}`);
     }
   }
 }
