@@ -54,6 +54,13 @@ export interface File {
   size: string;
 }
 
+export interface RawFile {
+  path: string;
+  name: string;
+  isdir: boolean;
+  size: number;
+}
+
 export interface FFProbe {
   duration: number;
 }

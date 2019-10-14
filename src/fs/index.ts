@@ -1,5 +1,3 @@
-export * from './file';
-
 import { promises as fsPromises } from 'fs';
 import { join } from 'path';
 
