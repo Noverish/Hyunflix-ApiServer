@@ -1,7 +1,7 @@
 import * as request from 'request';
 
 import { FFMPEG_HOST } from '@src/config';
-import { FFProbeVideo, RawSubtitle, RawFile } from '@src/models';
+import { FFProbeVideo, RawSubtitle, RawFile, Stat } from '@src/models';
 
 function send(url, method, payload = undefined): Promise<object> {
   return new Promise((resolve, reject) => {
@@ -40,4 +40,22 @@ export async function readdir(path: string): Promise<RawFile[]> {
   const url = `${FFMPEG_HOST}/fs/readdir?path=${encodeURI(path)}`;
   const method = 'GET';
   return (await send(url, method)) as RawFile[];
+}
+
+export async function walk(path: string): Promise<string[]> {
+  const url = `${FFMPEG_HOST}/fs/walk?path=${encodeURI(path)}`;
+  const method = 'GET';
+  return (await send(url, method)) as string[];
+}
+
+export async function access(path: string): Promise<{ error: string | null}> {
+  const url = `${FFMPEG_HOST}/fs/access?path=${encodeURI(path)}`;
+  const method = 'GET';
+  return (await send(url, method)) as { error: string | null};
+}
+
+export async function lstat(path: string): Promise<Stat> {
+  const url = `${FFMPEG_HOST}/fs/lstat?path=${encodeURI(path)}`;
+  const method = 'GET';
+  return (await send(url, method)) as Stat;
 }

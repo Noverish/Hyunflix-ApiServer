@@ -1,11 +1,9 @@
-import { extname, basename, dirname, join } from 'path';
-import { promises as fsPromises } from 'fs';
+import { extname, basename } from 'path';
 
 import { Video, VideoArticle } from '@src/entity';
-import { walk } from '@src/fs';
-import { ARCHIVE_PATH, VIDEO_FOLDER_PATHS, VIDEO_EXAMINE_SOCKET_PATH } from '@src/config';
-import { ffprobeVideo } from '@src/api';
-import { FFProbeVideo } from '@src/models';
+import { walk, access, lstat, ffprobeVideo } from '@src/api';
+import { VIDEO_FOLDER_PATHS, VIDEO_EXAMINE_SOCKET_PATH } from '@src/config';
+import { FFProbeVideo, Stat } from '@src/models';
 import { send } from '@src/sockets';
 
 export default function () {
@@ -37,14 +35,13 @@ async function examineFolder(folderPath: string, callback: (msg: string) => void
 }
 
 async function examineVideo(videoPath: string, callback: (msg: string) => void) {
-  const relativeVideoPath = videoPath.replace(ARCHIVE_PATH, '');
-  const video: Video | null = await Video.findByPath(relativeVideoPath);
+  const video: Video | null = await Video.findByPath(videoPath);
 
   if (video) {
-    const stat = await fsPromises.stat(videoPath);
+    const stat: Stat = await lstat(videoPath);
 
     if (stat.size.toString() !== video.size.toString()) {
-      const ffprobe: FFProbeVideo = await ffprobeVideo(relativeVideoPath);
+      const ffprobe: FFProbeVideo = await ffprobeVideo(videoPath);
 
       await Video.update(video.id, {
         duration: ffprobe.duration,
@@ -57,10 +54,10 @@ async function examineVideo(videoPath: string, callback: (msg: string) => void) 
       callback(`[Modified] ${videoPath}`);
     }
   } else {
-    const ffprobe: FFProbeVideo = await ffprobeVideo(relativeVideoPath);
+    const ffprobe: FFProbeVideo = await ffprobeVideo(videoPath);
 
     const videoId: number = await Video.insert({
-      path: relativeVideoPath,
+      path: videoPath,
       duration: ffprobe.duration,
       width: ffprobe.width,
       height: ffprobe.height,
@@ -89,10 +86,9 @@ async function examineDeleted(callback: (msg: string) => void) {
   const videos: Video[] = await Video.findAll();
 
   for (const video of videos) {
-    const realVideoPath = join(ARCHIVE_PATH, video.path);
-    try {
-      await fsPromises.access(realVideoPath);
-    } catch (err) {
+    const { error } = await access(video.path);
+
+    if (error) {
       await Video.delete(video.id);
       callback(`[Deleted Video] ${video.path}`);
     }

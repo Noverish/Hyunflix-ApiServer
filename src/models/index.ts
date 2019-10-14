@@ -54,6 +54,12 @@ export interface File {
   size: string;
 }
 
+export interface Stat {
+  size: number;
+  isDirectory: boolean;
+  isFile: boolean;
+}
+
 export interface RawFile {
   path: string;
   name: string;
