@@ -1,14 +1,14 @@
 import * as request from 'request';
 
 import { FFMPEG_HOST } from '@src/config';
-import { FFProbeVideo } from '@src/models';
+import { FFProbeVideo, RawSubtitle } from '@src/models';
 
 function send(url, method, payload = undefined): Promise<object> {
   return new Promise((resolve, reject) => {
     const options = {
       url,
       method,
-      json: payload,
+      json: payload || true,
     };
 
     request(options, (err: Error, res: request.Response, body: object) => {
@@ -17,7 +17,7 @@ function send(url, method, payload = undefined): Promise<object> {
         return;
       }
 
-      resolve(JSON.parse(body.toString()));
+      resolve(body);
     });
   });
 }
@@ -27,4 +27,11 @@ export async function ffprobeVideo(path: string): Promise<FFProbeVideo> {
   const method = 'GET';
 
   return (await send(url, method)) as FFProbeVideo;
+}
+
+export async function subtitle(videoPath: string): Promise<RawSubtitle[]> {
+  const url = `${FFMPEG_HOST}/subtitle`;
+  const method = 'POST';
+  const payload = { videoPath };
+  return (await send(url, method, payload)) as RawSubtitle[];
 }

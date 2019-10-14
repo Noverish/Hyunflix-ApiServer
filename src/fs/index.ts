@@ -1,5 +1,4 @@
 export * from './file';
-export * from './subtitle';
 
 import { promises as fsPromises } from 'fs';
 import { join } from 'path';

@@ -1,9 +1,10 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
+import { pathToURL } from '@src/utils';
 import { Video } from '@src/entity';
-import { IVideo, ISubtitle } from '@src/models';
-import { findSubtitle } from '@src/fs';
+import { IVideo, ISubtitle, RawSubtitle } from '@src/models';
 import { checkAdmin } from '@src/middlewares/check-admin';
+import { subtitle } from '@src/api';
 import videoExamine from '@src/workers/video-examine';
 
 const router: Router = Router();
@@ -45,7 +46,12 @@ router.get('/:videoId/subtitles', (req: Request, res: Response, next: NextFuncti
       return;
     }
 
-    const subtitles: ISubtitle[] = await findSubtitle(video.path);
+    const rawSubtitles: RawSubtitle[] = await subtitle(video.path);
+
+    const subtitles: ISubtitle[] = rawSubtitles.map(s => ({
+      language: s.language,
+      url: pathToURL(s.path),
+    }));
 
     res.status(200);
     res.json(subtitles);

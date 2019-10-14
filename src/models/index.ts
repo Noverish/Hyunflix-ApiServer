@@ -17,6 +17,11 @@ export interface ISubtitle {
   url: string;
 }
 
+export interface RawSubtitle {
+  language: string;
+  path: string;
+}
+
 export interface IVideoArticle {
   id: number;
   videos: IVideo[];
