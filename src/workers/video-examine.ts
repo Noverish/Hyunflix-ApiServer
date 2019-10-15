@@ -1,63 +1,56 @@
 import { extname, basename } from 'path';
 
 import { Video, VideoArticle } from '@src/entity';
-import { walk, access, lstat, ffprobeVideo } from '@src/api';
+import { walk, statBulk, ffprobeVideo } from '@src/api';
 import { VIDEO_FOLDER_PATHS, VIDEO_EXAMINE_SOCKET_PATH } from '@src/config';
 import { FFProbeVideo, Stat } from '@src/models';
 import { send } from '@src/sockets';
 
+type Callback = (msg: string) => void;
+type Insert = string;
+type Update = { id: number, path: string };
+type Delete = Video;
+
 export default function () {
-  const callback = (msg: string) => {
+  const callback: Callback = (msg: string) => {
     send(VIDEO_EXAMINE_SOCKET_PATH, msg);
   };
 
   (async function () {
+    let videoPaths: string[] = [];
+
     for (const folderPath of VIDEO_FOLDER_PATHS) {
-      await examineFolder(folderPath, callback);
+      const allFilePaths: string[] = await walk(folderPath);
+      videoPaths = videoPaths.concat(allFilePaths.filter(f => extname(f) === '.mp4'));
     }
-    await examineDeleted(callback);
+
+    await examineInsert(videoPaths, callback);
+    await examineUpdate(videoPaths, callback);
+    await examineDelete(videoPaths, callback);
 
     callback('Done!');
   })().catch(err => callback(err.stack));
 }
 
-async function examineFolder(folderPath: string, callback: (msg: string) => void) {
-  const videoPaths: string[] = (await walk(folderPath)).filter(f => extname(f) === '.mp4');
+async function examineInsert(videoPaths: string[], callback: Callback) {
+  const videoStats: Stat[] = await statBulk(videoPaths);
 
-  for (const videoPath of videoPaths) {
-    try {
-      await examineVideo(videoPath, callback);
-    } catch (err) {
-      callback(videoPath);
-      callback(err.stack);
+  const insertQueue: Insert[] = [];
+
+  for (const videoStat of videoStats) {
+    const { path, size } = videoStat;
+    const video: Video | null = await Video.findByPath(path);
+
+    if (!video) {
+      insertQueue.push(path);
     }
   }
-}
 
-async function examineVideo(videoPath: string, callback: (msg: string) => void) {
-  const video: Video | null = await Video.findByPath(videoPath);
-
-  if (video) {
-    const stat: Stat = await lstat(videoPath);
-
-    if (stat.size.toString() !== video.size.toString()) {
-      const ffprobe: FFProbeVideo = await ffprobeVideo(videoPath);
-
-      await Video.update(video.id, {
-        duration: ffprobe.duration,
-        width: ffprobe.width,
-        height: ffprobe.height,
-        bitrate: ffprobe.bitrate,
-        size: ffprobe.size.toString(),
-      });
-
-      callback(`[Modified] ${videoPath}`);
-    }
-  } else {
-    const ffprobe: FFProbeVideo = await ffprobeVideo(videoPath);
+  for (const path of insertQueue) {
+    const ffprobe: FFProbeVideo = await ffprobeVideo(path);
 
     const videoId: number = await Video.insert({
-      path: videoPath,
+      path,
       duration: ffprobe.duration,
       width: ffprobe.width,
       height: ffprobe.height,
@@ -70,7 +63,7 @@ async function examineVideo(videoPath: string, callback: (msg: string) => void) 
     const articleId: number = await VideoArticle.insert({
       videos: [video],
       tags: '',
-      title: basename(videoPath, extname(videoPath)),
+      title: basename(path, extname(path)),
       date: new Date(),
     });
 
@@ -78,20 +71,53 @@ async function examineVideo(videoPath: string, callback: (msg: string) => void) 
 
     await Video.update(videoId, { article });
 
-    callback(`[Inserted] ${videoPath}`);
+    callback(`[Inserted] ${path}`);
   }
 }
 
-async function examineDeleted(callback: (msg: string) => void) {
+async function examineUpdate(videoPaths: string[], callback: Callback) {
+  const videoStats: Stat[] = await statBulk(videoPaths);
+
+  const updateQueue: Update[] = [];
+
+  for (const videoStat of videoStats) {
+    const { path, size } = videoStat;
+    const video: Video | null = await Video.findByPath(path);
+
+    if (video && (size.toString() !== video.size.toString())) {
+      updateQueue.push({ path , id: video.id });
+    }
+  }
+
+  for (const { id, path } of updateQueue) {
+    const ffprobe: FFProbeVideo = await ffprobeVideo(path);
+
+    await Video.update(id, {
+      duration: ffprobe.duration,
+      width: ffprobe.width,
+      height: ffprobe.height,
+      bitrate: ffprobe.bitrate,
+      size: ffprobe.size.toString(),
+    });
+
+    callback(`[Modified] ${path}`);
+  }
+}
+
+async function examineDelete(videoPaths: string[], callback: Callback) {
   const videos: Video[] = await Video.findAll();
 
-  for (const video of videos) {
-    const { error } = await access(video.path);
+  const deleteQueue: Delete[] = [];
 
-    if (error) {
-      await Video.delete(video.id);
-      callback(`[Deleted Video] ${video.path}`);
+  for (const video of videos) {
+    if (!videoPaths.includes(video.path)) {
+      deleteQueue.push(video);
     }
+  }
+
+  for (const video of deleteQueue) {
+    await Video.delete(video.id);
+    callback(`[Deleted Video] ${video.path}`);
   }
 
   const videoArticles: VideoArticle[] = await VideoArticle.findAll();

@@ -54,8 +54,15 @@ export async function access(path: string): Promise<{ error: string | null}> {
   return (await send(url, method)) as { error: string | null};
 }
 
-export async function lstat(path: string): Promise<Stat> {
-  const url = `${FFMPEG_HOST}/fs/lstat?path=${encodeURI(path)}`;
+export async function stat(path: string): Promise<Stat> {
+  const url = `${FFMPEG_HOST}/fs/stat?path=${encodeURI(path)}`;
   const method = 'GET';
   return (await send(url, method)) as Stat;
+}
+
+export async function statBulk(paths: string[]): Promise<Stat[]> {
+  const url = `${FFMPEG_HOST}/fs/stat-bulk`;
+  const method = 'POST';
+  const payload = { paths };
+  return (await send(url, method, payload)) as Stat[];
 }

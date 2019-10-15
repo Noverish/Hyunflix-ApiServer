@@ -55,6 +55,7 @@ export interface File {
 }
 
 export interface Stat {
+  path: string;
   size: number;
   isDirectory: boolean;
   isFile: boolean;
