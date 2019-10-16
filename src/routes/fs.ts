@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import * as prettyBytes from 'pretty-bytes';
 
 import { readdir } from '@src/api';
-import { File, RawFile } from '@src/models';
+import { File, Stat } from '@src/models';
 import { checkAdmin } from '@src/middlewares/check-admin';
 import { pathToURL } from '@src/utils';
 
@@ -12,13 +12,13 @@ router.get('/readdir', checkAdmin, (req: Request, res: Response, next: NextFunct
   (async function () {
     const path = req.query['path'];
 
-    const rawFiles: RawFile[] = await readdir(path);
-    const files: File[] = rawFiles.map(f => ({
-      url: pathToURL(f.path),
-      path: f.path,
-      name: f.name,
-      isdir: f.isdir,
-      size: prettyBytes(f.size),
+    const stats: Stat[] = await readdir(path);
+    const files: File[] = stats.map(s => ({
+      url: pathToURL(s.path),
+      path: s.path,
+      name: s.name,
+      isdir: s.isdir,
+      size: prettyBytes(s.size),
     }));
 
     res.status(200);

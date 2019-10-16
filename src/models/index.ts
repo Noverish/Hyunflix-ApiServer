@@ -46,26 +46,19 @@ export interface IMusic {
   tags: string[];
 }
 
+export interface Stat {
+  path: string;
+  name: string;
+  size: number;
+  isdir: boolean;
+}
+
 export interface File {
   url: string;
   path: string;
   name: string;
   isdir: boolean;
   size: string;
-}
-
-export interface Stat {
-  path: string;
-  size: number;
-  isDirectory: boolean;
-  isFile: boolean;
-}
-
-export interface RawFile {
-  path: string;
-  name: string;
-  isdir: boolean;
-  size: number;
 }
 
 export interface FFProbe {
