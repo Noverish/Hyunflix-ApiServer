@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 
 import { VideoArticle } from '@src/entity';
 import { checkAdmin } from '@src/middlewares/check-admin';
-import { search } from '@src/workers/video';
+import searchVideo from '@src/workers/search-video';
 import { IVideoArticle } from '@src/models';
 
 const router: Router = Router();
@@ -17,7 +17,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
     const articles: IVideoArticle[] = tmp.map(a => a.convert());
 
     const searched = (query)
-      ? search(articles, query)
+      ? searchVideo(articles, query)
       : articles;
 
     const sliced = searched.slice((page - 1) * pageSize, (page) * pageSize);

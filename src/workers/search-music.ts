@@ -1,15 +1,15 @@
 import * as Fuse from 'fuse.js';
 
-import { IVideoArticle } from '@src/models';
+import { IMusic } from '@src/models';
 
-export function search(articles: IVideoArticle[], query: string): IVideoArticle[] {
+export default function (musics: IMusic[], query: string): IMusic[] {
   const options = {
     shouldSort: true,
-    threshold: 0.5,
+    threshold: 0.1,
     maxPatternLength: 32,
     keys: ['tags', 'title'],
   };
-  const fuse = new Fuse(articles, options);
+  const fuse = new Fuse(musics, options);
   const result = fuse.search(query);
   return result;
 }
