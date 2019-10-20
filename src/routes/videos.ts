@@ -3,13 +3,13 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { pathToURL } from '@src/utils';
 import { Video } from '@src/entity';
 import { IVideo, ISubtitle, RawSubtitle } from '@src/models';
-import { checkAdmin } from '@src/middlewares/check-admin';
+import { checkAuthority } from '@src/middlewares/validate-header';
 import { subtitle } from '@src/api';
 import videoExamine from '@src/workers/video-examine';
 
 const router: Router = Router();
 
-router.post('/examine', checkAdmin, (req: Request, res: Response, next: NextFunction) => {
+router.post('/examine', checkAuthority('admin'), (req: Request, res: Response, next: NextFunction) => {
   videoExamine();
   res.status(204);
   res.end();

@@ -2,12 +2,16 @@ import * as request from 'request';
 
 import { FFMPEG_HOST } from '@src/config';
 import { FFProbeVideo, RawSubtitle, Stat } from '@src/models';
+import { API_SERVER_KEY } from '@src/credentials';
 
 function send(url, method, payload = undefined): Promise<object> {
   return new Promise((resolve, reject) => {
     const options = {
       url,
       method,
+      headers: {
+        'Authorization': `Bearer ${API_SERVER_KEY}`
+      },
       json: payload || true,
     };
 

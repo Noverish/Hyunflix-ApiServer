@@ -1,5 +1,9 @@
-export function filterWithAuthority<T>(userAuthority: string[], list: T[]): T[] {
-  if (userAuthority.includes('admin')) {
+import { Auth } from '@src/models';
+
+export function filterWithAuthority<T>(auth: Auth, list: T[]): T[] {
+  const authorityList: string[] = auth.authority;
+  
+  if (authorityList.includes('admin')) {
     return list;
   }
 
@@ -10,6 +14,6 @@ export function filterWithAuthority<T>(userAuthority: string[], list: T[]): T[] 
       return true;
     }
 
-    return authority.every(a => userAuthority.includes(a));
+    return authority.every(a => authorityList.includes(a));
   });
 }

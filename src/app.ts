@@ -7,7 +7,7 @@ import 'reflect-metadata';
 import { PORT } from '@src/config';
 import sockets from '@src/sockets';
 import { consoleLogger, fileLogger } from '@src/utils/logger';
-import { validateToken } from '@src/middlewares/validate-token';
+import validateHeader from '@src/middlewares/validate-header';
 import routes from './routes';
 
 const app = express();
@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(consoleLogger);
 app.use(fileLogger);
 
-app.use(validateToken);
+app.use(validateHeader);
 app.use('/', routes);
 
 app.use((req, res, next) => {

@@ -84,3 +84,10 @@ export interface IUserVideo {
   time: number;
   date: string;
 }
+
+export interface Auth {
+  id: number;
+  token: string;
+  authority: string[];
+  allowedPaths: string[];
+}

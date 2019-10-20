@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
 import { VideoArticle } from '@src/entity';
-import { checkAdmin } from '@src/middlewares/check-admin';
+import { checkAuthority } from '@src/middlewares/validate-header';
 import searchVideo from '@src/workers/search-video';
 import { IVideoArticle } from '@src/models';
 
@@ -62,7 +62,7 @@ router.get('/:articleId', (req: Request, res: Response, next: NextFunction) => {
   })().catch(next);
 });
 
-router.put('/:articleId', checkAdmin, (req: Request, res: Response, next: NextFunction) => {
+router.put('/:articleId', checkAuthority('admin'), (req: Request, res: Response, next: NextFunction) => {
   const articleId: number = parseInt(req.params['articleId'], 10);
   const params: Partial<VideoArticle> = req.body;
 

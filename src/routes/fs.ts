@@ -3,12 +3,12 @@ import * as prettyBytes from 'pretty-bytes';
 
 import { readdir } from '@src/api';
 import { File, Stat } from '@src/models';
-import { checkAdmin } from '@src/middlewares/check-admin';
+import { checkAuthority } from '@src/middlewares/validate-header';
 import { pathToURL } from '@src/utils';
 
 const router: Router = Router();
 
-router.get('/readdir', checkAdmin, (req: Request, res: Response, next: NextFunction) => {
+router.get('/readdir', checkAuthority('admin'), (req: Request, res: Response, next: NextFunction) => {
   (async function () {
     const path = req.query['path'];
 
