@@ -11,19 +11,21 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
+            - v1-dependencies-{{ checksum "package-lock.json" }}
       - run: npm install
       - save_cache:
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - ./node_modules
       - run: npm run tslint
   
   deploy:
     machine: true
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package-lock.json" }}
       - run: docker build -t hyunsub/api:latest .
       - run: docker save -o hyunsub-api.tar hyunsub/api:latest
       - add_ssh_keys:
