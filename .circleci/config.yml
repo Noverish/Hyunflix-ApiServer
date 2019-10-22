@@ -26,6 +26,11 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package-lock.json" }}
+      - run: npm install
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
       - run: docker build -t hyunsub/api:latest .
       - run: docker save -o hyunsub-api.tar hyunsub/api:latest
       - add_ssh_keys:
