@@ -6,3 +6,5 @@ export const FFMPEG_HOST = 'http://home.hyunsub.kim:8080/fs';
 
 export const USER_VIDEO_SOCKET_PATH = '/api/socket.io/user/video';
 export const VIDEO_EXAMINE_SOCKET_PATH = '/api/socket.io/videos/examine';
+
+export const API_SERVER_KEY = process.env.API_SERVER_KEY!;

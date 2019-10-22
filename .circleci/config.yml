@@ -10,8 +10,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package-lock.json" }}
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
       - run: npm install
       - save_cache:
           key: v1-dependencies-{{ checksum "package-lock.json" }}
@@ -24,8 +23,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package-lock.json" }}
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
       - run: npm install
       - save_cache:
           key: v1-dependencies-{{ checksum "package-lock.json" }}

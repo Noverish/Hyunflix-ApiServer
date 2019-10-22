@@ -1,7 +1,5 @@
 dist/
 logs/
-credentials*
-ormconfig.js
 ffmpeg2pass*
 src/tmp/
 
