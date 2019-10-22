@@ -10,7 +10,7 @@ function send(url, method, payload = undefined): Promise<object> {
       url,
       method,
       headers: {
-        'Authorization': `Bearer ${API_SERVER_KEY}`
+        Authorization: `Bearer ${API_SERVER_KEY}`,
       },
       json: payload || true,
     };

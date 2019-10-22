@@ -2,7 +2,7 @@ import { Auth } from '@src/models';
 
 export function filterWithAuthority<T>(auth: Auth, list: T[]): T[] {
   const authorityList: string[] = auth.authority;
-  
+
   if (authorityList.includes('admin')) {
     return list;
   }
