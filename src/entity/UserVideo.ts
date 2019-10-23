@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, getConnection, FindConditions } from 'typeorm';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, getConnection, FindConditions } from 'typeorm';
 
 import { VideoArticle } from '@src/entity';
 import { timeAgo } from '@src/utils';
@@ -12,7 +12,7 @@ export class UserVideo extends BaseEntity {
   @Column()
   userId: number;
 
-  @OneToOne(type => VideoArticle)
+  @ManyToOne(type => VideoArticle)
   @JoinColumn()
   article: VideoArticle;
 
