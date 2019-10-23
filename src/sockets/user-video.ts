@@ -19,12 +19,12 @@ function receive(payload: UserVideoTime) {
     }
 
     const article = await VideoArticle.findById(articleId);
-    const userVideo: UserVideo | null = await UserVideo.find(userId, article);
+    const userVideo: UserVideo | null = await UserVideo.$findOne({ userId, article });
 
     if (!userVideo) {
-      await UserVideo.insert(userId, article);
+      await UserVideo.insert({ userId, article });
+    } else {
+      await UserVideo.update({ userId, article }, { time });
     }
-
-    await UserVideo.update(userId, article, time);
   })().catch(console.error);
 }

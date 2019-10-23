@@ -1,11 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, getConnection } from 'typeorm';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, getConnection, FindConditions } from 'typeorm';
 
 import { VideoArticle } from '@src/entity';
 import { timeAgo } from '@src/utils';
 import { IUserVideo } from '@src/models';
 
 @Entity()
-export class UserVideo {
+export class UserVideo extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -22,40 +22,22 @@ export class UserVideo {
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   date: Date;
 
-  static async find(userId: number, article: VideoArticle): Promise<UserVideo | null> {
+  static async $findOne(where: FindConditions<UserVideo>): Promise<UserVideo | null> {
     return await getConnection()
       .getRepository(UserVideo)
       .findOne({
-        where: { userId, article },
+        where,
         relations: ['article', 'article.videos'],
       });
   }
 
-  static async findAll(userId: number): Promise<UserVideo[]> {
+  static async $find(where: FindConditions<UserVideo>): Promise<UserVideo[]> {
     return await getConnection()
       .getRepository(UserVideo)
       .find({
-        where: { userId },
+        where,
         relations: ['article', 'article.videos'],
       });
-  }
-
-  static async insert(userId: number, article: VideoArticle) {
-    await getConnection()
-      .createQueryBuilder()
-      .insert()
-      .into(UserVideo)
-      .values({ userId, article })
-      .execute();
-  }
-
-  static async update(userId: number, article: VideoArticle, time: number) {
-    await getConnection()
-      .createQueryBuilder()
-      .update(UserVideo)
-      .set({ time, date: new Date() })
-      .where({ userId, article })
-      .execute();
   }
 
   convert(): IUserVideo {
