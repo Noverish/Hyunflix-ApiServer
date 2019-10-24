@@ -1,11 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 import { IMusic } from '@src/models';
 import { pathToURL } from '@src/utils';
 
 @Entity()
-export class Music {
+export class Music extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -36,17 +36,6 @@ export class Music {
       .find({
         order: { date: 'DESC' },
       });
-  }
-
-  static async insert(param: QueryDeepPartialEntity<Music>): Promise<number> {
-    const result = await getConnection()
-      .createQueryBuilder()
-      .insert()
-      .into(Music)
-      .values(param)
-      .execute();
-
-    return result.identifiers[0].id;
   }
 
   convert(): IMusic {

@@ -3,6 +3,7 @@ import { Server } from 'http';
 
 import userVideo from './user-video';
 import videoExamine from './video-examine';
+import examineMusic from './examine-music';
 
 const sockets = {};
 const listeners = {};
@@ -10,6 +11,7 @@ const listeners = {};
 export default function (server: Server) {
   userVideo(server);
   videoExamine(server);
+  examineMusic(server);
 }
 
 export function createSocket(server: Server, path: string) {

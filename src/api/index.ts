@@ -1,7 +1,7 @@
 import * as request from 'request';
 
 import { FFMPEG_HOST, API_SERVER_KEY } from '@src/config';
-import { FFProbeVideo, RawSubtitle, Stat } from '@src/models';
+import { FFProbeVideo, FFProbeMusic, RawSubtitle, Stat } from '@src/models';
 
 function send(url, method, payload = undefined): Promise<object> {
   return new Promise((resolve, reject) => {
@@ -26,10 +26,17 @@ function send(url, method, payload = undefined): Promise<object> {
 }
 
 export async function ffprobeVideo(path: string): Promise<FFProbeVideo> {
-  const url = `${FFMPEG_HOST}/ffprobe/video?path=${encodeURI(path)}`;
+  const url = `${FFMPEG_HOST}/ffprobe/video?path=${encodeURIComponent(path)}`;
   const method = 'GET';
 
   return (await send(url, method)) as FFProbeVideo;
+}
+
+export async function ffprobeMusic(path: string): Promise<FFProbeMusic> {
+  const url = `${FFMPEG_HOST}/ffprobe/music?path=${encodeURIComponent(path)}`;
+  const method = 'GET';
+
+  return (await send(url, method)) as FFProbeMusic;
 }
 
 export async function subtitle(videoPath: string): Promise<RawSubtitle[]> {
@@ -40,25 +47,25 @@ export async function subtitle(videoPath: string): Promise<RawSubtitle[]> {
 }
 
 export async function readdir(path: string): Promise<Stat[]> {
-  const url = `${FFMPEG_HOST}/fs/readdir?path=${encodeURI(path)}`;
+  const url = `${FFMPEG_HOST}/fs/readdir?path=${encodeURIComponent(path)}`;
   const method = 'GET';
   return (await send(url, method)) as Stat[];
 }
 
 export async function walk(path: string): Promise<string[]> {
-  const url = `${FFMPEG_HOST}/fs/walk?path=${encodeURI(path)}`;
+  const url = `${FFMPEG_HOST}/fs/walk?path=${encodeURIComponent(path)}`;
   const method = 'GET';
   return (await send(url, method)) as string[];
 }
 
 export async function access(path: string): Promise<{ error: string | null}> {
-  const url = `${FFMPEG_HOST}/fs/access?path=${encodeURI(path)}`;
+  const url = `${FFMPEG_HOST}/fs/access?path=${encodeURIComponent(path)}`;
   const method = 'GET';
   return (await send(url, method)) as { error: string | null};
 }
 
 export async function stat(path: string): Promise<Stat> {
-  const url = `${FFMPEG_HOST}/fs/stat?path=${encodeURI(path)}`;
+  const url = `${FFMPEG_HOST}/fs/stat?path=${encodeURIComponent(path)}`;
   const method = 'GET';
   return (await send(url, method)) as Stat;
 }

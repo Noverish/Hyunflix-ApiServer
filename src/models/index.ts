@@ -63,13 +63,17 @@ export interface File {
 
 export interface FFProbe {
   duration: number;
+  bitrate: number;
+  size: number;
 }
 
 export interface FFProbeVideo extends FFProbe {
   width: number;
   height: number;
-  bitrate: number;
-  size: number;
+}
+
+export interface FFProbeMusic extends FFProbe {
+
 }
 
 export interface UserVideoTime {

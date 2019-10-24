@@ -5,8 +5,15 @@ import { filterWithAuthority } from '@src/utils/authority';
 import { checkAuthority } from '@src/middlewares/validate-header';
 import { IMusic, Auth } from '@src/models';
 import searchMusic from '@src/workers/search-music';
+import examineMusic from '@src/workers/examine-music';
 
 const router: Router = Router();
+
+router.post('/examine', checkAuthority('admin'), (req: Request, res: Response, next: NextFunction) => {
+  examineMusic();
+  res.status(204);
+  res.end();
+});
 
 // TODO property-validator
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
