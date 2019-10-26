@@ -8,7 +8,7 @@ const timeAgoObj = new javascriptTimeAgo('ko-KR');
 
 export function timeAgo(date: Date) {
   return timeAgoObj.format(date);
-};
+}
 
 export function dateToString(date: Date) {
   const year = leadingZeros(date.getFullYear(), 4);

@@ -13,16 +13,16 @@ export class Encode extends BaseEntity {
 
   @Column()
   outpath: string;
-  
+
   @Column()
   options: string;
 
-  @Column("float", { default: 0 })
+  @Column('float', { default: 0 })
   progress: number;
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   date: Date;
-  
+
   convert(): IEncode {
     return {
       id: this.id,
