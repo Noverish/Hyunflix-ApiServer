@@ -45,7 +45,7 @@ export class UserVideo extends BaseEntity {
       userId: this.userId,
       article: this.article.convert(),
       time: this.time,
-      date: timeAgo.format(this.date),
+      date: timeAgo(this.date),
     };
   }
 }

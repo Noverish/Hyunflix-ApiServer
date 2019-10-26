@@ -4,7 +4,11 @@ import { ARCHIVE_PATH, FILE_SERVER } from '@src/config';
 import javascriptTimeAgo from 'javascript-time-ago';
 require('javascript-time-ago/load-all-locales');
 
-export const timeAgo = new javascriptTimeAgo('ko-KR');
+const timeAgoObj = new javascriptTimeAgo('ko-KR');
+
+export function timeAgo(date: Date) {
+  return timeAgoObj.format(date);
+};
 
 export function dateToString(date: Date) {
   const year = leadingZeros(date.getFullYear(), 4);

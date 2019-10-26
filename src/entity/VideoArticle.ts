@@ -77,7 +77,7 @@ export class VideoArticle {
       id: this.id,
       tags: this.tags.split(',').filter(t => !!t),
       title: this.title,
-      date: timeAgo.format(this.date),
+      date: timeAgo(this.date),
       videos: (this.videos || []).map(v => v.convert()),
     };
   }

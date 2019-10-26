@@ -95,3 +95,12 @@ export interface Auth {
   authority: string[];
   allowedPaths: string[];
 }
+
+export interface IEncode {
+  id: number;
+  inpath: string;
+  outpath: string;
+  options: string;
+  progress: number;
+  date: string;
+}
