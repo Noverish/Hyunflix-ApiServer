@@ -34,6 +34,7 @@ export class Music extends BaseEntity {
     return {
       id: this.id,
       title: this.title,
+      path: this.path,
       url: pathToURL(this.path),
       duration: this.duration,
       youtube: this.youtube,

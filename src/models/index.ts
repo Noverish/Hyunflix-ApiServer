@@ -40,6 +40,7 @@ export interface IVideoBundle {
 export interface IMusic {
   id: number;
   title: string;
+  path: string;
   url: string;
   duration: number;
   youtube: string | null;
