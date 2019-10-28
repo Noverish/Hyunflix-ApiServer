@@ -6,6 +6,7 @@ import { checkAuthority } from '@src/middlewares/validate-header';
 import { IMusic, Auth } from '@src/models';
 import searchMusic from '@src/workers/search-music';
 import examineMusic from '@src/workers/examine-music';
+import * as Api from '@src/api';
 
 const router: Router = Router();
 
@@ -23,7 +24,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
     const pageSize: number = parseInt(req.query['ps'] || '0', 10);
     const auth: Auth = req['auth'];
 
-    const tmp: Music[] = await Music.findAll();
+    const tmp: Music[] = await Music.find({ order: { id: 'DESC' } });
     const tmp2 = filterWithAuthority(auth, tmp);
     const musics: IMusic[] = tmp2.map(m => m.convert());
 
@@ -66,11 +67,30 @@ router.post('/', checkAuthority('fs'), (req: Request, res: Response, next: NextF
   })().catch(next);
 });
 
+router.delete('/', checkAuthority('admin'), (req: Request, res: Response, next: NextFunction) => {
+  (async function () {
+    const ids: number[] = req.body['ids'];
+    const deleteFile: boolean = req.body['deleteFile'];
+
+    if (deleteFile) {
+      const musics: Music[] = await Music.findByIds(ids);
+      const paths: string[] = musics.map(m => m.path);
+
+      await Api.unlinkBulk(paths);
+    }
+
+    await Music.delete(ids);
+
+    res.status(204);
+    res.end();
+  })().catch(next);
+});
+
 router.get('/tags', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
     const auth: Auth = req['auth'];
 
-    let musics: Music[] = await Music.findAll();
+    let musics: Music[] = await Music.find();
     musics = filterWithAuthority(auth, musics);
 
     const tagSet = new Set();

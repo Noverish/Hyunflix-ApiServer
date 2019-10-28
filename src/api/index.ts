@@ -76,3 +76,10 @@ export async function statBulk(paths: string[]): Promise<Stat[]> {
   const payload = { paths };
   return (await send(url, method, payload)) as Stat[];
 }
+
+export async function unlinkBulk(paths: string[]): Promise<void> {
+  const url = `${FFMPEG_HOST}/fs/unlink-bulk`;
+  const method = 'POST';
+  const payload = { paths };
+  await send(url, method, payload);
+}

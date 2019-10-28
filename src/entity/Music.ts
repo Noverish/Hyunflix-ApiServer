@@ -30,14 +30,6 @@ export class Music extends BaseEntity {
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   date: Date;
 
-  static async findAll(): Promise<Music[]> {
-    return await getConnection()
-      .getRepository(Music)
-      .find({
-        order: { date: 'DESC' },
-      });
-  }
-
   convert(): IMusic {
     return {
       id: this.id,
