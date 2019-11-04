@@ -1,16 +1,4 @@
-export interface IVideo {
-  id: number;
-  url: string;
-  duration: number;
-  width: number;
-  height: number;
-  bitrate: number;
-  size: number;
-  durationString: string;
-  bitrateString: string;
-  sizeString: string;
-  resolution: string;
-}
+export * from './video';
 
 export interface ISubtitle {
   language: string;
@@ -20,21 +8,6 @@ export interface ISubtitle {
 export interface RawSubtitle {
   language: string;
   path: string;
-}
-
-export interface IVideoArticle {
-  id: number;
-  videos: IVideo[];
-  tags: string[];
-  title: string;
-  date: string;
-}
-
-export interface IVideoBundle {
-  id: number;
-  articles: IVideoArticle[];
-  title: string;
-  category: string;
 }
 
 export interface IMusic {
@@ -75,19 +48,6 @@ export interface FFProbeVideo extends FFProbe {
 
 export interface FFProbeMusic extends FFProbe {
 
-}
-
-export interface UserVideoTime {
-  userId: number;
-  articleId: number;
-  time: number;
-}
-
-export interface IUserVideo {
-  userId: number;
-  article: IVideoArticle;
-  time: number;
-  date: string;
 }
 
 export interface Auth {

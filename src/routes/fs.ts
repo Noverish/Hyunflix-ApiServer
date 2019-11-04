@@ -8,7 +8,9 @@ import { pathToURL } from '@src/utils';
 
 const router: Router = Router();
 
-router.get('/readdir', checkAuthority('admin'), (req: Request, res: Response, next: NextFunction) => {
+router.use(checkAuthority('admin'));
+
+router.get('/readdir', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
     const path = req.query['path'];
 

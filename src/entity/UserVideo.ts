@@ -1,8 +1,8 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, getConnection, FindConditions } from 'typeorm';
 
-import { VideoArticle } from '@src/entity';
-import { timeAgo } from '@src/utils';
+import { Video } from '@src/entity';
 import { IUserVideo } from '@src/models';
+import { timeAgo } from '@src/utils';
 
 @Entity()
 export class UserVideo extends BaseEntity {
@@ -12,9 +12,9 @@ export class UserVideo extends BaseEntity {
   @Column()
   userId: number;
 
-  @ManyToOne(type => VideoArticle)
+  @ManyToOne(type => Video)
   @JoinColumn()
-  article: VideoArticle;
+  video: Video;
 
   @Column({ default: 0 })
   time: number;
@@ -22,12 +22,12 @@ export class UserVideo extends BaseEntity {
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   date: Date;
 
-  static async $findOne(where: FindConditions<UserVideo>): Promise<UserVideo | null> {
+  static async $findOne(where: FindConditions<UserVideo>): Promise<UserVideo | undefined> {
     return await getConnection()
       .getRepository(UserVideo)
       .findOne({
         where,
-        relations: ['article', 'article.videos'],
+        relations: ['video'],
       });
   }
 
@@ -36,14 +36,14 @@ export class UserVideo extends BaseEntity {
       .getRepository(UserVideo)
       .find({
         where,
-        relations: ['article', 'article.videos'],
+        relations: ['video'],
       });
   }
 
   convert(): IUserVideo {
     return {
       userId: this.userId,
-      article: this.article.convert(),
+      video: this.video.convert(),
       time: this.time,
       date: timeAgo(this.date),
     };

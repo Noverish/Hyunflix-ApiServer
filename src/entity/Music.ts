@@ -1,5 +1,4 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, getConnection } from 'typeorm';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 import { IMusic } from '@src/models';
 import { pathToURL } from '@src/utils';
@@ -18,10 +17,10 @@ export class Music extends BaseEntity {
   @Column()
   duration: number;
 
-  @Column()
+  @Column({ default: '' })
   tags: string;
 
-  @Column()
+  @Column({ default: '' })
   authority: string;
 
   @Column({ nullable: true })

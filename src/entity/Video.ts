@@ -1,15 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, getConnection } from 'typeorm';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import * as prettyBytes from 'pretty-bytes';
 
-import { VideoArticle } from '@src/entity';
+import { VideoSeries } from '@src/entity';
 import { IVideo } from '@src/models';
-import { pathToURL, second2String, width2Resolution } from '@src/utils';
+import { pathToURL, second2String, width2Resolution, timeAgo } from '@src/utils';
 
 @Entity()
-export class Video {
+export class Video extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  title: string;
 
   @Column()
   path: string;
@@ -29,60 +31,27 @@ export class Video {
   @Column('bigint')
   size: string;
 
-  @ManyToOne(type => VideoArticle, article => article.videos)
-  article: VideoArticle;
+  @Column({ default: '' })
+  tags: string;
 
-  static async findAll(): Promise<Video[]> {
-    return await getConnection()
-      .getRepository(Video)
-      .find();
-  }
+  @Column({ default: '' })
+  authority: string;
 
-  static async findById(id: number): Promise<Video | null> {
-    return await getConnection()
-      .getRepository(Video)
-      .findOne({ where: { id } });
-  }
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  date: Date;
 
-  static async findByPath(path: string): Promise<Video | null> {
-    return await getConnection()
-      .getRepository(Video)
-      .findOne({ where: { path } });
-  }
-
-  static async update(id: number, values: QueryDeepPartialEntity<Video>) {
-    await getConnection()
-      .createQueryBuilder()
-      .update(Video)
-      .set(values)
-      .where('id = :id', { id })
-      .execute();
-  }
-
-  static async insert(values: QueryDeepPartialEntity<Video>): Promise<number> {
-    const result = await getConnection()
-      .createQueryBuilder()
-      .insert()
-      .into(Video)
-      .values(values)
-      .execute();
-
-    return result.identifiers[0].id;
-  }
-
-  static async delete(id: number) {
-    await getConnection()
-      .getRepository(Video)
-      .createQueryBuilder()
-      .delete()
-      .where('id = :id', { id })
-      .execute();
-  }
+  @ManyToOne(type => VideoSeries, bundle => bundle.videos)
+  series: VideoSeries;
 
   convert(): IVideo {
     return {
       id: this.id,
+      title: this.title,
       url: pathToURL(this.path),
+      path: this.path,
+      tags: this.tags.split(',').filter(t => !!t),
+      date: timeAgo(this.date),
+
       duration: this.duration,
       width: this.width,
       height: this.height,

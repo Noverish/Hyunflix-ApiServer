@@ -1,6 +1,6 @@
 import { extname, basename } from 'path';
 
-import { Video, VideoArticle } from '@src/entity';
+import { Video } from '@src/entity';
 import { walk, statBulk, ffprobeVideo } from '@src/api';
 import { VIDEO_FOLDER_PATHS, VIDEO_EXAMINE_SOCKET_PATH } from '@src/config';
 import { FFProbeVideo, Stat } from '@src/models';
@@ -38,8 +38,8 @@ async function examineInsert(videoPaths: string[], callback: Callback) {
   const insertQueue: Insert[] = [];
 
   for (const videoStat of videoStats) {
-    const { path, size } = videoStat;
-    const video: Video | null = await Video.findByPath(path);
+    const { path } = videoStat;
+    const video: Video | undefined = await Video.findOne({ path });
 
     if (!video) {
       insertQueue.push(path);
@@ -49,27 +49,17 @@ async function examineInsert(videoPaths: string[], callback: Callback) {
   for (const path of insertQueue) {
     const ffprobe: FFProbeVideo = await ffprobeVideo(path);
 
-    const videoId: number = await Video.insert({
+    await Video.insert({
       path,
       duration: ffprobe.duration,
       width: ffprobe.width,
       height: ffprobe.height,
       bitrate: ffprobe.bitrate,
       size: ffprobe.size.toString(),
-    });
-
-    const video: Video = await Video.findById(videoId);
-
-    const articleId: number = await VideoArticle.insert({
-      videos: [video],
       tags: '',
       title: basename(path, extname(path)),
       date: new Date(),
     });
-
-    const article: VideoArticle = await VideoArticle.findById(articleId);
-
-    await Video.update(videoId, { article });
 
     callback(`[Inserted] ${path}`);
   }
@@ -82,7 +72,7 @@ async function examineUpdate(videoPaths: string[], callback: Callback) {
 
   for (const videoStat of videoStats) {
     const { path, size } = videoStat;
-    const video: Video | null = await Video.findByPath(path);
+    const video: Video | undefined = await Video.findOne({ path });
 
     if (video && (size.toString() !== video.size.toString())) {
       updateQueue.push({ path , id: video.id });
@@ -105,7 +95,7 @@ async function examineUpdate(videoPaths: string[], callback: Callback) {
 }
 
 async function examineDelete(videoPaths: string[], callback: Callback) {
-  const videos: Video[] = await Video.findAll();
+  const videos: Video[] = await Video.find();
 
   const deleteQueue: Delete[] = [];
 
@@ -117,15 +107,6 @@ async function examineDelete(videoPaths: string[], callback: Callback) {
 
   for (const video of deleteQueue) {
     await Video.delete(video.id);
-    callback(`[Deleted Video] ${video.path}`);
-  }
-
-  const videoArticles: VideoArticle[] = await VideoArticle.findAll();
-
-  for (const videoArticle of videoArticles) {
-    if (videoArticle.videos.length === 0) {
-      await VideoArticle.delete(videoArticle.id);
-      callback(`[Deleted VideoArticle] ${videoArticle.title}`);
-    }
+    callback(`[Deleted] ${video.path}`);
   }
 }

@@ -10,12 +10,6 @@ import * as Api from '@src/api';
 
 const router: Router = Router();
 
-router.post('/examine', checkAuthority('admin'), (req: Request, res: Response, next: NextFunction) => {
-  examineMusic();
-  res.status(204);
-  res.end();
-});
-
 // TODO property-validator
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
@@ -44,7 +38,28 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
   })().catch(next);
 });
 
-router.post('/', checkAuthority('fs'), (req: Request, res: Response, next: NextFunction) => {
+router.get('/tags', (req: Request, res: Response, next: NextFunction) => {
+  (async function () {
+    const auth: Auth = req['auth'];
+
+    let musics: Music[] = await Music.find();
+    musics = filterWithAuthority(auth, musics);
+
+    const tagSet = new Set();
+    musics.forEach(m => m.tags.split(',').reduce((s, t) => s.add(t), tagSet));
+
+    res.status(200);
+    res.json([...tagSet]);
+  })().catch(next);
+});
+
+router.post('/examine', checkAuthority('admin'), (req: Request, res: Response, next: NextFunction) => {
+  examineMusic();
+  res.status(204);
+  res.end();
+});
+
+router.post('/', checkAuthority('admin'), (req: Request, res: Response, next: NextFunction) => {
   (async function () {
     const title: string = req.body['title'];
     const path: string = req.body['path'];
@@ -83,21 +98,6 @@ router.delete('/', checkAuthority('admin'), (req: Request, res: Response, next: 
 
     res.status(204);
     res.end();
-  })().catch(next);
-});
-
-router.get('/tags', (req: Request, res: Response, next: NextFunction) => {
-  (async function () {
-    const auth: Auth = req['auth'];
-
-    let musics: Music[] = await Music.find();
-    musics = filterWithAuthority(auth, musics);
-
-    const tagSet = new Set();
-    musics.forEach(m => m.tags.split(',').reduce((s, t) => s.add(t), tagSet));
-
-    res.status(200);
-    res.json([...tagSet]);
   })().catch(next);
 });
 

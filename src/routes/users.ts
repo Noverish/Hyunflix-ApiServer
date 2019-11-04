@@ -1,10 +1,10 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
-import { UserVideo, VideoArticle } from '@src/entity';
+import { UserVideo, Video } from '@src/entity';
 
 const router: Router = Router();
 
-const notFoundMsg = (userId, articleId) => `There is no UserVideo with userId=${userId} and articleId=${articleId}`;
+const notFoundMsg = (userId, videoId) => `There is no UserVideo with userId=${userId} and videoId=${videoId}`;
 
 router.get('/:userId/videos', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
@@ -17,22 +17,22 @@ router.get('/:userId/videos', (req: Request, res: Response, next: NextFunction) 
   })().catch(next);
 });
 
-router.get('/:userId/videos/:articleId', (req: Request, res: Response, next: NextFunction) => {
+router.get('/:userId/videos/:videoId', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
     const userId: number = parseInt(req.params['userId'], 10);
-    const articleId: number = parseInt(req.params['articleId'], 10);
+    const videoId: number = parseInt(req.params['videoId'], 10);
 
-    const article: VideoArticle | null = await VideoArticle.findById(articleId);
-    if (!article) {
+    const video: Video | undefined = await Video.findOne({ id: videoId });
+    if (!video) {
       res.status(404);
-      res.json({ msg: notFoundMsg(userId, articleId) });
+      res.json({ msg: notFoundMsg(userId, videoId) });
       return;
     }
 
-    const userVideo: UserVideo | null = await UserVideo.$findOne({ userId, article });
+    const userVideo: UserVideo | undefined = await UserVideo.$findOne({ userId, video });
     if (!userVideo) {
       res.status(404);
-      res.json({ msg: notFoundMsg(userId, articleId) });
+      res.json({ msg: notFoundMsg(userId, videoId) });
       return;
     }
 
@@ -44,20 +44,20 @@ router.get('/:userId/videos/:articleId', (req: Request, res: Response, next: Nex
 router.delete('/:userId/videos', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
     const userId: number = parseInt(req.params['userId'], 10);
-    const articleIds: number[] = req.body['articleIds'];
+    const videoIds: number[] = req.body['videoIds'];
 
-    for (const articleId of articleIds) {
-      const article: VideoArticle | null = await VideoArticle.findById(articleId);
-      if (!article) {
+    for (const videoId of videoIds) {
+      const video: Video | undefined = await Video.findOne({ id: videoId });
+      if (!video) {
         res.status(404);
-        res.json({ msg: notFoundMsg(userId, articleId) });
+        res.json({ msg: notFoundMsg(userId, videoId) });
         return;
       }
 
-      const userVideo: UserVideo | null = await UserVideo.$findOne({ userId, article });
+      const userVideo: UserVideo | undefined = await UserVideo.$findOne({ userId, video });
       if (!userVideo) {
         res.status(404);
-        res.json({ msg: notFoundMsg(userId, articleId) });
+        res.json({ msg: notFoundMsg(userId, videoId) });
         return;
       }
 
@@ -69,22 +69,22 @@ router.delete('/:userId/videos', (req: Request, res: Response, next: NextFunctio
   })().catch(next);
 });
 
-router.delete('/:userId/videos/:articleId', (req: Request, res: Response, next: NextFunction) => {
+router.delete('/:userId/videos/:videoId', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
     const userId: number = parseInt(req.params['userId'], 10);
-    const articleId: number = parseInt(req.params['articleId'], 10);
+    const videoId: number = parseInt(req.params['videoId'], 10);
 
-    const article: VideoArticle | null = await VideoArticle.findById(articleId);
-    if (!article) {
+    const video: Video | undefined = await Video.findOne({ id: videoId });
+    if (!video) {
       res.status(404);
-      res.json({ msg: notFoundMsg(userId, articleId) });
+      res.json({ msg: notFoundMsg(userId, videoId) });
       return;
     }
 
-    const userVideo: UserVideo | null = await UserVideo.$findOne({ userId, article });
+    const userVideo: UserVideo | undefined = await UserVideo.$findOne({ userId, video });
     if (!userVideo) {
       res.status(404);
-      res.json({ msg: notFoundMsg(userId, articleId) });
+      res.json({ msg: notFoundMsg(userId, videoId) });
       return;
     }
 
