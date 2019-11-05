@@ -2,7 +2,7 @@ import * as socketio from 'socket.io';
 import { Server } from 'http';
 
 import userVideo from './user-video';
-import videoExamine from './video-examine';
+import examineVideo from './examine-video';
 import examineMusic from './examine-music';
 
 const sockets = {};
@@ -10,7 +10,7 @@ const listeners = {};
 
 export default function (server: Server) {
   userVideo(server);
-  videoExamine(server);
+  examineVideo(server);
   examineMusic(server);
 }
 
