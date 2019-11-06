@@ -1,7 +1,7 @@
 import { extname, basename } from 'path';
 
 import { Video } from '@src/entity';
-import { walk, statBulk, ffprobeVideo } from '@src/api';
+import { walk, statBulk, ffprobeVideo } from '@src/rpc';
 import { VIDEO_FOLDER_PATHS, VIDEO_EXAMINE_SOCKET_PATH } from '@src/config';
 import { FFProbeVideo, Stat } from '@src/models';
 import { send } from '@src/sockets';

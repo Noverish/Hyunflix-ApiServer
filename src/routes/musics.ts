@@ -6,7 +6,7 @@ import { checkAuthority } from '@src/middlewares/validate-header';
 import { IMusic, Auth } from '@src/models';
 import searchMusic from '@src/workers/search-music';
 import examineMusic from '@src/workers/examine-music';
-import * as Api from '@src/api';
+import { unlinkBulk } from '@src/rpc';
 
 const router: Router = Router();
 
@@ -91,7 +91,7 @@ router.delete('/', checkAuthority('admin'), (req: Request, res: Response, next: 
       const musics: Music[] = await Music.findByIds(ids);
       const paths: string[] = musics.map(m => m.path);
 
-      await Api.unlinkBulk(paths);
+      await unlinkBulk(paths);
     }
 
     await Music.delete(ids);

@@ -1,7 +1,7 @@
 import { extname, basename } from 'path';
 
 import { Music } from '@src/entity';
-import { walk, ffprobeMusic } from '@src/api';
+import { walk, ffprobeMusic } from '@src/rpc';
 import { MUSIC_FOLDER_PATH, MUSIC_EXAMINE_SOCKET_PATH } from '@src/config';
 import { FFProbeMusic, Stat } from '@src/models';
 import { send } from '@src/sockets';

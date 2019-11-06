@@ -3,6 +3,7 @@ import * as cors from 'cors';
 import * as http from 'http';
 import { createConnection } from 'typeorm';
 import 'reflect-metadata';
+import '@src/rpc';
 
 import { PORT } from '@src/config';
 import sockets from '@src/sockets';

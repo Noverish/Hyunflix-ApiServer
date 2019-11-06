@@ -5,7 +5,7 @@ import { Video } from '@src/entity';
 import { checkAuthority } from '@src/middlewares/validate-header';
 import searchVideo from '@src/workers/search-video';
 import { IVideo, RawSubtitle, ISubtitle } from '@src/models';
-import { subtitle } from '@src/api';
+import { subtitle } from '@src/rpc';
 
 const router: Router = Router();
 
