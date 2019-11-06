@@ -10,3 +10,5 @@ export const VIDEO_EXAMINE_SOCKET_PATH = '/api/socket.io/videos/examine';
 export const MUSIC_EXAMINE_SOCKET_PATH = '/api/socket.io/musics/examine';
 
 export const API_SERVER_KEY = process.env.API_SERVER_KEY!;
+
+export const SSE_SERVER = 'http://home.hyunsub.kim:8124';

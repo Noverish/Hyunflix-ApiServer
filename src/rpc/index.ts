@@ -23,3 +23,4 @@ export function call(functionName, args): Promise<any> {
 export * from './ffprobe';
 export * from './fs';
 export * from './subtitle';
+export * from './ffmpeg';

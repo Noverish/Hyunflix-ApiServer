@@ -50,6 +50,17 @@ export interface FFProbeMusic extends FFProbe {
 
 }
 
+export interface FFMpegStatus {
+  millis: number;
+  frame: number;
+  fps: number;
+  q: number;
+  size: number;
+  time: number;
+  bitrate: number;
+  speed: number;
+}
+
 export interface Auth {
   id: number;
   token: string;
