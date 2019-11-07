@@ -5,6 +5,10 @@ export function readdir(path: string): Promise<string[]> {
   return call('readdir', { path });
 }
 
+export function rename(from: string, to: string): Promise<void> {
+  return call('rename', { from, to });
+}
+
 export function unlink(path: string): Promise<void> {
   return call('unlink', { path });
 }

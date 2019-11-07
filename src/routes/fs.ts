@@ -1,4 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
+import { join } from 'path';
 import * as prettyBytes from 'pretty-bytes';
 
 import { readdir, statBulk } from '@src/rpc';
@@ -14,7 +15,7 @@ router.get('/readdir', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
     const path = req.query['path'];
 
-    const paths: string[] = await readdir(path);
+    const paths: string[] = (await readdir(path)).map(f => join(path, f));
     const stats: Stat[] = await statBulk(paths);
     const files: File[] = stats.map(s => ({
       url: pathToURL(s.path),

@@ -7,7 +7,7 @@ import { call } from './';
 export async function ffmpeg(args: string[], callback: (status: FFMpegStatus) => void): Promise<void> {
   const es = new EventSource(`${SSE_SERVER}/ffmpeg`);
   es.onmessage = (event: MessageEvent) => {
-    callback(event.data);
+    callback(JSON.parse(event.data));
   };
 
   await call('ffmpeg', { args });

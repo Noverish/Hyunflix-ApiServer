@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 
 import { checkAuthority } from '@src/middlewares/validate-header';
 import { Encode } from '@src/entity';
+import encodeVideos from '@src/workers/encode-videos';
 
 const router: Router = Router();
 
@@ -23,6 +24,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
     const options = req.body['options'];
 
     await Encode.insert({ inpath, outpath, options });
+    encodeVideos();
 
     res.status(204);
     res.end();

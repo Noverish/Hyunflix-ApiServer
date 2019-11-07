@@ -51,7 +51,6 @@ export interface FFProbeMusic extends FFProbe {
 }
 
 export interface FFMpegStatus {
-  millis: number;
   frame: number;
   fps: number;
   q: number;
