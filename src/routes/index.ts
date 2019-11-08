@@ -6,6 +6,7 @@ import fs from './fs';
 import musics from './musics';
 import users from './users';
 import encodes from './encodes';
+import ffmpeg from './ffmpeg';
 
 const router: Router = Router();
 
@@ -15,5 +16,6 @@ router.use('/musics', musics);
 router.use('/fs', fs);
 router.use('/users', users);
 router.use('/encodes', encodes);
+router.use('/ffmpeg', ffmpeg);
 
 export default router;

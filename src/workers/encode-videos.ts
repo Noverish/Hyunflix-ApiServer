@@ -4,27 +4,33 @@ import { Between } from 'typeorm';
 import { FFMPEG_SOCKET_PATH } from '@src/config';
 import { FFMpegStatus } from '@src/models';
 import { Encode } from '@src/entity';
-import { ffmpeg, ffprobeVideo, unlink, rename } from '@src/rpc';
+import { ffmpeg, ffprobeVideo, unlink, rename, ffmpegExist } from '@src/rpc';
 import { send } from '@src/sockets';
 
 let isWorking = false;
 
-export default async function () {
-  if (isWorking) {
-    return;
-  }
-  isWorking = true;
-
-  while (true) {
-    const encode: Encode | undefined = await Encode.findOne({ progress: Between(0, 99) });
-
-    if (!encode) {
-      isWorking = false;
+export default function () {
+  (async function () {
+    if (isWorking) {
       return;
     }
-
-    await encodeVideo(encode);
-  }
+    isWorking = true;
+    
+    if (await ffmpegExist()) {
+      return;
+    }
+  
+    while (true) {
+      const encode: Encode | undefined = await Encode.findOne({ progress: Between(0, 99) });
+  
+      if (!encode) {
+        isWorking = false;
+        return;
+      }
+  
+      await encodeVideo(encode);
+    }
+  })().catch(console.error);
 }
 
 async function encodeVideo(encode: Encode) {

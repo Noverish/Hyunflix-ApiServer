@@ -38,7 +38,9 @@ app.use((err, req, res, next) => {
 const server: http.Server = http.createServer(app);
 
 server.listen(PORT, () => {
-  console.log(`* API Server Started at ${PORT}`);
-  createConnection().catch(console.error);
-  sockets(server);
+  (async () => {
+    console.log(`* API Server Started at ${PORT}`);
+    await createConnection();
+    sockets(server);
+  })().catch(console.error);
 });
