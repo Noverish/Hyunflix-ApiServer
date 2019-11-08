@@ -15,19 +15,19 @@ export default function () {
       return;
     }
     isWorking = true;
-    
+
     if (await ffmpegExist()) {
       return;
     }
-  
+
     while (true) {
       const encode: Encode | undefined = await Encode.findOne({ progress: Between(0, 99) });
-  
+
       if (!encode) {
         isWorking = false;
         return;
       }
-  
+
       await encodeVideo(encode);
     }
   })().catch(console.error);

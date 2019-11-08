@@ -9,6 +9,7 @@ export const FFMPEG_SOCKET_PATH = '/api/socket.io/ffmpeg';
 export const USER_VIDEO_SOCKET_PATH = '/api/socket.io/user/video';
 export const VIDEO_EXAMINE_SOCKET_PATH = '/api/socket.io/videos/examine';
 export const MUSIC_EXAMINE_SOCKET_PATH = '/api/socket.io/musics/examine';
+export const YOUTUBE_SOCKET_PATH = '/api/socket.io/youtube';
 
 export const API_SERVER_KEY = process.env.API_SERVER_KEY!;
 

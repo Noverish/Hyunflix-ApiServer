@@ -5,6 +5,7 @@ import userVideo from './user-video';
 import examineVideo from './examine-video';
 import examineMusic from './examine-music';
 import ffmpeg from './ffmpeg';
+import downloadYoutube from './download-youtube';
 
 const sockets = {};
 const listeners = {};
@@ -14,6 +15,7 @@ export default function (server: Server) {
   examineVideo(server);
   examineMusic(server);
   ffmpeg(server);
+  downloadYoutube(server);
 }
 
 export function createSocket(server: Server, path: string) {

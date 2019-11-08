@@ -13,7 +13,7 @@ export function call(functionName, args): Promise<any> {
       if (err) {
         reject(err);
       } else if (error) {
-        reject(error);
+        reject(new Error(error.message));
       } else {
         resolve(response);
       }
@@ -26,3 +26,4 @@ export * from './fs';
 export * from './subtitle';
 export * from './ffmpeg';
 export * from './ffstate';
+export * from './youtube';

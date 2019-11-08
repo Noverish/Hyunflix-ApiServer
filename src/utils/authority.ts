@@ -8,12 +8,11 @@ export function filterWithAuthority<T>(auth: Auth, list: T[]): T[] {
   }
 
   return list.filter((item: T) => {
-    const authority: string[] = item['authority'].split(',');
-
-    if (authority.length === 0) {
+    if (!item['authority']) {
       return true;
     }
 
+    const authority: string[] = item['authority'].split(',').filter(v => !!v);
     return authority.every(a => authorityList.includes(a));
   });
 }

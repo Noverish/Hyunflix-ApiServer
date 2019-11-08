@@ -6,6 +6,7 @@ import { checkAuthority } from '@src/middlewares/validate-header';
 import { IMusic, Auth } from '@src/models';
 import searchMusic from '@src/workers/search-music';
 import examineMusic from '@src/workers/examine-music';
+import downloadMusic from '@src/workers/download-music';
 import { unlinkBulk } from '@src/rpc';
 
 const router: Router = Router();
@@ -50,6 +51,18 @@ router.get('/tags', (req: Request, res: Response, next: NextFunction) => {
 
     res.status(200);
     res.json([...tagSet]);
+  })().catch(next);
+});
+
+router.post('/download-youtube', (req: Request, res: Response, next: NextFunction) => {
+  (async function () {
+    const url: string = req.body['url'];
+    const tags: string[] = req.body['tags'];
+
+    downloadMusic(url, tags);
+
+    res.status(204);
+    res.end();
   })().catch(next);
 });
 

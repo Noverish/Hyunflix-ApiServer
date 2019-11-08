@@ -75,3 +75,24 @@ export interface IEncode {
   progress: number;
   date: string;
 }
+
+export interface YoutubeStatus {
+  progress: number;
+  total: number;
+  speed: number;
+  eta: number;
+}
+
+export enum YoutubeStage {
+  ready = 0,
+  download = 1,
+  encode = 2,
+  success = 3,
+}
+
+export interface IYoutubeStatus {
+  stage: YoutubeStage;
+  progress: number;
+  eta: number;
+  error: string | null;
+}
