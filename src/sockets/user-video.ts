@@ -24,7 +24,7 @@ function receive(payload: UserVideoTime) {
     if (!userVideo) {
       await UserVideo.insert({ userId, video });
     } else {
-      await UserVideo.update({ userId, video }, { time });
+      await UserVideo.update({ userId, video }, { time, date: new Date() });
     }
   })().catch(console.error);
 }
