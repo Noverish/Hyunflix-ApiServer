@@ -22,9 +22,9 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
       ? searchVideo(videos, query)
       : videos;
 
-    const sliced = searched.slice((page - 1) * pageSize, (page) * pageSize);
-
-    // TODO Check authority
+    const sliced = (pageSize)
+      ? searched.slice((page - 1) * pageSize, (page) * pageSize)
+      : searched;
 
     res.status(200);
     res.json({

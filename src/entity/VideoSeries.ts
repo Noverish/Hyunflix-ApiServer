@@ -17,7 +17,7 @@ export class VideoSeries extends BaseEntity {
   @Column({ default: '' })
   category: string;
 
-  static async $findOne(where: FindConditions<VideoSeries>): Promise<VideoSeries | null> {
+  static async $findOne(where?: FindConditions<VideoSeries>): Promise<VideoSeries | null> {
     return await getConnection()
       .getRepository(VideoSeries)
       .findOne({
@@ -26,7 +26,7 @@ export class VideoSeries extends BaseEntity {
       });
   }
 
-  static async $find(where: FindConditions<VideoSeries>): Promise<VideoSeries[]> {
+  static async $find(where?: FindConditions<VideoSeries>): Promise<VideoSeries[]> {
     return await getConnection()
       .getRepository(VideoSeries)
       .find({

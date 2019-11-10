@@ -14,10 +14,10 @@ const router: Router = Router();
 // TODO property-validator
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
+    const auth: Auth = req['auth'];
     const query: string = req.query['q'] || '';
     const page: number = parseInt(req.query['p'] || '1', 10);
     const pageSize: number = parseInt(req.query['ps'] || '0', 10);
-    const auth: Auth = req['auth'];
 
     const tmp: Music[] = await Music.find({ order: { id: 'DESC' } });
     const tmp2 = filterWithAuthority(auth, tmp);

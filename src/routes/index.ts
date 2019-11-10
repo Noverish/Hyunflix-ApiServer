@@ -4,7 +4,7 @@ import videoSeries from './videos/video-series';
 import videos from './videos/videos';
 import fs from './fs';
 import musics from './musics';
-import users from './users';
+import userVideos from './user/user-videos';
 import encodes from './encodes';
 import ffmpeg from './ffmpeg';
 
@@ -14,7 +14,7 @@ router.use('/videos/series', videoSeries);
 router.use('/videos', videos);
 router.use('/musics', musics);
 router.use('/fs', fs);
-router.use('/users', users);
+router.use('/user/videos', userVideos);
 router.use('/encodes', encodes);
 router.use('/ffmpeg', ffmpeg);
 
