@@ -11,7 +11,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
     const page: number = parseInt(req.query['p'] || '1', 10);
     const pageSize: number = parseInt(req.query['ps'] || '0', 10);
 
-    const tmp: VideoSeries[] = await VideoSeries.$find();
+    const tmp: VideoSeries[] = await VideoSeries.$find(undefined, { order: { id: 'DESC' } });
     const items: IVideoSeries[] = tmp.map(s => s.convert());
 
     const searched = (query)

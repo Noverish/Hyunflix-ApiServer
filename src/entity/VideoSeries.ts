@@ -1,4 +1,4 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany, getConnection, FindConditions } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany, getConnection, FindConditions, FindManyOptions } from 'typeorm';
 
 import { Video } from '@src/entity';
 import { IVideoSeries } from '@src/models';
@@ -26,12 +26,13 @@ export class VideoSeries extends BaseEntity {
       });
   }
 
-  static async $find(where?: FindConditions<VideoSeries>): Promise<VideoSeries[]> {
+  static async $find(where?: FindConditions<VideoSeries>, options?: FindManyOptions<VideoSeries>): Promise<VideoSeries[]> {
     return await getConnection()
       .getRepository(VideoSeries)
       .find({
         where,
         relations: ['videos'],
+        ...options,
       });
   }
 

@@ -12,7 +12,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
     const page: number = parseInt(req.query['p'] || '1', 10);
     const pageSize: number = parseInt(req.query['ps'] || '0', 10);
 
-    const tmp: UserVideo[] = await UserVideo.$find({ userId });
+    const tmp: UserVideo[] = await UserVideo.$find({ userId }, { order: { date: 'DESC' } });
     const items: IUserVideo[] = tmp.map(i => i.convert());
 
     const searched = (query)
