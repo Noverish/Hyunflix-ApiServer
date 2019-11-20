@@ -4,7 +4,6 @@ import { Server } from 'http';
 import userVideo from './user-video';
 import examineVideo from './examine-video';
 import examineMusic from './examine-music';
-import ffmpeg from './ffmpeg';
 import downloadYoutube from './download-youtube';
 
 const sockets = {};
@@ -14,7 +13,6 @@ export default function (server: Server) {
   userVideo(server);
   examineVideo(server);
   examineMusic(server);
-  ffmpeg(server);
   downloadYoutube(server);
 }
 

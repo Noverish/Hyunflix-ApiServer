@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 
 import { checkAuthority } from '@src/middlewares/validate-header';
 import { Encode } from '@src/entity';
-import encodeVideos from '@src/workers/encode-videos';
+import { IEncode } from '@src/models';
 
 const router: Router = Router();
 
@@ -10,10 +10,26 @@ router.use(checkAuthority('admin'));
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
-    const encodes: Encode[] = await Encode.find({ order: { id: 'DESC' } });
+    const query: string = req.query['q'] || '';
+    const page: number = parseInt(req.query['p'] || '1', 10);
+    const pageSize: number = parseInt(req.query['ps'] || '0', 10);
+
+    const tmp: Encode[] = await Encode.find({ order: { id: 'DESC' } });
+    const items: IEncode[] = tmp.map(m => m.convert());
+
+    const searched = (query)
+      ? items.filter(i => i.inpath.includes(query))
+      : items;
+
+    const sliced = (pageSize)
+      ? searched.slice((page - 1) * pageSize, (page) * pageSize)
+      : searched;
 
     res.status(200);
-    res.json(encodes.map(v => v.convert()));
+    res.json({
+      total: searched.length,
+      results: sliced,
+    });
   })().catch(next);
 });
 
@@ -24,7 +40,6 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
     const options = req.body['options'];
 
     await Encode.insert({ inpath, outpath, options });
-    encodeVideos();
 
     res.status(204);
     res.end();
