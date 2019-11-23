@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { join } from 'path';
 import * as prettyBytes from 'pretty-bytes';
 
-import { readdir, statBulk } from '@src/rpc';
+import { readdir, statBulk, rename } from '@src/rpc';
 import { File, Stat } from '@src/models';
 import { checkAuthority } from '@src/middlewares/validate-header';
 import { pathToURL } from '@src/utils';
@@ -27,6 +27,18 @@ router.get('/readdir', (req: Request, res: Response, next: NextFunction) => {
 
     res.status(200);
     res.json(files);
+  })().catch(next);
+});
+
+router.post('/rename', (req: Request, res: Response, next: NextFunction) => {
+  (async function () {
+    const from = req.body['from'];
+    const to = req.body['to'];
+
+    await rename(from, to);
+
+    res.status(204);
+    res.end();
   })().catch(next);
 });
 
