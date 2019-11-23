@@ -1,11 +1,12 @@
 import { Router, Request, Response, NextFunction } from 'express';
+import { basename, extname } from 'path';
 
 import { pathToURL } from '@src/utils';
 import { Video } from '@src/entity';
 import { checkAuthority } from '@src/middlewares/validate-header';
 import searchVideo from '@src/workers/search-video';
-import { IVideo, RawSubtitle, ISubtitle } from '@src/models';
-import { subtitle } from '@src/rpc';
+import { IVideo, RawSubtitle, ISubtitle, FFProbeVideo } from '@src/models';
+import { subtitle, ffprobeVideo } from '@src/rpc';
 
 const router: Router = Router();
 
@@ -31,6 +32,29 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
       total: searched.length,
       results: sliced,
     });
+  })().catch(next);
+});
+
+router.post('/', (req: Request, res: Response, next: NextFunction) => {
+  (async function () {
+    const path: string = req.body['path'];
+
+    const ffprobe: FFProbeVideo = await ffprobeVideo(path);
+
+    await Video.insert({
+      path,
+      duration: ffprobe.duration,
+      width: ffprobe.width,
+      height: ffprobe.height,
+      bitrate: ffprobe.bitrate,
+      size: ffprobe.size.toString(),
+      tags: '',
+      title: basename(path, extname(path)),
+      date: new Date(),
+    });
+
+    res.status(204);
+    res.end();
   })().catch(next);
 });
 
