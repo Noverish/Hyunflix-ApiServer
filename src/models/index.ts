@@ -58,6 +58,8 @@ export interface FFMpegStatus {
   time: number;
   bitrate: number;
   speed: number;
+  progress: number;
+  eta: number;
 }
 
 export interface Auth {
@@ -83,16 +85,15 @@ export interface YoutubeStatus {
   eta: number;
 }
 
-export enum YoutubeStage {
-  ready = 0,
-  download = 1,
-  encode = 2,
-  success = 3,
-}
-
-export interface IYoutubeStatus {
-  stage: YoutubeStage;
+export interface YoutubeSSEStatus {
+  stage: YoutubeSSEStage;
   progress: number;
   eta: number;
   error: string | null;
+}
+
+export enum YoutubeSSEStage {
+  download = 0,
+  encode = 1,
+  finish = 2,
 }

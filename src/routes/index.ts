@@ -7,6 +7,7 @@ import musics from './musics';
 import userVideos from './user/user-videos';
 import encodes from './encodes';
 import ffmpeg from './ffmpeg';
+import youtube from './youtube';
 
 const router: Router = Router();
 
@@ -17,5 +18,6 @@ router.use('/fs', fs);
 router.use('/user/videos', userVideos);
 router.use('/encodes', encodes);
 router.use('/ffmpeg', ffmpeg);
+router.use('/youtube', youtube);
 
 export default router;
