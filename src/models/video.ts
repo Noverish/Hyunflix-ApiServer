@@ -26,14 +26,13 @@ export interface IVideoSeries {
 }
 
 export interface IUserVideo {
-  userId: number;
   video: IVideo;
   time: number;
   date: string;
 }
 
 export interface UserVideoTime {
-  userId: number;
+  token: string;
   videoId: number;
   time: number;
 }

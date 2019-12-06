@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 import { Auth } from '@src/models';
-
-const AUTH_HEADER = 'x-hyunsub-auth';
+import { AUTH_HEADER } from '@src/config';
 
 export default function (req: Request, res: Response, next: NextFunction) {
   const authString: string = (req.headers[AUTH_HEADER] || '').toString();

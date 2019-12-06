@@ -6,7 +6,7 @@ import 'reflect-metadata';
 import '@src/rpc';
 
 import { PORT } from '@src/config';
-import sockets from '@src/sockets';
+import socket from '@src/socket';
 import { consoleLogger, fileLogger } from '@src/utils/logger';
 import validateHeader from '@src/middlewares/validate-header';
 import routes from './routes';
@@ -41,6 +41,6 @@ server.listen(PORT, () => {
   (async () => {
     console.log(`* API Server Started at ${PORT}`);
     await createConnection();
-    sockets(server);
+    socket(server);
   })().catch(console.error);
 });

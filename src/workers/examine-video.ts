@@ -4,7 +4,6 @@ import { Video } from '@src/entity';
 import { walk, statBulk, ffprobeVideo } from '@src/rpc';
 import { VIDEO_FOLDER_PATHS, VIDEO_EXAMINE_SOCKET_PATH } from '@src/config';
 import { FFProbeVideo, Stat } from '@src/models';
-import { send } from '@src/sockets';
 
 type Callback = (msg: string) => void;
 type Insert = string;
@@ -13,7 +12,7 @@ type Delete = Video;
 
 export default function () {
   const callback: Callback = (msg: string) => {
-    send(VIDEO_EXAMINE_SOCKET_PATH, msg);
+
   };
 
   (async function () {

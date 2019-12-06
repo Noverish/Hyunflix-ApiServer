@@ -5,7 +5,7 @@ module.exports = {
    "username": "root",
    "password": process.env.DATABASE_PASSWORD,
    "database": "hyunsub2",
-   "synchronize": false,
+   "synchronize": true,
    "logging": false,
    "entities": [
       "src/entity/**/*.ts"

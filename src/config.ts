@@ -4,11 +4,7 @@ export const PORT = parseInt(process.env.PORT, 10) || 80;
 export const VIDEO_FOLDER_PATHS = ['/Movies', '/TV_Programs'];
 export const MUSIC_FOLDER_PATH = '/Musics';
 
-export const USER_VIDEO_SOCKET_PATH = '/api/socket.io/user/video';
-export const VIDEO_EXAMINE_SOCKET_PATH = '/api/socket.io/videos/examine';
-export const MUSIC_EXAMINE_SOCKET_PATH = '/api/socket.io/musics/examine';
-export const YOUTUBE_SOCKET_PATH = '/api/socket.io/youtube';
-
 export const API_SERVER_KEY = process.env.API_SERVER_KEY!;
 
 export const SSE_SERVER = 'http://home.hyunsub.kim:8124';
+export const AUTH_HEADER = 'x-hyunsub-auth';
