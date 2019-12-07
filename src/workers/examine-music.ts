@@ -2,7 +2,7 @@ import { extname, basename } from 'path';
 
 import { Music } from '@src/entity';
 import { walk, ffprobeMusic } from '@src/rpc';
-import { MUSIC_FOLDER_PATH, MUSIC_EXAMINE_SOCKET_PATH } from '@src/config';
+import { MUSIC_FOLDER_PATH } from '@src/config';
 import { FFProbeMusic, Stat } from '@src/models';
 
 type Callback = (msg: string) => void;

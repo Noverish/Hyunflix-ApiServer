@@ -17,6 +17,7 @@ jobs:
           paths:
             - ./node_modules
       - run: npm run tslint
+      - run: npm run check
   
   deploy:
     machine: true
