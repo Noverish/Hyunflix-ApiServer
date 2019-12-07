@@ -1,9 +1,10 @@
 import * as jayson from 'jayson';
 
-// TODO from config
+import { RPC_SERVER_HOST, RPC_SERVER_PORT } from '@src/config';
+
 const client = jayson.Client.http({
-  host: 'home.hyunsub.kim',
-  port: 8123,
+  host: RPC_SERVER_HOST,
+  port: RPC_SERVER_PORT,
   timeout: 0,
 });
 

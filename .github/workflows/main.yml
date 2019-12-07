@@ -35,4 +35,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: cd ~/hyunsub; docker load -i hyunsub-api.tar; docker-compose up -d --force-recreate api
+        script: cd ~/hyunsub; docker load -i hyunsub-api.tar; docker-compose up -d --force-recreate api; rm hyunsub-api.tar

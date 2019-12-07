@@ -65,6 +65,7 @@ export interface FFMpegStatus {
 export interface Auth {
   id: number;
   token: string;
+  username: string;
   authority: string[];
   allowedPaths: string[];
 }

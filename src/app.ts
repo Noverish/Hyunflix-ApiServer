@@ -13,8 +13,6 @@ import routes from './routes';
 
 const app = express();
 
-app.set('port', PORT);
-
 app.use(cors());
 app.use(express.json());
 
