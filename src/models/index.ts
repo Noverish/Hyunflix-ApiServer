@@ -98,3 +98,10 @@ export enum YoutubeSSEStage {
   encode = 1,
   finish = 2,
 }
+
+export interface IMusicPlaylist {
+  id: number;
+  userId: number;
+  title: string;
+  musics: IMusic[];
+}

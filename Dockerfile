@@ -11,4 +11,4 @@ COPY ormconfig.js  /app
 COPY package.json  /app
 COPY tsconfig.json /app
 
-CMD ["npm", "run", "dev"]
+ENTRYPOINT npm start
