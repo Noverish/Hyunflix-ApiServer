@@ -25,6 +25,16 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
     }).catch(next);
 });
 
+router.get('/:playlistId', (req: Request, res: Response, next: NextFunction) => {
+  const { id: userId } = req['auth'] as Auth;
+
+  MusicPlaylistService.getPlaylist({ userId, ...req.params })
+    .then(([status, response]) => {
+      res.status(status);
+      res.json(response);
+    }).catch(next);
+});
+
 router.put('/:playlistId', (req: Request, res: Response, next: NextFunction) => {
   const { id: userId } = req['auth'] as Auth;
 
