@@ -105,3 +105,10 @@ export interface IMusicPlaylist {
   title: string;
   musics: IMusic[];
 }
+
+export interface IComic {
+  id: number;
+  title: string;
+  path: string;
+  date: string;
+}

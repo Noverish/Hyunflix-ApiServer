@@ -9,6 +9,7 @@ import userVideos from './user/user-videos';
 import encodes from './encodes';
 import ffmpeg from './ffmpeg';
 import youtube from './youtube';
+import comics from './comics';
 
 const router: Router = Router();
 
@@ -21,5 +22,6 @@ router.use('/user/videos', userVideos);
 router.use('/encodes', encodes);
 router.use('/ffmpeg', ffmpeg);
 router.use('/youtube', youtube);
+router.use('/comics', comics);
 
 export default router;
