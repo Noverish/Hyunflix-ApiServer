@@ -1,5 +1,4 @@
 import { getConnection, createConnection } from 'typeorm';
-import { DATABASE_PASSWORD } from './credentials';
 import * as mysql from 'mysql';
 
 function query(conn: mysql.Connection, sql: string) {
@@ -23,14 +22,14 @@ export async function init() {
     conn = mysql.createConnection({
       host     : 'localhost',
       user     : 'root',
-      password : DATABASE_PASSWORD,
+      password : '',
     });
     conn.connect();
     await query(conn, 'CREATE DATABASE test;');
 
     console.log('created database');
     process.env.DATABASE_HOST = 'localhost';
-    process.env.DATABASE_PASSWORD = DATABASE_PASSWORD;
+    process.env.DATABASE_PASSWORD = '';
     process.env.DATABASE_DATABASE = 'test';
     await createConnection();
   }
