@@ -43,7 +43,6 @@ export default async function (url: string, tags: string[]) {
       youtube,
       path: outpath,
       tags: tags.join(','),
-      authority: '',
     });
 
     stage = YoutubeSSEStage.finish;

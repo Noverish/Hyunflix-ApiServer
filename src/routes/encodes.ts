@@ -6,7 +6,7 @@ import { IEncode } from '@src/models';
 
 const router: Router = Router();
 
-router.use(checkAuthority('admin'));
+router.use(checkAuthority(256));
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
   (async function () {

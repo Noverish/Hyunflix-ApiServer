@@ -3,14 +3,14 @@ import * as Fuse from 'fuse.js';
 import { Raw } from 'typeorm';
 
 import { ServiceResult } from '@src/services';
-import { Comic } from '@src/entity';
-import { IComic } from '@src/models';
+import { Music } from '@src/entity';
+import { IMusic } from '@src/models';
 
 interface Schema {
   q?: string;
   p: number;
   ps?: number;
-  authority: string[];
+  authority: number;
 }
 
 const schema = Joi.object({
@@ -28,16 +28,16 @@ export default async function (args: object): Promise<ServiceResult> {
 
   const { q: query, p: page, ps: pageSize, authority } = value as Schema;
 
-  const tmp: Comic[] = await Comic.find({
+  const tmp: Music[] = await Music.find({
     order: { id: 'DESC' },
     where: { authority: Raw(`${authority} & authority`) },
   });
 
-  const videos: IComic[] = tmp.map(m => m.convert());
+  const musics: IMusic[] = tmp.map(m => m.convert());
 
   const searched = (query)
-    ? search(videos, query)
-    : videos;
+    ? search(musics, query)
+    : musics;
 
   const sliced = (pageSize)
     ? searched.slice((page - 1) * pageSize, page * pageSize)
@@ -46,8 +46,8 @@ export default async function (args: object): Promise<ServiceResult> {
   return [200, { total: searched.length, results: sliced }];
 }
 
-function search(videos: IComic[], query: string): IComic[] {
-  return new Fuse(videos, {
+function search(musics: IMusic[], query: string): IMusic[] {
+  return new Fuse(musics, {
     shouldSort: true,
     threshold: 0.1,
     maxPatternLength: 32,

@@ -1,7 +1,7 @@
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 import { IComic } from '@src/models';
-import { dateToString } from '@src/utils';
+import { timeAgo } from '@src/utils';
 
 @Entity()
 export class Comic extends BaseEntity {
@@ -17,12 +17,19 @@ export class Comic extends BaseEntity {
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   date: Date;
 
+  @Column({ default: '' })
+  tags: string;
+
+  @Column({ default: 0 })
+  authority: number;
+
   convert(): IComic {
     return {
       id: this.id,
       title: this.title,
       path: this.path,
-      date: dateToString(this.date),
+      date: timeAgo(this.date),
+      tags: this.tags.split(',').filter(t => !!t),
     };
   }
 }

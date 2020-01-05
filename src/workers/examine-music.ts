@@ -35,7 +35,6 @@ async function examineInsert(paths: string[], callback: Callback) {
         title: basename(path, extname(path)),
         duration: ffprobe.duration,
         tags: '',
-        authority: '',
         youtube: null,
       });
 

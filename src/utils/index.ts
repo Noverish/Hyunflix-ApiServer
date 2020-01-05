@@ -82,3 +82,7 @@ export function pathToURL(path: string): string {
 
   return FILE_SERVER + uri;
 }
+
+export function authorityCheck(to: number, from: number) {
+  return from === (to & from);
+}

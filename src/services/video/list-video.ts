@@ -3,14 +3,14 @@ import * as Fuse from 'fuse.js';
 import { Raw } from 'typeorm';
 
 import { ServiceResult } from '@src/services';
-import { Comic } from '@src/entity';
-import { IComic } from '@src/models';
+import { Video } from '@src/entity';
+import { IVideo } from '@src/models';
 
 interface Schema {
   q?: string;
   p: number;
   ps?: number;
-  authority: string[];
+  authority: number;
 }
 
 const schema = Joi.object({
@@ -28,12 +28,12 @@ export default async function (args: object): Promise<ServiceResult> {
 
   const { q: query, p: page, ps: pageSize, authority } = value as Schema;
 
-  const tmp: Comic[] = await Comic.find({
+  const tmp: Video[] = await Video.find({
     order: { id: 'DESC' },
     where: { authority: Raw(`${authority} & authority`) },
   });
 
-  const videos: IComic[] = tmp.map(m => m.convert());
+  const videos: IVideo[] = tmp.map(m => m.convert());
 
   const searched = (query)
     ? search(videos, query)
@@ -46,7 +46,7 @@ export default async function (args: object): Promise<ServiceResult> {
   return [200, { total: searched.length, results: sliced }];
 }
 
-function search(videos: IComic[], query: string): IComic[] {
+function search(videos: IVideo[], query: string): IVideo[] {
   return new Fuse(videos, {
     shouldSort: true,
     threshold: 0.1,

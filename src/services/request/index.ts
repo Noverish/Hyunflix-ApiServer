@@ -1,15 +1,15 @@
 import * as request from 'request';
 
 import { AUTH_HEADER } from '@src/config';
-import { Auth } from '@src/models';
+import { Session } from '@src/models';
 
-export function validateToken(token: string): Promise<Auth> {
+export function validateSession(sessionId: string): Promise<Session> {
   return new Promise((resolve, reject) => {
     const config = {
       method: 'GET',
-      url: 'http://home.hyunsub.kim:8080/auth/validate-token',
+      url: 'http://home.hyunsub.kim:8080/auth/validate-session',
       headers: {
-        Authorization: `Bearer ${token}`,
+        'x-hyunsub-session-id': `${sessionId}`,
       },
     };
 
@@ -19,8 +19,8 @@ export function validateToken(token: string): Promise<Auth> {
         return;
       }
 
-      const authString: string = res.headers[AUTH_HEADER].toString();
-      resolve(JSON.parse(authString));
+      const sessionString: string = res.headers[AUTH_HEADER].toString();
+      resolve(JSON.parse(sessionString));
     });
   });
 }

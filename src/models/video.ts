@@ -32,7 +32,7 @@ export interface IUserVideo {
 }
 
 export interface UserVideoTime {
-  token: string;
+  sessionId: string;
   videoId: number;
   time: number;
 }

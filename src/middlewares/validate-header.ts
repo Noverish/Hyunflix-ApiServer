@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { Auth } from '@src/models';
+import { Session } from '@src/models';
 import { AUTH_HEADER } from '@src/config';
+import { authorityCheck } from '@src/utils';
 
 export default function (req: Request, res: Response, next: NextFunction) {
   const authString: string = (req.headers[AUTH_HEADER] || '').toString();
@@ -10,16 +11,16 @@ export default function (req: Request, res: Response, next: NextFunction) {
     res.status(401);
     res.json({ msg: 'Unauthorized' });
   } else {
-    req['auth'] = JSON.parse(authString);
+    req['session'] = JSON.parse(authString);
     next();
   }
 }
 
 export function checkUserId(userId: number) {
   return function (req: Request, res: Response, next: NextFunction) {
-    const auth: Auth = req['auth'];
+    const session: Session = req['session'];
 
-    if (auth.id !== userId) {
+    if (session.userId !== userId) {
       res.status(403);
       res.json({ msg: 'Forbidden' });
     } else {
@@ -28,11 +29,11 @@ export function checkUserId(userId: number) {
   };
 }
 
-export function checkAuthority(authority: string) {
+export function checkAuthority(authority: number) {
   return function (req: Request, res: Response, next: NextFunction) {
-    const auth: Auth = req['auth'];
+    const session: Session = req['session'];
 
-    if (!auth.authority.includes(authority)) {
+    if (authorityCheck(session.authority, authority)) {
       res.status(403);
       res.json({ msg: 'Forbidden' });
     } else {

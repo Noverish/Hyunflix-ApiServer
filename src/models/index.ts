@@ -62,11 +62,10 @@ export interface FFMpegStatus {
   eta: number;
 }
 
-export interface Auth {
-  id: number;
-  token: string;
-  username: string;
-  authority: string[];
+export interface Session {
+  id: string;
+  userId: number;
+  authority: number;
   allowedPaths: string[];
 }
 
@@ -111,4 +110,5 @@ export interface IComic {
   title: string;
   path: string;
   date: string;
+  tags: string[];
 }

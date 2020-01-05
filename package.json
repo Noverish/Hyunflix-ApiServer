@@ -9,7 +9,7 @@
     "check": "tsc --noEmit",
     "tslint": "tslint -p .",
     "tslint:fix": "tslint -p . --fix",
-    "test": "mocha -r ts-node/register -r tsconfig-paths/register --exit \"test/**/*.ts\""
+    "test:integration": "mocha -r ts-node/register -r tsconfig-paths/register --exit \"test/integration/**/*.ts\""
   },
   "dependencies": {
     "cors": "^2.8.5",

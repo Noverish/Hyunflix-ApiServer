@@ -9,7 +9,7 @@ import { pathToURL } from '@src/utils';
 
 const router: Router = Router();
 
-router.use(checkAuthority('admin'));
+router.use(checkAuthority(256));
 
 router.get('/readdir', (req: Request, res: Response, next: NextFunction) => {
   (async function () {

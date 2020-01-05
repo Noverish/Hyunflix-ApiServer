@@ -1,15 +1,17 @@
-import { Router } from 'express';
+import { Router, Response, NextFunction } from 'express';
+
+import { ServiceResult } from '@src/services';
 
 import videoSeries from './videos/video-series';
 import videos from './videos/videos';
 import fs from './fs';
-import musics from './musics';
+import musics from './musics/musics';
 import musicPlaylist from './musics/music-playlist';
 import userVideos from './user/user-videos';
 import encodes from './encodes';
 import ffmpeg from './ffmpeg';
 import youtube from './youtube';
-import comics from './comics';
+import comics from './comics/comics';
 
 const router: Router = Router();
 
@@ -25,3 +27,9 @@ router.use('/youtube', youtube);
 router.use('/comics', comics);
 
 export default router;
+
+export const handleServiceResult = (res: Response) => (result: ServiceResult) => {
+  const [status, response] = result;
+  res.status(status);
+  res.json(response);
+};

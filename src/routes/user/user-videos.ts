@@ -1,13 +1,13 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
 import { UserVideo, Video } from '@src/entity';
-import { Auth, IUserVideo } from '@src/models';
+import { Session, IUserVideo } from '@src/models';
 
 const router: Router = Router();
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
-    const { id: userId }: Auth = req['auth'];
+    const { userId }: Session = req['session'];
     const query: string = req.query['q'] || '';
     const page: number = parseInt(req.query['p'] || '1', 10);
     const pageSize: number = parseInt(req.query['ps'] || '0', 10);
@@ -33,7 +33,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
 
 router.get('/:videoId', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
-    const { id: userId }: Auth = req['auth'];
+    const { userId }: Session = req['session'];
     const videoId: number = parseInt(req.params['videoId'], 10);
 
     const video: Video | undefined = await Video.findOne({ id: videoId });
@@ -57,7 +57,7 @@ router.get('/:videoId', (req: Request, res: Response, next: NextFunction) => {
 
 router.delete('/', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
-    const { id: userId }: Auth = req['auth'];
+    const { userId }: Session = req['session'];
     const videoIds: number[] = req.body['videoIds'];
 
     for (const videoId of videoIds) {

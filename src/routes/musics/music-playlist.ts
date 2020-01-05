@@ -1,58 +1,49 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
 import { MusicPlaylistService } from '@src/services';
-import { Auth } from '@src/models';
+import { Session } from '@src/models';
+import { handleServiceResult } from '@src/routes';
 
 const router: Router = Router();
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
-  const { id: userId } = req['auth'] as Auth;
+  const { userId }: Session = req['session'];
 
   MusicPlaylistService.listPlaylist({ userId })
-    .then(([status, response]) => {
-      res.status(status);
-      res.json(response);
-    }).catch(next);
+    .then(handleServiceResult(res))
+    .catch(next);
 });
 
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
-  const { id: userId } = req['auth'] as Auth;
+  const { userId }: Session = req['session'];
 
   MusicPlaylistService.createPlaylist({ userId, ...req.body })
-    .then(([status, response]) => {
-      res.status(status);
-      res.json(response);
-    }).catch(next);
+    .then(handleServiceResult(res))
+    .catch(next);
 });
 
 router.get('/:playlistId', (req: Request, res: Response, next: NextFunction) => {
-  const { id: userId } = req['auth'] as Auth;
+  const { userId }: Session = req['session'];
 
   MusicPlaylistService.getPlaylist({ userId, ...req.params })
-    .then(([status, response]) => {
-      res.status(status);
-      res.json(response);
-    }).catch(next);
+    .then(handleServiceResult(res))
+    .catch(next);
 });
 
 router.put('/:playlistId', (req: Request, res: Response, next: NextFunction) => {
-  const { id: userId } = req['auth'] as Auth;
+  const { userId }: Session = req['session'];
 
   MusicPlaylistService.updatePlaylist({ userId, ...req.params, ...req.body })
-    .then(([status, response]) => {
-      res.status(status);
-      res.json(response);
-    }).catch(next);
+    .then(handleServiceResult(res))
+    .catch(next);
 });
 
 router.delete('/:playlistId', (req: Request, res: Response, next: NextFunction) => {
-  const { id: userId } = req['auth'] as Auth;
+  const { userId }: Session = req['session'];
 
   MusicPlaylistService.deletePlaylist({ userId, ...req.params })
-    .then(([status, response]) => {
-      res.status(status);
-      res.json(response);
-    }).catch(next);
+    .then(handleServiceResult(res))
+    .catch(next);
 });
 
 export default router;

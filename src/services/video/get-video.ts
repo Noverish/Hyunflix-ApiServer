@@ -2,15 +2,15 @@ import * as Joi from '@hapi/joi';
 import { Raw } from 'typeorm';
 
 import { ServiceResult } from '@src/services';
-import { Comic } from '@src/entity';
+import { Video } from '@src/entity';
 
 interface Schema {
-  comicId: number;
+  videoId: number;
   authority: number;
 }
 
 const schema = Joi.object({
-  comicId: Joi.number().required(),
+  videoId: Joi.number().required(),
   authority: Joi.number().required(),
 });
 
@@ -20,14 +20,14 @@ export default async function (args: object): Promise<ServiceResult> {
     return [400, { msg: error.message }];
   }
 
-  const { comicId, authority } = value as Schema;
+  const { videoId, authority } = value as Schema;
 
-  const comic: Comic | undefined = await Comic.findOne({
-    id: comicId,
+  const video: Video | undefined = await Video.findOne({
+    id: videoId,
     authority: Raw(`${authority} & authority`),
   });
 
-  return (comic)
-    ? [200, comic.convert()]
+  return (video)
+    ? [200, video.convert()]
     : [404, { msg: 'Not Found' }];
 }
