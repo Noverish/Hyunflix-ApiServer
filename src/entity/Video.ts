@@ -34,7 +34,7 @@ export class Video extends BaseEntity {
   @Column({ default: '' })
   tags: string;
 
-  @Column({ default: 0 })
+  @Column({ default: 1 })
   authority: number;
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })

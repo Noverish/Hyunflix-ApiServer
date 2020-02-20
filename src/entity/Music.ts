@@ -20,7 +20,7 @@ export class Music extends BaseEntity {
   @Column({ default: '' })
   tags: string;
 
-  @Column({ default: 0 })
+  @Column({ default: 1 })
   authority: number;
 
   @Column({ nullable: true })

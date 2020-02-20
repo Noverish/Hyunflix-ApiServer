@@ -17,7 +17,7 @@ export class VideoSeries extends BaseEntity {
   @Column({ default: '' })
   category: string;
 
-  @Column({ default: 0 })
+  @Column({ default: 1 })
   authority: number;
 
   static async $findOne(where?: FindConditions<VideoSeries>): Promise<VideoSeries | null> {
