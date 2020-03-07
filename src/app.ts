@@ -8,7 +8,7 @@ import '@src/rpc';
 import { PORT } from '@src/config';
 import socket from '@src/socket';
 import { consoleLogger, fileLogger } from '@src/utils/logger';
-import validateHeader from '@src/middlewares/validate-header';
+import { verifyToken } from '@src/middlewares';
 import routes from './routes';
 
 const app = express();
@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(consoleLogger);
 app.use(fileLogger);
 
-app.use(validateHeader);
+app.use(verifyToken);
 app.use('/', routes);
 
 app.use((req, res, next) => {

@@ -1,12 +1,12 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
-import { checkAuthority } from '@src/middlewares/validate-header';
+import { checkAuthority } from '@src/middlewares';
 import { Encode } from '@src/entity';
 import { IEncode } from '@src/models';
 
 const router: Router = Router();
 
-router.use(checkAuthority(256));
+router.use(checkAuthority(256)); // TODO number
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
   (async function () {

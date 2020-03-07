@@ -1,12 +1,13 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
 import { ComicService } from '@src/services';
-import { Session } from '@src/models';
+import { TokenPayload } from '@src/models';
+import { TOKEN_PAYLOAD_FIELD } from '@src/config';
 
 const router: Router = Router();
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
-  const { authority }: Session = req['session'];
+  const { authority }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
 
   ComicService.listComic({ ...req.query, authority })
     .then(([status, response]) => {
@@ -16,7 +17,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get('/:comicId', (req: Request, res: Response, next: NextFunction) => {
-  const { authority }: Session = req['session'];
+  const { authority }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
 
   ComicService.getComic({ ...req.params, authority })
     .then(([status, response]) => {
@@ -26,7 +27,7 @@ router.get('/:comicId', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get('/:comicId/imgs', (req: Request, res: Response, next: NextFunction) => {
-  const { authority }: Session = req['session'];
+  const { authority }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
 
   ComicService.listComicImg({ ...req.params, authority })
     .then(([status, response]) => {

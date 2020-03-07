@@ -1,13 +1,14 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
 import { MusicPlaylistService } from '@src/services';
-import { Session } from '@src/models';
+import { TokenPayload } from '@src/models';
 import { handleServiceResult } from '@src/routes';
+import { TOKEN_PAYLOAD_FIELD } from '@src/config';
 
 const router: Router = Router();
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
-  const { userId }: Session = req['session'];
+  const { userId }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
 
   MusicPlaylistService.listPlaylist({ userId })
     .then(handleServiceResult(res))
@@ -15,7 +16,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
-  const { userId }: Session = req['session'];
+  const { userId }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
 
   MusicPlaylistService.createPlaylist({ userId, ...req.body })
     .then(handleServiceResult(res))
@@ -23,7 +24,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get('/:playlistId', (req: Request, res: Response, next: NextFunction) => {
-  const { userId }: Session = req['session'];
+  const { userId }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
 
   MusicPlaylistService.getPlaylist({ userId, ...req.params })
     .then(handleServiceResult(res))
@@ -31,7 +32,7 @@ router.get('/:playlistId', (req: Request, res: Response, next: NextFunction) => 
 });
 
 router.put('/:playlistId', (req: Request, res: Response, next: NextFunction) => {
-  const { userId }: Session = req['session'];
+  const { userId }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
 
   MusicPlaylistService.updatePlaylist({ userId, ...req.params, ...req.body })
     .then(handleServiceResult(res))
@@ -39,7 +40,7 @@ router.put('/:playlistId', (req: Request, res: Response, next: NextFunction) => 
 });
 
 router.delete('/:playlistId', (req: Request, res: Response, next: NextFunction) => {
-  const { userId }: Session = req['session'];
+  const { userId }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
 
   MusicPlaylistService.deletePlaylist({ userId, ...req.params })
     .then(handleServiceResult(res))

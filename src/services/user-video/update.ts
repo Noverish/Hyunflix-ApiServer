@@ -1,11 +1,11 @@
 import * as Joi from '@hapi/joi';
 
-import { ServiceResult, RequestService } from '@src/services';
+import { ServiceResult, TokenService } from '@src/services';
 import { Video, UserVideo } from '@src/entity';
 import { UserVideoTime } from '@src/models';
 
 const schema = Joi.object({
-  sessionId: Joi.string().required(),
+  token: Joi.string().required(),
   videoId: Joi.number().required(),
   time: Joi.number().required(),
 });
@@ -16,13 +16,13 @@ export default async function (body: object): Promise<ServiceResult> {
     return [400, { msg: error.message }];
   }
 
-  const { sessionId, videoId, time } = value as UserVideoTime;
+  const { token, videoId, time } = value as UserVideoTime;
 
   if (time === 0) {
     return [204, {}];
   }
 
-  const { userId } = await RequestService.validateSession(sessionId);
+  const { userId } = await TokenService.verifyToken(token);
 
   const video = await Video.findOne({ id: videoId });
   const userVideo: UserVideo | null = await UserVideo.findOne({ userId, video });

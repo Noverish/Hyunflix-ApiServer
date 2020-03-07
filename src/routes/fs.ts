@@ -4,7 +4,7 @@ import * as prettyBytes from 'pretty-bytes';
 
 import { readdir, statBulk, rename } from '@src/rpc';
 import { File, Stat } from '@src/models';
-import { checkAuthority } from '@src/middlewares/validate-header';
+import { checkAuthority } from '@src/middlewares';
 import { pathToURL } from '@src/utils';
 
 const router: Router = Router();

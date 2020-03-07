@@ -1,13 +1,14 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
 import { UserVideo, Video } from '@src/entity';
-import { Session, IUserVideo } from '@src/models';
+import { IUserVideo, TokenPayload } from '@src/models';
+import { TOKEN_PAYLOAD_FIELD } from '@src/config';
 
 const router: Router = Router();
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
-    const { userId }: Session = req['session'];
+    const { userId }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
     const query: string = req.query['q'] || '';
     const page: number = parseInt(req.query['p'] || '1', 10);
     const pageSize: number = parseInt(req.query['ps'] || '0', 10);
@@ -33,7 +34,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
 
 router.get('/:videoId', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
-    const { userId }: Session = req['session'];
+    const { userId }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
     const videoId: number = parseInt(req.params['videoId'], 10);
 
     const video: Video | undefined = await Video.findOne({ id: videoId });
@@ -57,7 +58,7 @@ router.get('/:videoId', (req: Request, res: Response, next: NextFunction) => {
 
 router.delete('/', (req: Request, res: Response, next: NextFunction) => {
   (async function () {
-    const { userId }: Session = req['session'];
+    const { userId }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
     const videoIds: number[] = req.body['videoIds'];
 
     for (const videoId of videoIds) {

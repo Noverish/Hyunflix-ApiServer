@@ -1,5 +1,4 @@
-import { relative } from 'path';
-import { ARCHIVE_PATH, FILE_SERVER } from '@src/config';
+import { FILE_SERVER } from '@src/config';
 
 import javascriptTimeAgo from 'javascript-time-ago';
 require('javascript-time-ago/load-all-locales');
@@ -76,11 +75,7 @@ function leadingZeros(num: number, digits: number) {
 }
 
 export function pathToURL(path: string): string {
-  const uri = path.startsWith(ARCHIVE_PATH)
-    ? `/${relative(ARCHIVE_PATH, path)}`
-    : path;
-
-  return FILE_SERVER + uri;
+  return FILE_SERVER + path;
 }
 
 export function authorityCheck(to: number, from: number) {

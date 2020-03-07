@@ -62,13 +62,6 @@ export interface FFMpegStatus {
   eta: number;
 }
 
-export interface Session {
-  id: string;
-  userId: number;
-  authority: number;
-  allowedPaths: string[];
-}
-
 export interface IEncode {
   id: number;
   inpath: string;
@@ -111,4 +104,10 @@ export interface IComic {
   path: string;
   date: string;
   tags: string[];
+}
+
+export interface TokenPayload {
+  userId: number;
+  authority: number;
+  allowedPaths: string[];
 }

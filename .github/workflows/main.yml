@@ -19,20 +19,20 @@ jobs:
     - run: npm install
     - run: npm run tslint
     - run: npm run check
-    - run: docker build -t hyunsub/api .
-    - run: docker save -o hyunsub-api.tar hyunsub/api
+    - run: docker build -t hyunflix/api .
+    - run: docker save -o hyunflix-api.tar hyunflix/api
     - uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        source: "hyunsub-api.tar"
-        target: "/home/hyunsub/hyunsub/"
+        source: "hyunflix-api.tar"
+        target: "/home/hyunsub/environment/hyunflix/"
     - uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: cd ~/hyunsub; docker load -i hyunsub-api.tar; docker-compose up -d --force-recreate api; rm hyunsub-api.tar
+        script: cd ~/environment/hyunflix; docker load -i hyunflix-api.tar; docker-compose up -d --force-recreate api; rm hyunflix-api.tar

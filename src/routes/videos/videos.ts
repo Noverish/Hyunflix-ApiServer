@@ -1,15 +1,16 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
 import { Video } from '@src/entity';
-import { checkAuthority } from '@src/middlewares/validate-header';
-import { Session } from '@src/models';
+import { checkAuthority } from '@src/middlewares';
+import { TokenPayload } from '@src/models';
 import { VideoService } from '@src/services';
 import { handleServiceResult } from '@src/routes';
+import { TOKEN_PAYLOAD_FIELD } from '@src/config';
 
 const router: Router = Router();
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
-  const { authority }: Session = req['session'];
+  const { authority }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
 
   VideoService.listVideo({ ...req.query, authority })
     .then(handleServiceResult(res))
@@ -17,7 +18,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get('/tags', (req: Request, res: Response, next: NextFunction) => {
-  const { authority }: Session = req['session'];
+  const { authority }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
 
   VideoService.listVideoTags({ authority })
     .then(handleServiceResult(res))
@@ -25,7 +26,7 @@ router.get('/tags', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get('/:videoId', (req: Request, res: Response, next: NextFunction) => {
-  const { authority }: Session = req['session'];
+  const { authority }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
 
   VideoService.getVideo({ ...req.params, authority })
     .then(handleServiceResult(res))
@@ -33,7 +34,7 @@ router.get('/:videoId', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get('/:videoId/subtitles', (req: Request, res: Response, next: NextFunction) => {
-  const { authority }: Session = req['session'];
+  const { authority }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
 
   VideoService.listVideoSubtitles({ ...req.params, authority })
     .then(handleServiceResult(res))
