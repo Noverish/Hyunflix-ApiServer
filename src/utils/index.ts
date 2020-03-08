@@ -10,14 +10,14 @@ export function timeAgo(date: Date) {
 }
 
 export function dateToString(date: Date) {
-  const year = leadingZeros(date.getFullYear(), 4);
-  const month = leadingZeros(date.getMonth() + 1, 2);
-  const d = leadingZeros(date.getDate(), 2);
-  const hour = leadingZeros(date.getHours(), 2);
-  const minute = leadingZeros(date.getMinutes(), 2);
-  const second = leadingZeros(date.getSeconds(), 2);
+  const year   = date.getFullYear().toString().padStart(4, '0');
+  const month  = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day    = date.getDate().toString().padStart(2, '0');
+  const hour   = date.getHours().toString().padStart(2, '0');
+  const minute = date.getMinutes().toString().padStart(2, '0');
+  const second = date.getSeconds().toString().padStart(2, '0');
 
-  return `${year}-${month}-${d} ${hour}:${minute}:${second}`;
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
 
 export function second2String(second: number) {
@@ -61,17 +61,6 @@ export function width2Resolution(width: number) {
   });
 
   return list[key];
-}
-
-function leadingZeros(num: number, digits: number) {
-  let zero = '';
-  const n = num.toString();
-  if (n.length < digits) {
-    for (let i = 0; i < digits - n.length; i += 1) {
-      zero += '0';
-    }
-  }
-  return zero + n;
 }
 
 export function pathToURL(path: string): string {

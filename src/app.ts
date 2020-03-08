@@ -7,17 +7,14 @@ import '@src/rpc';
 
 import { PORT } from '@src/config';
 import socket from '@src/socket';
-import { consoleLogger, fileLogger } from '@src/utils/logger';
-import { verifyToken } from '@src/middlewares';
+import { verifyToken, logger } from '@src/middlewares';
 import routes from './routes';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-app.use(consoleLogger);
-app.use(fileLogger);
+app.use(logger);
 
 app.use(verifyToken);
 app.use('/', routes);
