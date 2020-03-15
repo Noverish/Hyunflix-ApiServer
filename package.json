@@ -1,7 +1,6 @@
 {
   "name": "Hyunflix-ApiServer",
-  "description": ".",
-  "license": "ISC",
+  "private": true,
   "scripts": {
     "dev": "nodemon --exec 'ts-node -r tsconfig-paths/register' --watch 'src/**/*.ts' src/app.ts",
     "start": "ts-node -r tsconfig-paths/register src/app.ts",
@@ -53,9 +52,5 @@
     "ts-node": "^8.6.2",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^3.8.3"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/Noverish/Hyunflix-ApiServer.git"
   }
 }
