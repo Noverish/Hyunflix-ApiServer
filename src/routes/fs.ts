@@ -12,8 +12,8 @@ const router: Router = Router();
 router.use(checkAuthority(256));
 
 router.get('/readdir', (req: Request, res: Response, next: NextFunction) => {
-  (async function () {
-    const path = req.query['path'];
+  (async () => {
+    const { path } = req.query;
 
     const paths: string[] = (await readdir(path)).map(f => join(path, f));
     const stats: Stat[] = await statBulk(paths);
@@ -31,9 +31,8 @@ router.get('/readdir', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.post('/rename', (req: Request, res: Response, next: NextFunction) => {
-  (async function () {
-    const from = req.body['from'];
-    const to = req.body['to'];
+  (async () => {
+    const { from, to } = req.body;
 
     await rename(from, to);
 

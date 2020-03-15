@@ -3,7 +3,7 @@ import { extname, basename } from 'path';
 import { Music } from '@src/entity';
 import { walk, ffprobeMusic } from '@src/rpc';
 import { MUSIC_FOLDER_PATH } from '@src/config';
-import { FFProbeMusic, Stat } from '@src/models';
+import { FFProbeMusic } from '@src/models';
 
 type Callback = (msg: string) => void;
 
@@ -12,7 +12,7 @@ export default function () {
 
   };
 
-  (async function () {
+  (async () => {
     const allFilePaths: string[] = await walk(MUSIC_FOLDER_PATH);
     const musicPaths: string[] = allFilePaths.filter(f => extname(f) === '.mp3');
 
@@ -50,8 +50,8 @@ async function examineDelete(paths: string[], callback: Callback) {
     const { path } = music;
 
     if (!paths.includes(path)) {
-      const music = await Music.findOne({ path });
-      await music.remove();
+      const music2 = await Music.findOne({ path });
+      await music2.remove();
       callback(`[Deleted] ${path}`);
     }
   }

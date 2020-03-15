@@ -1,8 +1,8 @@
 import * as EventSource from 'eventsource';
 
-import { call } from './';
 import { SSE_SERVER } from '@src/config';
 import { FFMpegStatus } from '@src/models';
+import { call } from '.';
 
 const STATUS_EVENT = 'status';
 const FINISH_EVENT = 'finish';

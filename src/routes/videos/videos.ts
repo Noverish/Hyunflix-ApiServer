@@ -53,7 +53,7 @@ router.put('/:videoId', (req: Request, res: Response, next: NextFunction) => {
   const videoId: number = parseInt(req.params['videoId'], 10);
   const params: Partial<Video> = req.body;
 
-  (async function () {
+  (async () => {
     const video: Video | undefined = await Video.findOne({ id: videoId });
 
     if (!video) {

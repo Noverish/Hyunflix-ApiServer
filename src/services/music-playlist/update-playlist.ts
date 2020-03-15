@@ -30,8 +30,14 @@ export default async function (args: object): Promise<ServiceResult> {
     return [404, { msg: 'Not Found' }];
   }
 
-  title && (playlist.title = title);
-  musicIds && (playlist.musics = await Music.findByIds(musicIds));
+  if (title) {
+    playlist.title = title;
+  }
+
+  if (musicIds) {
+    playlist.musics = await Music.findByIds(musicIds);
+  }
+
   playlist.save();
 
   return [204, {}];

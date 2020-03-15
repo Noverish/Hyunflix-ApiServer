@@ -20,8 +20,8 @@ export class VideoSeries extends BaseEntity {
   @Column({ default: 1 })
   authority: number;
 
-  static async $findOne(where?: FindConditions<VideoSeries>): Promise<VideoSeries | null> {
-    return await getConnection()
+  static $findOne(where?: FindConditions<VideoSeries>): Promise<VideoSeries | null> {
+    return getConnection()
       .getRepository(VideoSeries)
       .findOne({
         where,
@@ -29,8 +29,8 @@ export class VideoSeries extends BaseEntity {
       });
   }
 
-  static async $find(where?: FindConditions<VideoSeries>, options?: FindManyOptions<VideoSeries>): Promise<VideoSeries[]> {
-    return await getConnection()
+  static $find(where?: FindConditions<VideoSeries>, options?: FindManyOptions<VideoSeries>): Promise<VideoSeries[]> {
+    return getConnection()
       .getRepository(VideoSeries)
       .find({
         where,

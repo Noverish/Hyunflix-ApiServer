@@ -12,16 +12,10 @@ morgan.token('remote-addr', (req: Request, res: Response) => {
   return req.ip || req.connection.remoteAddress;
 });
 
-morgan.token('date', (req: Request, res: Response) => {
-  return dateToString(new Date());
-});
+morgan.token('date', (req: Request, res: Response) => dateToString(new Date()));
 
-morgan.token('user-id', (req: Request, res: Response) => {
-  return req[TOKEN_PAYLOAD_FIELD]?.userId;
-});
+morgan.token('user-id', (req: Request, res: Response) => req[TOKEN_PAYLOAD_FIELD]?.userId);
 
-morgan.token('url', (req: Request, res: Response) => {
-  return decodeURI(req.originalUrl);
-});
+morgan.token('url', (req: Request, res: Response) => decodeURI(req.originalUrl));
 
 export default morgan('[:date] <:remote-addr> (:user-id) :method :status :response-time ms ":url"');

@@ -7,7 +7,7 @@ import { TOKEN_PAYLOAD_FIELD } from '@src/config';
 const router: Router = Router();
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
-  (async function () {
+  (async () => {
     const { userId }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
     const query: string = req.query['q'] || '';
     const page: number = parseInt(req.query['p'] || '1', 10);
@@ -33,7 +33,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get('/:videoId', (req: Request, res: Response, next: NextFunction) => {
-  (async function () {
+  (async () => {
     const { userId }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
     const videoId: number = parseInt(req.params['videoId'], 10);
 
@@ -57,22 +57,18 @@ router.get('/:videoId', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.delete('/', (req: Request, res: Response, next: NextFunction) => {
-  (async function () {
+  (async () => {
     const { userId }: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
-    const videoIds: number[] = req.body['videoIds'];
+    const { videoIds }: {videoIds: number[]} = req.body;
 
     for (const videoId of videoIds) {
       const video: Video | undefined = await Video.findOne({ id: videoId });
-      if (!video) {
-        continue;
+      if (video) {
+        const userVideo: UserVideo | undefined = await UserVideo.$findOne({ userId, video });
+        if (userVideo) {
+          await userVideo.remove();
+        }
       }
-
-      const userVideo: UserVideo | undefined = await UserVideo.$findOne({ userId, video });
-      if (!userVideo) {
-        continue;
-      }
-
-      await userVideo.remove();
     }
 
     res.status(204);

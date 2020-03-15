@@ -9,7 +9,7 @@ const router: Router = Router();
 router.use(checkAuthority(256)); // TODO number
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
-  (async function () {
+  (async () => {
     const query: string = req.query['q'] || '';
     const page: number = parseInt(req.query['p'] || '1', 10);
     const pageSize: number = parseInt(req.query['ps'] || '0', 10);
@@ -34,10 +34,8 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
-  (async function () {
-    const inpath = req.body['inpath'];
-    const outpath = req.body['outpath'];
-    const options = req.body['options'];
+  (async () => {
+    const { inpath, outpath, options } = req.body;
 
     await Encode.insert({ inpath, outpath, options });
 
@@ -49,7 +47,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 router.get('/presets', (req: Request, res: Response, next: NextFunction) => {
   const presets = {
     default: '-c:v libx264 -c:a aac -map_chapters -1 -y',
-    audio:   '-c:v copy -c:a aac -map_chapters -1 -y',
+    audio: '-c:v copy -c:a aac -map_chapters -1 -y',
     maxrate: '-c:v libx264 -b:v 2000k -maxrate 2000k -bufsize 4000k -vf scale=1280:-2 -c:a aac -map_chapters -1 -y',
   };
 

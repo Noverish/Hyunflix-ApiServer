@@ -1,15 +1,13 @@
 {
-  "name": "hyunflix-apiserver",
-  "version": "0.0.0",
+  "name": "Hyunflix-ApiServer",
   "description": ".",
-  "main": "src/app.js",
-  "private": true,
+  "license": "ISC",
   "scripts": {
     "dev": "nodemon --exec 'ts-node -r tsconfig-paths/register' --watch 'src/**/*.ts' src/app.ts",
     "start": "ts-node -r tsconfig-paths/register src/app.ts",
     "check": "tsc --noEmit",
-    "tslint": "tslint -p .",
-    "tslint:fix": "tslint -p . --fix",
+    "eslint": "eslint 'src/**/*.ts'",
+    "eslint:fix": "eslint 'src/**/*.ts' --fix",
     "test:integration": "mocha -r ts-node/register -r tsconfig-paths/register --exit \"test/integration/**/*.ts\""
   },
   "dependencies": {
@@ -42,22 +40,22 @@
     "@types/request": "^2.48.4",
     "@types/sinon": "^7.5.2",
     "@types/ws": "^7.2.2",
+    "@typescript-eslint/eslint-plugin": "^2.23.0",
+    "@typescript-eslint/parser": "^2.23.0",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
+    "eslint-config-airbnb-typescript": "^7.0.0",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-import": "^2.20.1",
     "mocha": "^7.1.0",
     "nodemon": "^2.0.2",
     "sinon": "^9.0.0",
     "ts-node": "^8.6.2",
     "tsconfig-paths": "^3.9.0",
-    "tslint": "^5.20.1",
-    "tslint-config-airbnb": "^5.11.2",
     "typescript": "^3.8.3"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/Noverish/Hyunflix-ApiServer.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  }
 }

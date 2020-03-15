@@ -15,7 +15,7 @@ export default function () {
 
   };
 
-  (async function () {
+  (async () => {
     let videoPaths: string[] = [];
 
     for (const folderPath of VIDEO_FOLDER_PATHS) {
@@ -74,7 +74,7 @@ async function examineUpdate(videoPaths: string[], callback: Callback) {
     const video: Video | undefined = await Video.findOne({ path });
 
     if (video && (size.toString() !== video.size.toString())) {
-      updateQueue.push({ path , id: video.id });
+      updateQueue.push({ path, id: video.id });
     }
   }
 

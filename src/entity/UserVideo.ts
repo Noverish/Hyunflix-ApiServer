@@ -22,8 +22,8 @@ export class UserVideo extends BaseEntity {
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   date: Date;
 
-  static async $findOne(where: FindConditions<UserVideo>): Promise<UserVideo | undefined> {
-    return await getConnection()
+  static $findOne(where: FindConditions<UserVideo>): Promise<UserVideo | undefined> {
+    return getConnection()
       .getRepository(UserVideo)
       .findOne({
         where,
@@ -31,8 +31,8 @@ export class UserVideo extends BaseEntity {
       });
   }
 
-  static async $find(where?: FindConditions<UserVideo>, options?: FindManyOptions<UserVideo>): Promise<UserVideo[]> {
-    return await getConnection()
+  static $find(where?: FindConditions<UserVideo>, options?: FindManyOptions<UserVideo>): Promise<UserVideo[]> {
+    return getConnection()
       .getRepository(UserVideo)
       .find({
         where,

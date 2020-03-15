@@ -1,5 +1,5 @@
 import { FFProbeVideo, FFProbeMusic } from '@src/models';
-import { call } from './';
+import { call } from '.';
 
 export function ffprobeVideo(path: string): Promise<FFProbeVideo> {
   return call('ffprobeVideo', { path });

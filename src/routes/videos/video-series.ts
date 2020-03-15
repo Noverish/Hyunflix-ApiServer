@@ -6,7 +6,7 @@ import { IVideoSeries, IVideo } from '@src/models';
 const router: Router = Router();
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
-  (async function () {
+  (async () => {
     const query: string = req.query['q'] || '';
     const page: number = parseInt(req.query['p'] || '1', 10);
     const pageSize: number = parseInt(req.query['ps'] || '0', 10);
@@ -31,7 +31,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get('/:seriesId', (req: Request, res: Response, next: NextFunction) => {
-  (async function () {
+  (async () => {
     const seriesId: number = parseInt(req.params['seriesId'], 10);
 
     const series: VideoSeries | null = await VideoSeries.$findOne({ id: seriesId });
@@ -48,7 +48,7 @@ router.get('/:seriesId', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get('/:seriesId/videos', (req: Request, res: Response, next: NextFunction) => {
-  (async function () {
+  (async () => {
     const seriesId: number = parseInt(req.params['seriesId'], 10);
     const query: string = req.query['q'] || '';
     const page: number = parseInt(req.query['p'] || '1', 10);

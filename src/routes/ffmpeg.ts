@@ -8,7 +8,7 @@ const router: Router = Router();
 router.use(checkAuthority(256)); // TODO number
 
 router.post('/pause', (req: Request, res: Response, next: NextFunction) => {
-  (async function () {
+  (async () => {
     try {
       await ffmpegPause();
       res.status(204);
@@ -21,7 +21,7 @@ router.post('/pause', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.post('/resume', (req: Request, res: Response, next: NextFunction) => {
-  (async function () {
+  (async () => {
     try {
       await ffmpegResume();
       res.status(204);
@@ -34,7 +34,7 @@ router.post('/resume', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get('/state', (req: Request, res: Response, next: NextFunction) => {
-  (async function () {
+  (async () => {
     try {
       const isRunning: boolean = await ffmpegState();
       res.status(200);

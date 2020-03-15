@@ -1,4 +1,4 @@
-import { call } from './';
+import { call } from '.';
 
 export function ffmpegExist(): Promise<boolean> {
   return call('ffmpegExist', undefined);

@@ -1,5 +1,5 @@
 import { Stat } from '@src/models';
-import { call } from './';
+import { call } from '.';
 
 export function readdir(path: string): Promise<string[]> {
   return call('readdir', { path });
