@@ -5,9 +5,9 @@
     "dev": "nodemon --exec 'ts-node -r tsconfig-paths/register' --watch 'src/**/*.ts' src/app.ts",
     "start": "ts-node -r tsconfig-paths/register src/app.ts",
     "check": "tsc --noEmit",
-    "eslint": "eslint 'src/**/*.ts'",
-    "eslint:fix": "eslint 'src/**/*.ts' --fix",
-    "test:integration": "mocha -r ts-node/register -r tsconfig-paths/register --exit \"test/integration/**/*.ts\""
+    "eslint": "eslint '{src,test}/**/*.ts'",
+    "eslint:fix": "eslint '{src,test}/**/*.ts' --fix",
+    "test:unit": "mocha -r ts-node/register -r tsconfig-paths/register --exit \"test/unit/**/*.ts\""
   },
   "dependencies": {
     "@hapi/joi": "^17.1.0",

@@ -6,7 +6,8 @@ on:
     - master
 
 jobs:
-  check:
+  deploy:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
 
     steps:
@@ -19,6 +20,7 @@ jobs:
     - run: npm install
     - run: npm run eslint
     - run: npm run check
+    - run: npm run test:unit
     - run: docker build -t hyunflix/api .
     - run: docker save -o hyunflix-api.tar hyunflix/api
     - uses: appleboy/scp-action@master
