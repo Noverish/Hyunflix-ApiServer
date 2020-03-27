@@ -10,6 +10,7 @@ export default function (req: Request, res: Response, next: NextFunction) {
   if (!token) {
     res.status(401);
     res.json({ msg: 'Unauthorized' });
+    return;
   }
 
   TokenService.verifyToken(token)
