@@ -1,6 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
-import { Video } from '@src/entity';
 import { checkAuthority } from '@src/middlewares';
 import { TokenPayload } from '@src/models';
 import { VideoService } from '@src/services';
@@ -51,23 +50,9 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.put('/:videoId', (req: Request, res: Response, next: NextFunction) => {
-  const videoId: number = parseInt(req.params['videoId'], 10);
-  const params: Partial<Video> = req.body;
-
-  (async () => {
-    const video: Video | undefined = await Video.findOne({ id: videoId });
-
-    if (!video) {
-      res.status(404);
-      res.json({ msg: 'Not Found' });
-      return;
-    }
-
-    await Video.update(videoId, params);
-
-    res.status(204);
-    res.json();
-  })().catch(next);
+  VideoService.updateVideo(req.params, req.body)
+    .then(handleServiceResult(res))
+    .catch(next);
 });
 
 router.post('/:videoId/examine', (req: Request, res: Response, next: NextFunction) => {

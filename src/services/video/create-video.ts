@@ -1,5 +1,4 @@
 import * as Joi from '@hapi/joi';
-import { basename, extname } from 'path';
 
 import { ServiceResult } from '@src/services';
 import { Video } from '@src/entity';
@@ -31,7 +30,6 @@ export default async function (args: object): Promise<ServiceResult> {
     height: ffprobe.height,
     bitrate: ffprobe.bitrate,
     size: ffprobe.size.toString(),
-    title: basename(path, extname(path)),
     date: new Date(),
   });
 

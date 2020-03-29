@@ -1,4 +1,4 @@
-import { extname, basename } from 'path';
+import { extname } from 'path';
 
 import { Video } from '@src/entity';
 import { walk, statBulk, ffprobeVideo } from '@src/rpc';
@@ -56,7 +56,6 @@ async function examineInsert(videoPaths: string[], callback: Callback) {
       bitrate: ffprobe.bitrate,
       size: ffprobe.size.toString(),
       tags: '',
-      title: basename(path, extname(path)),
       date: new Date(),
     });
 

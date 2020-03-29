@@ -1,5 +1,6 @@
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import * as prettyBytes from 'pretty-bytes';
+import { basename, extname } from 'path';
 
 import { VideoSeries } from '@src/entity';
 import { IVideo } from '@src/models';
@@ -9,9 +10,6 @@ import { pathToURL, second2String, width2Resolution, timeAgo } from '@src/utils'
 export class Video extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column()
-  title: string;
 
   @Column()
   path: string;
@@ -46,7 +44,7 @@ export class Video extends BaseEntity {
   convert(): IVideo {
     return {
       id: this.id,
-      title: this.title,
+      title: basename(this.path, extname(this.path)),
       url: pathToURL(this.path),
       path: this.path,
       tags: this.tags.split(',').filter(t => !!t),
