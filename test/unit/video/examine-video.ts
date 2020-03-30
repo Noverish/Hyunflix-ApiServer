@@ -93,10 +93,8 @@ describe('VideoService.examineVideo', () => {
 
       assert.equal(test.updateArgs.length, updateStub.callCount);
       test.updateArgs.forEach((args, i) => assert.deepEqual<any>(args, updateStub.getCall(i).args));
-    });
-  });
 
-  afterEach(() => {
-    sinon.restore();
+      sinon.restore();
+    });
   });
 });
