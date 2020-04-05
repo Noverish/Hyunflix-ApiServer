@@ -3,10 +3,11 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { checkAuthority } from '@src/middlewares';
 import { EncodeService } from '@src/services';
 import { handleServiceResult } from '@src/routes/utils';
+import { ADMIN_AUTHORITY } from '@src/config';
 
 const router: Router = Router();
 
-router.use(checkAuthority(255)); // TODO number
+router.use(checkAuthority(ADMIN_AUTHORITY));
 
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
   EncodeService.createEncode(req.body)

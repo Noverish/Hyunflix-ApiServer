@@ -4,7 +4,7 @@ import { checkAuthority } from '@src/middlewares';
 import { TokenPayload } from '@src/models';
 import { VideoService } from '@src/services';
 import { handleServiceResult } from '@src/routes';
-import { TOKEN_PAYLOAD_FIELD } from '@src/config';
+import { TOKEN_PAYLOAD_FIELD, ADMIN_AUTHORITY } from '@src/config';
 import { ffprobeVideo } from '@src/rpc';
 
 const router: Router = Router();
@@ -41,7 +41,7 @@ router.get('/:videoId/subtitles', (req: Request, res: Response, next: NextFuncti
     .catch(next);
 });
 
-router.use(checkAuthority(256));
+router.use(checkAuthority(ADMIN_AUTHORITY));
 
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
   VideoService.createVideo(req.body)

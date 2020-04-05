@@ -8,9 +8,9 @@ export default (authority: number) => (req: Request, res: Response, next: NextFu
   const payload: TokenPayload = req[TOKEN_PAYLOAD_FIELD];
 
   if (authorityCheck(payload.authority, authority)) {
+    next();
+  } else {
     res.status(403);
     res.json({ msg: 'Forbidden' });
-  } else {
-    next();
   }
 };

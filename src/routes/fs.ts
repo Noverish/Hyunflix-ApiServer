@@ -6,10 +6,11 @@ import { readdir, statBulk, rename } from '@src/rpc';
 import { File, Stat } from '@src/models';
 import { checkAuthority } from '@src/middlewares';
 import { pathToURL } from '@src/utils';
+import { ADMIN_AUTHORITY } from '@src/config';
 
 const router: Router = Router();
 
-router.use(checkAuthority(256));
+router.use(checkAuthority(ADMIN_AUTHORITY));
 
 router.get('/readdir', (req: Request, res: Response, next: NextFunction) => {
   (async () => {

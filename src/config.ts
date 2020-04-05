@@ -10,3 +10,4 @@ export const TOKEN_HEADER = 'x-hyunsub-access-token';
 export const TOKEN_KEY_PATH = 'keys/public.pem';
 export const TOKEN_ALGORITHM = 'RS256';
 export const TOKEN_PAYLOAD_FIELD = 'token-payload';
+export const ADMIN_AUTHORITY = 255;

@@ -2,10 +2,11 @@ import { Router, Request, Response, NextFunction } from 'express';
 
 import { checkAuthority } from '@src/middlewares';
 import { ffmpegState, ffmpegPause, ffmpegResume } from '@src/rpc';
+import { ADMIN_AUTHORITY } from '@src/config';
 
 const router: Router = Router();
 
-router.use(checkAuthority(256)); // TODO number
+router.use(checkAuthority(ADMIN_AUTHORITY));
 
 router.post('/pause', (req: Request, res: Response, next: NextFunction) => {
   (async () => {
