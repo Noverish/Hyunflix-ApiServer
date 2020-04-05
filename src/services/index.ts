@@ -6,6 +6,7 @@ import * as MusicService from './music';
 import * as MusicPlaylistService from './music-playlist';
 import * as ComicService from './comic';
 import * as TokenService from './token';
+import * as EncodeService from './encode';
 
 type ServiceResult = [number, object];
 
@@ -19,4 +20,5 @@ export {
   MusicPlaylistService,
   ComicService,
   TokenService,
+  EncodeService,
 };

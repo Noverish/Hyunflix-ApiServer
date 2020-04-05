@@ -1,47 +1,49 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
 import { checkAuthority } from '@src/middlewares';
-import { Encode } from '@src/entity';
-import { IEncode } from '@src/models';
+import { EncodeService } from '@src/services';
+import { handleServiceResult } from '@src/routes/utils';
 
 const router: Router = Router();
 
-router.use(checkAuthority(256)); // TODO number
-
-router.get('/', (req: Request, res: Response, next: NextFunction) => {
-  (async () => {
-    const query: string = req.query['q'] || '';
-    const page: number = parseInt(req.query['p'] || '1', 10);
-    const pageSize: number = parseInt(req.query['ps'] || '0', 10);
-
-    const tmp: Encode[] = await Encode.find({ order: { id: 'DESC' } });
-    const items: IEncode[] = tmp.map(m => m.convert());
-
-    const searched = (query)
-      ? items.filter(i => i.inpath.includes(query))
-      : items;
-
-    const sliced = (pageSize)
-      ? searched.slice((page - 1) * pageSize, (page) * pageSize)
-      : searched;
-
-    res.status(200);
-    res.json({
-      total: searched.length,
-      results: sliced,
-    });
-  })().catch(next);
-});
+router.use(checkAuthority(255)); // TODO number
 
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
-  (async () => {
-    const { inpath, outpath, options } = req.body;
+  EncodeService.createEncode(req.body)
+    .then(handleServiceResult(200, res))
+    .catch(next);
+});
 
-    await Encode.insert({ inpath, outpath, options });
+router.get('/', (req: Request, res: Response, next: NextFunction) => {
+  EncodeService.listEncode(req.query)
+    .then(handleServiceResult(200, res))
+    .catch(next);
+});
 
-    res.status(204);
-    res.end();
-  })().catch(next);
+router.get('/:encodeId', (req: Request, res: Response, next: NextFunction) => {
+  EncodeService.getEncode(req.params.encodeId)
+    .then(handleServiceResult(200, res))
+    .catch(next);
+});
+
+router.put('/:encodeId', (req: Request, res: Response, next: NextFunction) => {
+  EncodeService.updateEncode(req.params.encodeId, req.body)
+    .then(handleServiceResult(204, res))
+    .catch(next);
+});
+
+router.post('/:encodeId/before', (req: Request, res: Response, next: NextFunction) => {
+  EncodeService.createEncodeResult(req.body)
+    .then(result => EncodeService.updateEncode(req.params.encodeId, { beforeId: result.id }))
+    .then(handleServiceResult(204, res))
+    .catch(next);
+});
+
+router.post('/:encodeId/after', (req: Request, res: Response, next: NextFunction) => {
+  EncodeService.createEncodeResult(req.body)
+    .then(result => EncodeService.updateEncode(req.params.encodeId, { afterId: result.id }))
+    .then(handleServiceResult(204, res))
+    .catch(next);
 });
 
 router.get('/presets', (req: Request, res: Response, next: NextFunction) => {
@@ -53,6 +55,19 @@ router.get('/presets', (req: Request, res: Response, next: NextFunction) => {
 
   res.status(200);
   res.json(presets);
+});
+
+router.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  const msg = err.message;
+  const matches = msg.match(/^\d{3}/);
+  if (matches.length > 0) {
+    res.status(parseInt(matches[0]));
+    res.json({ msg });
+  } else {
+    console.error(err);
+    res.status(500);
+    res.json({ msg: err.stack });
+  }
 });
 
 export default router;

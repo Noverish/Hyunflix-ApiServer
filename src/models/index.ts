@@ -1,4 +1,5 @@
 export * from './video';
+export * from './dto';
 
 export interface ISubtitle {
   language: string;
@@ -60,15 +61,6 @@ export interface FFMpegStatus {
   speed: number;
   progress: number;
   eta: number;
-}
-
-export interface IEncode {
-  id: number;
-  inpath: string;
-  outpath: string;
-  options: string;
-  progress: number;
-  date: string;
 }
 
 export interface YoutubeStatus {

@@ -1,9 +1,9 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
 
-import { IEncode } from '@src/models';
-import { timeAgo } from '@src/utils';
+import { EncodeDTO } from '@src/models';
+import { EncodeResult } from './EncodeResult';
 
-@Entity()
+@Entity({ name: 'encode2' })
 export class Encode extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -20,17 +20,23 @@ export class Encode extends BaseEntity {
   @Column('float', { default: 0 })
   progress: number;
 
+  @OneToOne(type => EncodeResult, { nullable: true })
+  @JoinColumn()
+  before?: EncodeResult;
+
+  @OneToOne(type => EncodeResult, { nullable: true })
+  @JoinColumn()
+  after?: EncodeResult;
+
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   date: Date;
 
-  convert(): IEncode {
+  convert(): EncodeDTO {
     return {
-      id: this.id,
-      inpath: this.inpath,
-      outpath: this.outpath,
-      options: this.options,
-      progress: this.progress,
-      date: timeAgo(this.date),
+      ...this,
+      before: this.before?.convert() || null,
+      after: this.after?.convert() || null,
+      date: this.date.toISOString(),
     };
   }
 }

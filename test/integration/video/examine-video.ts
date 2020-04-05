@@ -13,7 +13,7 @@ describe('VideoService.examineVideo', () => {
     const updateSpy = sinon.spy(Video, 'update');
     const findOneSpy = sinon.spy(Video, 'findOne');
 
-    const result = await examineVideo({ authority: 1, videoId: 913 }, ffprobeVideo);
+    const result = await examineVideo({ authority: 1, videoId: 934 }, ffprobeVideo);
     console.log(findOneSpy.returnValues);
     console.log(updateSpy.getCall(0).args);
     console.log(result);

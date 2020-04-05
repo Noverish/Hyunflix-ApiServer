@@ -68,8 +68,16 @@ export function pathToURL(path: string): string {
   return FILE_SERVER + path;
 }
 
-export function authorityCheck(to: number, from: number) {
+export function authorityCheck(has: number, needed: number) {
   /* eslint-disable */
-  return from === (to & from);
+  return needed === (has & needed);
   /* eslint-enable */
+}
+
+export function compactObject(obj: object) {
+  const newObj = {};
+  Object.keys(obj).forEach((k) => {
+    if (obj[k] !== undefined) newObj[k] = obj[k];
+  });
+  return newObj;
 }
