@@ -21,6 +21,17 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
     .catch(next);
 });
 
+router.get('/presets', (req: Request, res: Response, next: NextFunction) => {
+  const presets = {
+    default: '-c:v libx264 -c:a aac -map_chapters -1 -y',
+    audio: '-c:v copy -c:a aac -map_chapters -1 -y',
+    maxrate: '-c:v libx264 -b:v 2000k -maxrate 2000k -bufsize 4000k -vf scale=1280:-2 -c:a aac -map_chapters -1 -y',
+  };
+
+  res.status(200);
+  res.json(presets);
+});
+
 router.get('/:encodeId', (req: Request, res: Response, next: NextFunction) => {
   EncodeService.getEncode(req.params.encodeId)
     .then(handleServiceResult(200, res))
@@ -45,17 +56,6 @@ router.post('/:encodeId/after', (req: Request, res: Response, next: NextFunction
     .then(result => EncodeService.updateEncode(req.params.encodeId, { afterId: result.id }))
     .then(handleServiceResult(204, res))
     .catch(next);
-});
-
-router.get('/presets', (req: Request, res: Response, next: NextFunction) => {
-  const presets = {
-    default: '-c:v libx264 -c:a aac -map_chapters -1 -y',
-    audio: '-c:v copy -c:a aac -map_chapters -1 -y',
-    maxrate: '-c:v libx264 -b:v 2000k -maxrate 2000k -bufsize 4000k -vf scale=1280:-2 -c:a aac -map_chapters -1 -y',
-  };
-
-  res.status(200);
-  res.json(presets);
 });
 
 router.use((err: Error, req: Request, res: Response, next: NextFunction) => {
