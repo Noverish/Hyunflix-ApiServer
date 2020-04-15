@@ -1,6 +1,6 @@
 import * as Joi from '@hapi/joi';
 import * as Fuse from 'fuse.js';
-import { Raw } from 'typeorm';
+import { Raw, Like, FindConditions } from 'typeorm';
 
 import { ServiceResult } from '@src/services';
 import { Video } from '@src/entity';
@@ -10,6 +10,7 @@ interface Schema {
   q?: string;
   p: number;
   ps?: number;
+  tag?: string;
   authority: number;
 }
 
@@ -17,6 +18,7 @@ const schema = Joi.object({
   q: Joi.string().optional().empty(''),
   p: Joi.number().optional().default(1),
   ps: Joi.number().optional(),
+  tag: Joi.string().optional().empty(''),
   authority: Joi.number().required(),
 });
 
@@ -26,11 +28,19 @@ export default async function (args: object): Promise<ServiceResult> {
     return [400, { msg: error.message }];
   }
 
-  const { q: query, p: page, ps: pageSize, authority } = value as Schema;
+  const { q: query, p: page, ps: pageSize, tag, authority } = value as Schema;
+
+  const where: FindConditions<Video> = {
+    authority: Raw(`${authority} & authority`),
+  };
+
+  if (tag) {
+    where.tags = Like(`%${tag}%`);
+  }
 
   const tmp: Video[] = await Video.find({
+    where,
     order: { id: 'DESC' },
-    where: { authority: Raw(`${authority} & authority`) },
   });
 
   const videos: IVideo[] = tmp.map(m => m.convert());
