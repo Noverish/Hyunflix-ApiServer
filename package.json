@@ -1,5 +1,5 @@
 {
-  "name": "Hyunflix-ApiServer",
+  "name": "hyunflix-api",
   "private": true,
   "scripts": {
     "dev": "nodemon --exec 'ts-node -r tsconfig-paths/register' --watch 'src/**/*.ts' src/app.ts",
